@@ -1,6 +1,5 @@
 {
   "globalEnv": [
-    "DOMAIN",
     "NODE_ENV",
     "NEXTAUTH_URL",
     "NEXT_PUBLIC_DEBUG",

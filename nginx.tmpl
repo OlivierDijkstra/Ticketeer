@@ -5,7 +5,7 @@ events {
 http {
     server {
         listen 80;
-        server_name ${DOMAIN-test.local};
+        server_name ${DOMAIN};
 
         location / {
             proxy_pass http://dashboard:3000;
@@ -18,7 +18,7 @@ http {
 
     server {
         listen 80;
-        server_name ${API_DOMAIN-api.test.local};
+        server_name ${API_DOMAIN};
 
         location / {
             proxy_pass http://api:8000;
