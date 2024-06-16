@@ -17,6 +17,7 @@ prod:
 # Command to build and start the development containers
 dev:
 	docker-compose -f docker-compose.dev.yml up -d --build
+	yarn dev
 
 # Command to stop and remove all containers
 down:

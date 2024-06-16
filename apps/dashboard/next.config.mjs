@@ -11,7 +11,6 @@ const nextConfig = {
   experimental: {
     outputFileTracingRoot: path.join(__dirname, "../../"),
   },
-  hostname: process.env.DOMAIN || 'localhost',
   images: {
     remotePatterns: [
       {

@@ -52,7 +52,6 @@ export async function fetchWithAuth<T>(
     headers,
     method: options.method || 'GET',
     referrer: process.env.NEXT_PUBLIC_REFERRER_URL || 'http://localhost:3000',
-    referrerPolicy: 'strict-origin-when-cross-origin',
     credentials: 'include',
   };
 
@@ -105,7 +104,7 @@ function createHeaders(
   });
 
   setXsrfToken(headers, allCookies, options);
-  setSessionCookie(headers, allCookies, options);
+  headers.set('Cookie', allCookies.map((cookie) => cookie.name + '=' + cookie.value).join('; '));
 
   return headers;
 }
@@ -127,34 +126,6 @@ function setXsrfToken(
   } else if (xsrfCookie) {
     debugLog('log', '→ Setting XSRF-TOKEN header from cookie');
     headers.set('X-XSRF-TOKEN', decodeURIComponent(xsrfCookie.value));
-  }
-}
-
-/**
- * Sets the session cookie header if available.
- * @param headers The headers object.
- * @param allCookies All available cookies.
- * @param options The fetch options.
- */
-function setSessionCookie(
-  headers: Headers,
-  allCookies: ResponseCookie[],
-  options: FetchOptions
-) {
-  const sessionCookie = allCookies.find(
-    (cookie) => cookie.name === 'laravel_session'
-  );
-  if (options.sessionCookie) {
-    headers.set(
-      'Cookie',
-      `laravel_session=${encodeURIComponent(options.sessionCookie)}`
-    );
-  } else if (sessionCookie) {
-    debugLog('log', '→ Setting Cookie Header from cookie (session)');
-    headers.set(
-      'Cookie',
-      `laravel_session=${encodeURIComponent(sessionCookie.value)}`
-    );
   }
 }
 

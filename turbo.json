@@ -1,5 +1,6 @@
 {
   "globalEnv": [
+    "DOMAIN",
     "NEXTAUTH_URL",
     "NEXT_PUBLIC_DEBUG",
     "NEXT_PUBLIC_REFERRER_URL",
