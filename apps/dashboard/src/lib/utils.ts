@@ -93,7 +93,7 @@ export function debugLog(
   severity: 'log' | 'warn' | 'error' | 'info' = 'log',
   ...message: string[] | unknown[]
 ) {
-  // if (process.env.NODE_ENV === 'production') return;
+  if (process.env.NODE_ENV === 'production') return;
 
   if (!process.env.NEXT_PUBLIC_DEBUG) return;
 

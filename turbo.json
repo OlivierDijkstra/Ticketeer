@@ -1,6 +1,7 @@
 {
   "globalEnv": [
     "DOMAIN",
+    "NODE_ENV",
     "NEXTAUTH_URL",
     "NEXT_PUBLIC_DEBUG",
     "NEXT_PUBLIC_REFERRER_URL",
@@ -19,9 +20,14 @@
     "start": {
       "dependsOn": ["^start"]
     },
-    "dev": {
+    "serve": {
       "cache": false,
       "persistent": true
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true,
+      "dependsOn": ["^serve"]
     },
     "test": {
       "dependsOn": ["^test"]

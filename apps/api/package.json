@@ -5,6 +5,7 @@
     "type": "module",
     "scripts": {
         "dev": "vite dev",
+        "serve": "php artisan serve",
         "lint": "./vendor/bin/pint",
         "test": "./vendor/bin/phpunit",
         "build": "vite build"
