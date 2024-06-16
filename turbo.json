@@ -1,0 +1,29 @@
+{
+  "globalEnv": [
+    "NEXTAUTH_URL",
+    "NEXT_PUBLIC_DEBUG",
+    "NEXT_PUBLIC_REFERRER_URL",
+    "NEXT_PUBLIC_BACKEND_API_URL"
+  ],
+  "$schema": "https://turbo.build/schema.json",
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "inputs": ["$TURBO_DEFAULT$", ".env", ".env.*"],
+      "outputs": [".next/**", "!.next/cache/**"]
+    },
+    "lint": {
+      "dependsOn": ["^lint"]
+    },
+    "start": {
+      "dependsOn": ["^start"]
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "test": {
+      "dependsOn": ["^test"]
+    }
+  }
+}

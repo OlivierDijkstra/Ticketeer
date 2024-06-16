@@ -1,0 +1,191 @@
+version: "3.9"
+
+# Common configurations for environment variables and networks
+x-common-environment-networks: &common-environment-networks
+  env_file:
+    - .env
+  networks:
+    - app-network
+
+# Common build configuration for services using the API Dockerfile
+x-api-service-build: &api-service-build
+  build:
+    context: .
+    dockerfile: ./apps/api/Dockerfile
+
+# Common volume configuration for services using the API application code
+x-api-service-volumes: &api-service-volumes
+  volumes:
+    - ./apps/api:/var/www/html
+
+services:
+  dashboard:
+    build:
+      context: .
+      dockerfile: ./apps/dashboard/Dockerfile
+    restart: always
+    env_file:
+      - .env
+    networks:
+      - app-network
+    depends_on:
+      - api
+    ports:
+      - "3000:3000"
+    extra_hosts:
+      - "${API_DOMAIN:-localhost}:host-gateway"
+
+  api:
+    <<: *api-service-build
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    networks:
+      - app-network
+    volumes:
+      - ./apps/api:/var/www/html
+    depends_on:
+      - db
+      - redis
+    healthcheck:
+      test: ["CMD", "php", "/var/www/html/artisan", "octane:status"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    extra_hosts:
+      - "${API_DOMAIN:-localhost}:host-gateway"
+
+  horizon:
+    <<: *api-service-build
+    environment:
+      CONTAINER_MODE: horizon
+    env_file:
+      - .env
+    networks:
+      - app-network
+    volumes:
+      - ./apps/api:/var/www/html
+    depends_on:
+      - api
+
+  worker:
+    <<: *api-service-build
+    environment:
+      CONTAINER_MODE: worker
+      WORKER_COMMAND: "php /var/www/html/artisan queue:work --tries=3"
+    env_file:
+      - .env
+    networks:
+      - app-network
+    volumes:
+      - ./apps/api:/var/www/html
+    depends_on:
+      - db
+      - redis
+
+  scout_worker:
+    <<: *api-service-build
+    environment:
+      CONTAINER_MODE: worker
+      WORKER_COMMAND: "php /var/www/html/artisan queue:work --queue=scout --tries=3"
+    env_file:
+      - .env
+    networks:
+      - app-network
+    volumes:
+      - ./apps/api:/var/www/html
+    depends_on:
+      - db
+      - redis
+
+  scheduler:
+    <<: *api-service-build
+    environment:
+      CONTAINER_MODE: scheduler
+    env_file:
+      - .env
+    networks:
+      - app-network
+    volumes:
+      - ./apps/api:/var/www/html
+    depends_on:
+      - db
+      - redis
+
+  nginx:
+    image: nginx:alpine
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - "80:80"
+    depends_on:
+      - dashboard
+      - api
+    networks:
+      - app-network
+    environment:
+      - DOMAIN=${DOMAIN:-localhost}
+      - API_DOMAIN=${API_DOMAIN:-localhost}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    extra_hosts:
+      - "${API_DOMAIN:-localhost}:host-gateway"
+
+  redis:
+    image: redis:alpine
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+    command: redis-server --requirepass ${REDIS_PASSWORD}
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - app-network
+
+  db:
+    image: mysql:8.4
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    volumes:
+      - mysql_data:/var/lib/mysql # Persist data
+    ports:
+      - "${DB_PORT:-3307}:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-uroot", "-p$${MYSQL_ROOT_PASSWORD}"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - app-network
+
+  typesense:
+    image: typesense/typesense:26.0
+    restart: on-failure
+    command: --data-dir /data --api-key=${TYPESENSE_API_KEY} --listen-port ${TYPESENSE_PORT} --enable-cors
+    volumes:
+      - typesense_data:/data
+    ports:
+      - "${TYPESENSE_PORT:-8108}:8108"
+    networks:
+      - app-network
+
+volumes:
+  mysql_data:
+  typesense_data:
+
+networks:
+  app-network:
+    driver: bridge
+
+  

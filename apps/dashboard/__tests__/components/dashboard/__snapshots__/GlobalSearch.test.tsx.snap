@@ -1,0 +1,46 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`GlobalSearch > it renders correctly 1`] = `
+<div>
+  <button
+    class="inline-flex items-center justify-center rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2 group whitespace-nowrap text-sm text-muted-foreground"
+  >
+    <svg
+      class="lucide lucide-search mr-2 size-4"
+      fill="none"
+      height="24"
+      stroke="currentColor"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="2"
+      viewBox="0 0 24 24"
+      width="24"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <circle
+        cx="11"
+        cy="11"
+        r="8"
+      />
+      <path
+        d="m21 21-4.3-4.3"
+      />
+    </svg>
+    Search...
+    <span
+      class="ml-8"
+    >
+      <kbd
+        class="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100 transition-colors group-hover:bg-muted-foreground/30"
+      >
+        <span
+          class="text-xs"
+        >
+          ⌘
+        </span>
+        K
+      </kbd>
+    </span>
+  </button>
+</div>
+`;

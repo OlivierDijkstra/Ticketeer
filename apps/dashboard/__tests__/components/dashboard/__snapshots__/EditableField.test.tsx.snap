@@ -1,0 +1,48 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`EditableField > it renders correctly 1`] = `
+<div>
+  <div>
+    <div
+      class="mb-2 flex items-center gap-2"
+    >
+      <div
+        class="w-full"
+      >
+        <span>
+          Test
+        </span>
+      </div>
+      <button
+        class="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-9 w-9 text-primary rounded-full"
+        data-state="closed"
+      >
+        <span
+          class="sr-only"
+        >
+          Edit value
+        </span>
+        <svg
+          class="lucide lucide-pencil"
+          fill="none"
+          height="24"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+          width="24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"
+          />
+          <path
+            d="m15 5 4 4"
+          />
+        </svg>
+      </button>
+    </div>
+  </div>
+</div>
+`;
