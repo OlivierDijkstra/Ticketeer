@@ -151,7 +151,7 @@ services:
       - app-network
 
   db:
-    image: mysql:8.4
+    image: mysql:8.0
     environment:
       MYSQL_DATABASE: ${MYSQL_DATABASE}
       MYSQL_USER: ${MYSQL_USER}
@@ -187,5 +187,3 @@ volumes:
 networks:
   app-network:
     driver: bridge
-
-  
