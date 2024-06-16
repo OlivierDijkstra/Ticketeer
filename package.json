@@ -2,7 +2,9 @@
   "name": "ticketgate-monorepo",
   "private": true,
   "scripts": {
-    "dev": "turbo dev",
+    "postinstall": "cd apps/api && composer install",
+    "dev": "turbo dev serve --parallel",
+    "serve": "turbo serve",
     "test": "turbo test",
     "lint": "turbo lint",
     "build": "turbo build",
