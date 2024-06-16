@@ -21,3 +21,4 @@ dev:
 # Command to stop and remove all containers
 down:
 	docker-compose down
+	docker-compose -f docker-compose.dev.yml down
