@@ -6,7 +6,7 @@ import type { Show } from '@/types/api';
 export default function ShowTitleCard({ show }: { show: Show }) {
   return (
     <Card>
-      <CardHeader>
+      <CardHeader className='bg-muted/50'>
         <div className='flex justify-between'>
           <CardTitle>Show</CardTitle>
 
@@ -18,7 +18,7 @@ export default function ShowTitleCard({ show }: { show: Show }) {
         </div>
       </CardHeader>
 
-      <CardContent>
+      <CardContent className='mt-4'>
         <ShowDateForm show={show} />
       </CardContent>
     </Card>

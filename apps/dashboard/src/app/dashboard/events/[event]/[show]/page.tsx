@@ -30,10 +30,10 @@ export default async function Page({
         </div>
 
         <Card className='lg:col-span-2'>
-          <CardHeader>
+          <CardHeader className='bg-muted/50'>
             <CardTitle>Guests</CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className='mt-4'>
             <ShowGuestsForm show={show} />
           </CardContent>
         </Card>
