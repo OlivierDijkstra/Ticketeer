@@ -209,7 +209,7 @@ export type Order = {
   deleted_at: string | null;
   created_at: string;
   updated_at: string;
-  customer: Customer;
+  customer?: Customer;
   show: Show;
   event: Event;
   products: Product[];

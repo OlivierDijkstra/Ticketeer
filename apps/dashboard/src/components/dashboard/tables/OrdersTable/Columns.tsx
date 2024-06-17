@@ -16,7 +16,11 @@ export function columns(_data: ColumnData): ColumnDef<Order>[] {
       accessorKey: 'customer',
       header: 'Customer',
       cell: ({ row }) => {
-        return `${row.original.customer.first_name} ${row.original.customer.last_name}`;
+        if (!row.original.customer) {
+          return '-';
+        }
+
+        return `${row.original.customer?.first_name} ${row.original.customer?.last_name}`;
       },
     },
     {

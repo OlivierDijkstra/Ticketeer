@@ -6,7 +6,6 @@ import { toast } from 'sonner';
 
 import CopyToClipboard from '@/components/CopyToClipboard';
 import EditableField from '@/components/dashboard/EditableField';
-import CreatePayment from '@/components/dashboard/order/CreatePayment';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import {
@@ -50,24 +49,18 @@ export default function OrderCard({ order }: { order: Order }) {
 
   return (
     <Card className='overflow-hidden'>
-      <CardHeader className='flex justify-between bg-muted/50 sm:flex-row sm:items-center'>
-        <div className='space-y-1'>
-          <Badge>{order.status}</Badge>
+      <CardHeader className='bg-muted/50'>
+        <Badge className='mb-1 max-w-fit'>{order.status}</Badge>
 
-          <CopyToClipboard value={order.id}>
-            <h1 className='group flex min-w-0 items-center gap-2 font-semibold tracking-tight'>
-              Order {order.order_number}
-            </h1>
-          </CopyToClipboard>
+        <CopyToClipboard value={order.id}>
+          <h1 className='group flex min-w-0 items-center gap-2 font-semibold tracking-tight'>
+            Order {order.order_number}
+          </h1>
+        </CopyToClipboard>
 
-          <p className='text-xs text-muted-foreground'>
-            {`Date: ${format(new Date(order.created_at), DEFAULT_PRETTY_DATE_FORMAT)}`}
-          </p>
-        </div>
-
-        <div className='min-w-fit'>
-          <CreatePayment order={order} />
-        </div>
+        <p className='text-xs text-muted-foreground'>
+          {`Date: ${format(new Date(order.created_at), DEFAULT_PRETTY_DATE_FORMAT)}`}
+        </p>
       </CardHeader>
 
       <CardContent className='mt-4 text-sm'>
@@ -123,7 +116,7 @@ export default function OrderCard({ order }: { order: Order }) {
                 )}
 
                 <span>
-                  
+
                   {formatMoney(
                     // @ts-expect-error: AAA
                     product.pivot?.adjusted_price || product.pivot?.price || 0

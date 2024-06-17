@@ -50,7 +50,7 @@ export default function CreateOrderForm({
         postal_code: z.string(),
         province: z.string(),
         phone: z.string().optional(),
-      }).nullable(),
+      }).optional(),
       products: z.array(
         z.object({
           id: z.number(),
@@ -182,7 +182,6 @@ export default function CreateOrderForm({
   });
 
   async function onSubmit(data: z.infer<typeof schema>) {
-    // @ts-expect-error: customer is not defined
     await toast.promise(createOrdersAction(data), {
       loading: 'Creating order...',
       success: (data: { payment_url: string }) => {

@@ -85,6 +85,10 @@ class Order extends Model
             }
         }
 
+        if (!env('MOLLIE_KEY')) {
+            return config('app.url');
+        }
+
         $payment = Mollie::api()
             ->payments
             ->create([

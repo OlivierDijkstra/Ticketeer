@@ -33,7 +33,7 @@ export async function getOrderAction({ order_id }: { order_id: string }) {
 
 export async function createOrdersAction(data: {
   show_id: number;
-  customer: {
+  customer?: {
     email: string;
     first_name: string;
     last_name: string;
@@ -50,6 +50,14 @@ export async function createOrdersAction(data: {
     price?: string;
   }[];
 }) {
+  // Generate a redirect url and add a slash after nextuaht_url only if required if its missing
+  let redirect_url = process.env.NEXTAUTH_URL;
+  if (!redirect_url?.endsWith('/')) {
+    redirect_url += '/';
+  }
+
+  redirect_url += 'dashboard/orders';
+  
   return await fetchWithAuth<
     Order & {
       payment_url: string;
@@ -59,7 +67,7 @@ export async function createOrdersAction(data: {
     body: {
       ...data,
       tos: true,
-      redirect_url: process.env.NEXTAUTH_URL + 'dashboard/orders',
+      redirect_url,
     },
     next: {
       tags: ['orders'],

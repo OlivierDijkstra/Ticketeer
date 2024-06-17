@@ -21,21 +21,23 @@ export default async function Page({
   });
 
   return (
-    <div className='space-y-4'>
-      <EventCard show={order.show} />
+    <div className='grid md:grid-cols-3 gap-4'>
+      <div className='space-y-4 row-start-2 md:row-start-1 md:col-span-2'>
+        <Suspense fallback={<SkeletonGraph />}>
+          <PaymentsTable
+            page={searchParams?.page_payments}
+            order_id={params?.order}
+          />
+        </Suspense>
 
-      <div className='grid gap-4 lg:grid-cols-2'>
-        <OrderCard order={order} />
+        <div className='grid gap-4 lg:grid-cols-2'>
+          <EventCard show={order.show} />
 
-        <CustomerCard order={order} />
+          <CustomerCard order={order} />
+        </div>
       </div>
 
-      <Suspense fallback={<SkeletonGraph />}>
-        <PaymentsTable
-          page={searchParams?.page_payments}
-          order_id={params?.order}
-        />
-      </Suspense>
+      <OrderCard order={order} />
     </div>
   );
 }

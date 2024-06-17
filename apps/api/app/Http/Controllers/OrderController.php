@@ -61,7 +61,7 @@ class OrderController extends Controller
         }
 
         $order = $show->orders()->create([
-            'customer_id' => $customer->id,
+            'customer_id' => $customer->id ?? null,
             'show_id' => $show->id,
             'description' => $request->input('description'),
             'order_number' => Order::GenerateOrderNumber(),
