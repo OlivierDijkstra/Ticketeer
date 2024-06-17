@@ -2,13 +2,14 @@
   "name": "ticketgate-monorepo",
   "private": true,
   "scripts": {
+    "postinstall": "yarn workspace api run postinstall",
+    "clean": "turbo clean",
     "dev": "turbo dev serve --parallel",
     "serve": "turbo serve",
     "test": "turbo test",
     "lint": "turbo lint",
-    "build": "turbo build",
-    "start": "turbo start",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "build": "turbo build"
   },
   "devDependencies": {
     "prettier": "^3.2.5",

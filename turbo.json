@@ -8,16 +8,8 @@
   ],
   "$schema": "https://turbo.build/schema.json",
   "tasks": {
-    "build": {
-      "dependsOn": ["^build"],
-      "inputs": ["$TURBO_DEFAULT$", ".env", ".env.*"],
-      "outputs": [".next/**", "!.next/cache/**"]
-    },
-    "lint": {
-      "dependsOn": ["^lint"]
-    },
-    "start": {
-      "dependsOn": ["^start"]
+    "clean": {
+      "cache": false
     },
     "serve": {
       "cache": false,
@@ -28,8 +20,16 @@
       "persistent": true,
       "dependsOn": ["^serve"]
     },
+    "lint": {
+      "dependsOn": ["^lint"]
+    },
     "test": {
       "dependsOn": ["^test"]
+    },
+    "build": {
+      "dependsOn": ["^build"],
+      "inputs": ["$TURBO_DEFAULT$", ".env", ".env.*"],
+      "outputs": [".next/**", "!.next/cache/**"]
     }
   }
 }
