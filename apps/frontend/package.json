@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "clean": "rm -rf node_modules",
-    "dev": "next dev --turbo",
+    "dev": "next dev --turbo --port=3001",
     "build": "next build",
     "start": "next start",
     "lint": "eslint . --ext .ts,.tsx --ignore-path .gitignore --fix && tsc --noEmit",
@@ -16,6 +16,7 @@
     "test:watch": "vitest --watch"
   },
   "dependencies": {
+    "@repo/lib": "*",
     "@hookform/resolvers": "^3.4.2",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
