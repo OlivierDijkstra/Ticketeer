@@ -1,11 +1,11 @@
 import dns from 'node:dns';
 
+import { debugLog, parseSetCookie } from '@repo/lib';
 import type { ResponseCookie } from 'next/dist/compiled/@edge-runtime/cookies';
 import { cookies } from 'next/headers';
 import { notFound } from 'next/navigation';
 
 import { API_URL } from '@/lib/constants';
-import { debugLog, parseSetCookie } from '@/lib/utils';
 dns.setDefaultResultOrder('ipv4first');
 
 interface FetchOptions extends Omit<RequestInit, 'body'> {

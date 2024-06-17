@@ -1,4 +1,4 @@
-import type { Media } from '@/types/api';
+import type { Media } from '@repo/lib';
 
 export default function generateMedia({
   url = 'media.jpg',

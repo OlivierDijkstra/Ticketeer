@@ -1,6 +1,7 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import type { Product } from '@repo/lib';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -19,7 +20,6 @@ import {
 import { Input } from '@/components/ui/input';
 import { useCurrencyInput } from '@/lib/hooks';
 import { updateProductAction } from '@/server/actions/products';
-import type { Product } from '@/types/api';
 
 export default function ProductPriceForm({ product }: { product: Product }) {
   const schema = z.object({

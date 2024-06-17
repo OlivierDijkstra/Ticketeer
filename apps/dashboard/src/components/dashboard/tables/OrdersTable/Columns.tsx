@@ -1,5 +1,6 @@
 'use client';
 
+import type { ColumnData, Order } from '@repo/lib';
 import type { ColumnDef } from '@tanstack/react-table';
 import { format } from 'date-fns';
 import { Eye } from 'lucide-react';
@@ -8,7 +9,6 @@ import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { DEFAULT_DATE_FORMAT } from '@/lib/constants';
-import type { ColumnData, Order } from '@/types/api';
 
 export function columns(_data: ColumnData): ColumnDef<Order>[] {
   const baseColumns: ColumnDef<Order>[] = [

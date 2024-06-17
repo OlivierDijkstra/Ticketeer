@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@repo/lib';
 import { Pencil } from 'lucide-react';
 import type { ChangeEvent, KeyboardEvent } from 'react';
 import { useState } from 'react';
@@ -21,7 +22,6 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { cn } from '@/lib/utils';
 
 export default function EditableField({
   value,

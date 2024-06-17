@@ -1,3 +1,4 @@
+import type { Show } from '@repo/lib';
 import {
   act,
   fireEvent,
@@ -11,7 +12,6 @@ import { beforeEach, describe, expect, test, vi } from 'vitest';
 
 import ShowDateForm from '@/components/dashboard/forms/ShowDateForm';
 import { updateShowAction } from '@/server/actions/shows';
-import type { Show } from '@/types/api';
 
 vi.mock('@/server/actions/shows', () => ({
   updateShowAction: vi.fn(),

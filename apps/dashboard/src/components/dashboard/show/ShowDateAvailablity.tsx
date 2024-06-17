@@ -1,7 +1,8 @@
+import type { Show } from '@repo/lib';
+
 import ResourceAvailabilitySwitch from '@/components/dashboard/forms/ResourceAvailabilitySwitch';
 import ShowDateForm from '@/components/dashboard/forms/ShowDateForm';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import type { Show } from '@/types/api';
 
 export default function ShowTitleCard({ show }: { show: Show }) {
   return (

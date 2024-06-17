@@ -1,12 +1,12 @@
 'use client';
 
+import type { ColumnData, Payment } from '@repo/lib';
+import formatMoney from '@repo/lib';
 import type { ColumnDef } from '@tanstack/react-table';
 import { format } from 'date-fns';
 
 import { Badge } from '@/components/ui/badge';
 import { DEFAULT_DATE_FORMAT } from '@/lib/constants';
-import formatMoney from '@/lib/utils';
-import type { ColumnData, Payment } from '@/types/api';
 
 export function columns(_data: ColumnData): ColumnDef<Payment>[] {
   return [

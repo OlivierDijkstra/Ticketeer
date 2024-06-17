@@ -1,9 +1,8 @@
 'use client';
 
 import * as SwitchPrimitives from '@radix-ui/react-switch';
+import { cn } from '@repo/lib';
 import * as React from 'react';
-
-import { cn } from '@/lib/utils';
 
 interface SwitchProps
   extends React.ComponentPropsWithoutRef<typeof SwitchPrimitives.Root> {

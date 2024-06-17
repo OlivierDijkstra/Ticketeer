@@ -1,5 +1,6 @@
 'use client';
 
+import type { ColumnData, Event } from '@repo/lib';
 import type { ColumnDef } from '@tanstack/react-table';
 import { Badge, BadgeCheck, Eye } from 'lucide-react';
 import { MoreHorizontal } from 'lucide-react';
@@ -15,7 +16,6 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { setEventFeaturedAction } from '@/server/actions/events';
 import { revalidate } from '@/server/helpers';
-import type { ColumnData, Event } from '@/types/api';
 
 export function columns(_data: ColumnData): ColumnDef<Event>[] {
   return [

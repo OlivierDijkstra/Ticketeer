@@ -1,5 +1,6 @@
 'use client';
 
+import type { Order } from '@repo/lib';
 import { Euro } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
@@ -7,7 +8,6 @@ import { toast } from 'sonner';
 import Spinner from '@/components/Spinner';
 import { Button } from '@/components/ui/button';
 import { createPaymentAction } from '@/server/actions/orders';
-import type { Order } from '@/types/api';
 
 interface Props extends React.HTMLAttributes<HTMLButtonElement> {
   order: Order;

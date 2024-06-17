@@ -1,7 +1,8 @@
+import type { Show } from '@repo/lib';
+
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { DataTable } from '@/components/ui/data-table';
 import { getCustomersAction } from '@/server/actions/customers';
-import type { Show } from '@/types/api';
 
 import { columns } from './Columns';
 

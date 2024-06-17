@@ -1,15 +1,15 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import type { Show } from '@repo/lib';
+import { cn } from '@repo/lib';
 import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
 import GuestField from '@/components/dashboard/show/GuestField';
-import { cn } from '@/lib/utils';
 import { updateShowAction } from '@/server/actions/shows';
-import type { Show } from '@/types/api';
 
 export default function ShowGuestsForm({ show }: { show: Show }) {
   const schema = z

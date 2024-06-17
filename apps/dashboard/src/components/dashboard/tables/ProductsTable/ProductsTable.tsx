@@ -1,10 +1,11 @@
+import type { PaginatedResponse, Product, Show } from '@repo/lib';
+
 import CreateProductDialog from '@/components/dashboard/dialogs/CreateProductDialog';
 import LinkProductDialog from '@/components/dashboard/dialogs/LinkProductDialog';
 import { columns } from '@/components/dashboard/tables/ProductsTable/Columns';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { DataTable } from '@/components/ui/data-table';
 import { getProductsAction } from '@/server/actions/products';
-import type { PaginatedResponse, Product, Show } from '@/types/api';
 
 export default async function ProductsTable({
   show,

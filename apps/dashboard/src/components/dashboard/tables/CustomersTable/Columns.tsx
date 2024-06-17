@@ -1,12 +1,12 @@
 'use client';
 
+import type { ColumnData, Customer } from '@repo/lib';
 import type { ColumnDef } from '@tanstack/react-table';
 import { Eye } from 'lucide-react';
 import Link from 'next/link';
 
 import SortButton from '@/components/dashboard/tables/SortButton';
 import { Button } from '@/components/ui/button';
-import type { ColumnData, Customer } from '@/types/api';
 
 export function columns(data: ColumnData): ColumnDef<Customer>[] {
   return [

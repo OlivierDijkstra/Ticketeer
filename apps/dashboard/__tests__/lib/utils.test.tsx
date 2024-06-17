@@ -1,6 +1,5 @@
+import * as utils from '@repo/lib';
 import { describe, expect, test } from 'vitest';
-
-import * as utils from '@/lib/utils';
 
 describe('utils', () => {
   test('cn', () => {

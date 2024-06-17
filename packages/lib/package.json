@@ -5,6 +5,7 @@
   "main": "./src/index.ts",
   "types": "./src/index.ts",
   "scripts": {
+    "clean": "rm -rf node_modules",
     "lint": "eslint . --max-warnings 0"
   },
   "devDependencies": {

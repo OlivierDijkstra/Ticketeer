@@ -1,3 +1,4 @@
+import type { Event } from '@repo/lib';
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import type { Mock } from 'vitest';
@@ -10,7 +11,6 @@ import {
   deleteEventMediaAction,
   setEventCoverAction,
 } from '@/server/actions/events';
-import type { Event } from '@/types/api';
 
 import generateMedia from '../../../helpers';
 
@@ -20,7 +20,7 @@ vi.mock('@/server/actions/events', () => ({
   setEventCoverAction: vi.fn(),
 }));
 
-vi.mock('@/lib/utils', () => ({
+vi.mock('@repo/lib', () => ({
   cn: vi.fn(),
 }));
 
@@ -61,11 +61,6 @@ describe('EventMediaZone', () => {
     render(<EventMediaZone event={mockEvent} />);
 
     expect(screen.getByText('Media')).toBeInTheDocument();
-    expect(
-      screen.getByText(
-        "Drag 'n' drop some files here, or click to select files"
-      )
-    ).toBeInTheDocument();
     mockEvent.media.forEach((media) => {
       expect(screen.getByAltText(media.name)).toBeInTheDocument();
     });

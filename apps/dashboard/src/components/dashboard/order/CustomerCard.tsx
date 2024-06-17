@@ -1,12 +1,12 @@
 'use client';
 
+import type { Customer } from '@repo/lib';
 import { Eye } from 'lucide-react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import type { Customer } from '@/types/api';
 
 export default function CustomerCard({ customer }: { customer?: Customer }) {
   const params = useParams<{

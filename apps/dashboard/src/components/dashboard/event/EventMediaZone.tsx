@@ -1,5 +1,7 @@
 'use client';
 
+import type { Event, Media } from '@repo/lib';
+import { cn } from '@repo/lib';
 import { Upload } from 'lucide-react';
 import { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
@@ -14,13 +16,11 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { cn } from '@/lib/utils';
 import {
   addEventMediaAction,
   deleteEventMediaAction,
   setEventCoverAction,
 } from '@/server/actions/events';
-import type { Event, Media } from '@/types/api';
 
 export default function EventMediaZone({ event }: { event: Event }) {
   const [mediaState, setMediaState] = useState(event.media);

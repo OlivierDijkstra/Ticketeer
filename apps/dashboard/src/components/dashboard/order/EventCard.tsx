@@ -1,3 +1,4 @@
+import type { Show } from '@repo/lib';
 import { format } from 'date-fns';
 import { ArrowRight, Eye } from 'lucide-react';
 import Link from 'next/link';
@@ -5,7 +6,6 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { DEFAULT_DATE_FORMAT } from '@/lib/constants';
-import type { Show } from '@/types/api';
 
 export default function EventCard({ show }: { show: Show }) {
   return (

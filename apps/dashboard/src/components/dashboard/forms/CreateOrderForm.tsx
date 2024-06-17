@@ -1,6 +1,7 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import type { Customer, Product, Show } from '@repo/lib';
 import { format } from 'date-fns';
 import { Plus } from 'lucide-react';
 import { useParams } from 'next/navigation';
@@ -28,7 +29,6 @@ import { getCustomersAction } from '@/server/actions/customers';
 import { createOrdersAction } from '@/server/actions/orders';
 import { getProductsAction } from '@/server/actions/products';
 import { getShowsAction } from '@/server/actions/shows';
-import type { Customer, Product, Show } from '@/types/api';
 
 export default function CreateOrderForm({
   callback,

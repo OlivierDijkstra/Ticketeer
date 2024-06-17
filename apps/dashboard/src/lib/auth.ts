@@ -1,3 +1,5 @@
+import type { User } from '@repo/lib';
+import { parseSetCookie } from '@repo/lib';
 import type {
   GetServerSidePropsContext,
   NextApiRequest,
@@ -9,8 +11,6 @@ import { getServerSession } from 'next-auth/next';
 import CredentialsProvider from 'next-auth/providers/credentials';
 
 import { fetchWithAuth } from '@/lib/fetch';
-import { parseSetCookie } from '@/lib/utils';
-import type { User } from '@/types/api';
 
 export const authOptions: NextAuthOptions = {
   providers: [

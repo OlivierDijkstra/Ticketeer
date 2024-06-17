@@ -1,5 +1,6 @@
 'use client';
 
+import type { ColumnData, Show } from '@repo/lib';
 import type { ColumnDef } from '@tanstack/react-table';
 import { format } from 'date-fns';
 import { ArrowRight, ArrowUpDown, Badge, BadgeCheck, Eye } from 'lucide-react';
@@ -7,7 +8,6 @@ import Link from 'next/link';
 
 import { Button } from '@/components/ui/button';
 import { DEFAULT_DATE_FORMAT } from '@/lib/constants';
-import type { ColumnData, Show } from '@/types/api';
 
 export function columns(data: ColumnData): ColumnDef<Show>[] {
   return [

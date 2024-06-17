@@ -22,6 +22,7 @@ type CookieAttributeKey = Extract<
 
 const attributeSetters: Record<
   CookieAttributeKey,
+  // eslint-disable-next-line no-unused-vars
   (cookie: ResponseCookie, value?: string) => void
 > = {
   expires: (cookie, value) => {
@@ -95,8 +96,10 @@ export function debugLog(
   severity: "log" | "warn" | "error" | "info" = "log",
   ...message: string[] | unknown[]
 ) {
+  // eslint-disable-next-line no-undef
   if (process.env.NODE_ENV === "production") return;
 
+  // eslint-disable-next-line no-undef
   if (!process.env.NEXT_PUBLIC_DEBUG) return;
 
   console[severity](...message);

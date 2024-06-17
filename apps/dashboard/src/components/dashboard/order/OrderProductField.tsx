@@ -1,3 +1,5 @@
+import type { Product } from '@repo/lib';
+import { cn } from '@repo/lib';
 import { Trash } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type { FieldArrayWithId, UseFormReturn } from 'react-hook-form';
@@ -13,8 +15,6 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { useCurrencyInput } from '@/lib/hooks';
-import { cn } from '@/lib/utils';
-import type { Product } from '@/types/api';
 
 type OrderProductFieldProps = {
   index: number;

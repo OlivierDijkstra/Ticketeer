@@ -1,5 +1,6 @@
 'use client';
 
+import type { ColumnData, Product } from '@repo/lib';
 import type { ColumnDef } from '@tanstack/react-table';
 import { Badge, BadgeCheck, Eye, Trash, Unlink } from 'lucide-react';
 import { MoreHorizontal } from 'lucide-react';
@@ -33,7 +34,6 @@ import {
   updateProductShowPivotAction,
 } from '@/server/actions/shows';
 import { revalidate } from '@/server/helpers';
-import type { ColumnData, Product } from '@/types/api';
 
 export function columns(data: ColumnData): ColumnDef<Product>[] {
   const baseColumns: ColumnDef<Product>[] = [

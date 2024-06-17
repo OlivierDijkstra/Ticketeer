@@ -16,6 +16,7 @@
     "test:watch": "vitest --watch"
   },
   "dependencies": {
+    "@repo/lib": "*",
     "@hookform/resolvers": "^3.4.2",
     "@radix-ui/react-alert-dialog": "^1.0.5",
     "@radix-ui/react-checkbox": "^1.0.4",

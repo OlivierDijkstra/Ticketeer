@@ -1,3 +1,4 @@
+import type { Event } from '@repo/lib';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { useRouter } from 'next/navigation';
@@ -7,7 +8,6 @@ import { beforeEach, describe, expect, test, vi } from 'vitest';
 import ResourceAvailabilitySwitch from '@/components/dashboard/forms/ResourceAvailabilitySwitch';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { updateEventAction } from '@/server/actions/events';
-import type { Event } from '@/types/api';
 
 vi.mock('@/server/actions/events', () => ({
   updateEventAction: vi.fn(),

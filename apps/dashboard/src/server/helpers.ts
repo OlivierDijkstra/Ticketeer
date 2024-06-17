@@ -1,8 +1,7 @@
 'use server';
 
+import { debugLog } from '@repo/lib';
 import { revalidateTag } from 'next/cache';
-
-import { debugLog } from '@/lib/utils';
 
 export async function revalidate(tag: string) {
   debugLog('info', `Revalidating tag: ${tag}`);

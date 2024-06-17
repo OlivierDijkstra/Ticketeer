@@ -1,8 +1,9 @@
 'use server';
 
+import { createUrl } from '@repo/lib';
+
 import { fetchWithAuth } from '@/lib/fetch';
 import type { DataPoint } from '@/lib/statistics';
-import { createUrl } from '@/lib/utils';
 
 export type StatsRequest = {
   model: 'customer' | 'revenue' | 'order';

@@ -44,6 +44,7 @@ export type User = {
   updated_at: string;
 };
 
+// eslint-disable-next-line no-redeclare
 export type Event = {
   id: number;
   name: string;
@@ -149,6 +150,7 @@ export type PaginatedResponse<T> = {
 };
 
 export type PaginationRefresh<T> = ({
+  // eslint-disable-next-line no-unused-vars
   page,
 }: {
   page?: string;
@@ -160,6 +162,7 @@ export type ColumnData = {
   params: {
     [param: string]: unknown;
   };
+  // eslint-disable-next-line no-unused-vars
   onSort?: (sorting: { id: string; desc: boolean }) => void;
   sorting?: {
     id: string;

@@ -1,6 +1,5 @@
+import type { User } from '@repo/lib';
 import type { DefaultSession } from 'next-auth';
-
-import type { User } from '@/types/api';
 
 declare module 'next-auth' {
   /**

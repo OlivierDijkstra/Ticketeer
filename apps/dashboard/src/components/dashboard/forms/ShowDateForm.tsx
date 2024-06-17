@@ -1,6 +1,7 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import type { Show } from '@repo/lib';
 import { format } from 'date-fns';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -10,7 +11,6 @@ import StartEndDateInputs from '@/components/dashboard/show/StartEndDateInputs';
 import Spinner from '@/components/Spinner';
 import { Button } from '@/components/ui/button';
 import { updateShowAction } from '@/server/actions/shows';
-import type { Show } from '@/types/api';
 
 export default function ShowDateForm({ show }: { show: Show }) {
   const schema = z

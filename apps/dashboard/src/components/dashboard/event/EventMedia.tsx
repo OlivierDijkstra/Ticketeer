@@ -1,3 +1,5 @@
+import type { Media } from '@repo/lib';
+import { cn } from '@repo/lib';
 import { MoreHorizontal, Trash, Wallpaper } from 'lucide-react';
 import Image from 'next/image';
 import { useState } from 'react';
@@ -26,8 +28,6 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { cn } from '@/lib/utils';
-import type { Media } from '@/types/api';
 
 export default function EventMedia({
   media,

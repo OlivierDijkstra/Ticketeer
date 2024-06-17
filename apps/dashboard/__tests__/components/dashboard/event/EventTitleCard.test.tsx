@@ -1,3 +1,4 @@
+import type { Event } from '@repo/lib';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { useRouter } from 'next/navigation';
@@ -7,7 +8,6 @@ import { beforeEach, describe, expect, test, vi } from 'vitest';
 import EventTitleCard from '@/components/dashboard/event/EventTitleCard';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { updateEventAction } from '@/server/actions/events';
-import type { Event } from '@/types/api';
 
 vi.mock('@/server/actions/events', () => ({
   updateEventAction: vi.fn(),
@@ -20,7 +20,7 @@ vi.mock('next/navigation', () => ({
   }),
 }));
 
-vi.mock('@/lib/utils', () => ({
+vi.mock('@repo/lib', () => ({
   cn: vi.fn(),
 }));
 

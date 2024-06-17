@@ -1,3 +1,4 @@
+import type { Product } from '@repo/lib';
 import {
   act,
   fireEvent,
@@ -13,7 +14,6 @@ import LinkProductForm from '@/components/dashboard/forms/LinkProductForm';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { getProductsAction } from '@/server/actions/products';
 import { linkProductToShowAction } from '@/server/actions/shows';
-import type { Product } from '@/types/api';
 
 vi.mock('@/server/actions/shows', () => ({
   linkProductToShowAction: vi.fn(),

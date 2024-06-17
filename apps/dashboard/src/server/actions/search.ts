@@ -1,8 +1,9 @@
 'use server';
 
+import type { Customer, Event, Product, Show } from '@repo/lib';
+import { createUrl } from '@repo/lib';
+
 import { fetchWithAuth } from '@/lib/fetch';
-import { createUrl } from '@/lib/utils';
-import type { Customer, Event, Product, Show } from '@/types/api';
 
 export async function searchAction({
   query,

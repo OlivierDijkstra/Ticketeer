@@ -1,5 +1,7 @@
 'use client';
 
+import type { Event } from '@repo/lib';
+import { cn } from '@repo/lib';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { toast } from 'sonner';
@@ -13,9 +15,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { cn } from '@/lib/utils';
 import { updateEventAction } from '@/server/actions/events';
-import type { Event } from '@/types/api';
 
 export default function EventTitleCard({ event }: { event: Event }) {
   const [eventData, setEventData] = useState<Event>(event);

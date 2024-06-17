@@ -1,8 +1,9 @@
+import type { Show } from '@repo/lib';
+
 import CreateOrderDialog from '@/components/dashboard/dialogs/CreateOrderDialog';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { DataTable } from '@/components/ui/data-table';
 import { getOrdersAction } from '@/server/actions/orders';
-import type { Show } from '@/types/api';
 
 import { columns } from './Columns';
 

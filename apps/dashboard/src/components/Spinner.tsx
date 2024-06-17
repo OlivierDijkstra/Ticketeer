@@ -1,8 +1,7 @@
+import { cn } from '@repo/lib';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { LoaderCircle } from 'lucide-react';
 import * as React from 'react';
-
-import { cn } from '@/lib/utils';
 
 export const variants = {
   variant: {

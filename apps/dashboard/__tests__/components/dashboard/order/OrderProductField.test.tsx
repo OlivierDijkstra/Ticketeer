@@ -1,3 +1,5 @@
+import type { Product } from '@repo/lib';
+import formatMoney from '@repo/lib';
 import {
   act,
   fireEvent,
@@ -13,8 +15,6 @@ import { describe, expect, test, vi } from 'vitest';
 
 import OrderProductField from '@/components/dashboard/order/OrderProductField';
 import { TooltipProvider } from '@/components/ui/tooltip';
-import formatMoney from '@/lib/utils';
-import type { Product } from '@/types/api';
 
 const products: Product[] = [
   {

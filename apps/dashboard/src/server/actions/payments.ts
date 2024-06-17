@@ -1,8 +1,9 @@
 'use server';
 
+import type { PaginatedResponse, Payment } from '@repo/lib';
+import { createUrl } from '@repo/lib';
+
 import { fetchWithAuth } from '@/lib/fetch';
-import { createUrl } from '@/lib/utils';
-import type { PaginatedResponse, Payment } from '@/types/api';
 
 export async function getPaymentsActions({
   page,

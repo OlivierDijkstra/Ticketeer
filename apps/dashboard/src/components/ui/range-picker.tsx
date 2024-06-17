@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@repo/lib';
 import { addDays, format } from 'date-fns';
 import { CalendarIcon } from 'lucide-react';
 import * as React from 'react';
@@ -12,7 +13,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
-import { cn } from '@/lib/utils';
 
 export function DatePickerWithRange({
   className,

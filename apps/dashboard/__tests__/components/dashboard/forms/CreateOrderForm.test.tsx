@@ -1,3 +1,4 @@
+import type { Customer, Product, Show } from '@repo/lib';
 import {
   act,
   fireEvent,
@@ -16,7 +17,6 @@ import { getCustomersAction } from '@/server/actions/customers';
 import { createOrdersAction } from '@/server/actions/orders';
 import { getProductsAction } from '@/server/actions/products';
 import { getShowsAction } from '@/server/actions/shows';
-import type { Customer, Product, Show } from '@/types/api';
 
 vi.mock('@/server/actions/orders', () => ({
   createOrdersAction: vi.fn(),

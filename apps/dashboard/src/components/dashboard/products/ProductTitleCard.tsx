@@ -1,5 +1,7 @@
 'use client';
 
+import type { Product } from '@repo/lib';
+import { cn } from '@repo/lib';
 import { Package, Ticket } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
@@ -18,9 +20,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { cn } from '@/lib/utils';
 import { updateProductAction } from '@/server/actions/products';
-import type { Product } from '@/types/api';
 
 export default function ProductTitleCard({ product }: { product: Product }) {
   const [productData, setProductData] = useState<Product>(product);

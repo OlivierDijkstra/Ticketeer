@@ -1,5 +1,7 @@
 'use client';
 
+import type { ColumnData, PaginatedResponse } from '@repo/lib';
+import { cn } from '@repo/lib';
 import type { ColumnDef } from '@tanstack/react-table';
 import {
   flexRender,
@@ -20,8 +22,6 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { cn } from '@/lib/utils';
-import type { ColumnData, PaginatedResponse } from '@/types/api';
 
 interface DataTableProps<TData, TValue> {
   columns: (

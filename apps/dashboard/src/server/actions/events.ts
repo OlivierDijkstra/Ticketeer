@@ -1,8 +1,9 @@
 'use server';
 
+import type { CreateEvent, Event, PaginatedResponse } from '@repo/lib';
+import { createUrl } from '@repo/lib';
+
 import { fetchWithAuth } from '@/lib/fetch';
-import { createUrl } from '@/lib/utils';
-import type { CreateEvent, Event, PaginatedResponse } from '@/types/api';
 
 export async function getEventsAction({
   page,

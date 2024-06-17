@@ -1,5 +1,7 @@
 'use client';
 
+import type { Order } from '@repo/lib';
+import formatMoney, { cn } from '@repo/lib';
 import { format } from 'date-fns';
 import { useState } from 'react';
 import { toast } from 'sonner';
@@ -14,10 +16,8 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { DEFAULT_PRETTY_DATE_FORMAT } from '@/lib/constants';
-import formatMoney, { cn } from '@/lib/utils';
 import { updateOrderAction } from '@/server/actions/orders';
 import { revalidate } from '@/server/helpers';
-import type { Order } from '@/types/api';
 
 export default function OrderCard({ order }: { order: Order }) {
   const [description, setDescription] = useState(order.description);

@@ -1,6 +1,7 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import type { Product } from '@repo/lib';
 import { useParams } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -23,7 +24,6 @@ import { Input } from '@/components/ui/input';
 import { useCurrencyInput } from '@/lib/hooks';
 import { getProductsAction } from '@/server/actions/products';
 import { linkProductToShowAction } from '@/server/actions/shows';
-import type { Product } from '@/types/api';
 
 export default function LinkProductForm({
   callback,

@@ -1,7 +1,5 @@
 'use server';
 
-import { fetchWithAuth } from '@/lib/fetch';
-import { createUrl } from '@/lib/utils';
 import type {
   CreateShow,
   LinkProduct,
@@ -9,7 +7,10 @@ import type {
   Product,
   ProductShowPivot,
   Show,
-} from '@/types/api';
+} from '@repo/lib';
+import { createUrl } from '@repo/lib';
+
+import { fetchWithAuth } from '@/lib/fetch';
 
 export async function getShowAction({ show_id }: { show_id: string }) {
   return await fetchWithAuth<Show>(`api/shows/${show_id}`, {

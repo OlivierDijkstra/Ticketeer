@@ -1,3 +1,4 @@
+import type { ColumnData, PaginatedResponse } from '@repo/lib';
 import type { ColumnDef } from '@tanstack/react-table';
 import {
   act,
@@ -13,7 +14,6 @@ import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 
 import SortButton from '@/components/dashboard/tables/SortButton';
 import { DataTable } from '@/components/ui/data-table';
-import type { ColumnData, PaginatedResponse } from '@/types/api';
 
 interface MockData {
   id: number;

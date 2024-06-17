@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@repo/lib';
 import { CommandList } from 'cmdk';
 import { Check, ChevronsUpDown, Search } from 'lucide-react';
 import { useEffect, useState } from 'react';
@@ -19,7 +20,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
-import { cn } from '@/lib/utils';
 
 type Value = string | number | boolean | undefined;
 

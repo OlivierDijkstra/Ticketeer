@@ -1,5 +1,6 @@
 'use client';
 
+import type { Customer, Event, Product, Show } from '@repo/lib';
 import { format } from 'date-fns';
 import {
   ArrowRight,
@@ -26,7 +27,6 @@ import {
   DEFAULT_PRETTY_DATE_FORMAT,
 } from '@/lib/constants';
 import { searchAction } from '@/server/actions/search';
-import type { Customer, Event, Product, Show } from '@/types/api';
 
 type SearchResults = {
   events: Event[];

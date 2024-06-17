@@ -1,8 +1,9 @@
 'use server';
 
+import type { CreateProduct, PaginatedResponse, Product } from '@repo/lib';
+import { createUrl } from '@repo/lib';
+
 import { fetchWithAuth } from '@/lib/fetch';
-import { createUrl } from '@/lib/utils';
-import type { CreateProduct, PaginatedResponse, Product } from '@/types/api';
 
 export async function getProductsAction({
   page,
