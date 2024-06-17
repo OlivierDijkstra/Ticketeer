@@ -1,5 +1,6 @@
 'use client';
 
+import { Upload } from 'lucide-react';
 import { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { toast } from 'sonner';
@@ -109,46 +110,48 @@ export default function EventMediaZone({ event }: { event: Event }) {
 
   return (
     <Card>
-      <CardHeader>
+      <CardHeader className='bg-muted/50'>
         <CardTitle>Media</CardTitle>
         <CardDescription>
           Upload images for the event. Supported formats: .png, .jpeg, .jpg
         </CardDescription>
       </CardHeader>
 
-      <CardContent className='flex flex-col gap-4'>
+      <CardContent className='mt-4 flex flex-col gap-4'>
         <div className='auto-cols-small grid gap-4'>
           {mediaState?.map((media) => (
             <EventMedia
+              className={media.custom_properties.cover ? 'col-span-full row-start-1 col-start-1' : ''}
               key={media.id}
               media={media}
               onDelete={() => handleDeleteMedia(media)}
               onSetCover={() => handleSetCover(media)}
             />
           ))}
-        </div>
 
-        <div
-          {...getRootProps()}
-          className={cn([
-            'grid w-full cursor-pointer place-items-center rounded border p-8 text-sm text-muted-foreground transition-opacity',
-            {
-              'pointer-events-none opacity-50': loading,
-            },
-          ])}
-        >
-          <input data-testid='dropzone' {...getInputProps()} />
+          <div
+            {...getRootProps()}
+            className={cn([
+              'grid aspect-video w-full cursor-pointer place-items-center rounded transition-all',
+              'border border-dashed p-8 bg-muted/50',
+              'text-sm text-muted-foreground',
+              'hover:bg-muted',
+              {
+                'pointer-events-none opacity-50': loading,
+              },
+            ])}
+          >
+            <input data-testid='dropzone' {...getInputProps()} />
 
-          {loading ? (
-            <Spinner size='lg' />
-          ) : isDragActive ? (
-            <p>Drop the files here ...</p>
-          ) : (
-            <p>
-              Drag &apos;n&apos; drop some files here, or click to select files
-            </p>
-          )}
-        </div>
+            {loading ? (
+              <Spinner size='lg' />
+            ) : isDragActive ? (
+              <p>Drop the files here ...</p>
+            ) : (
+              <Upload />
+            )}
+          </div>
+        </div>        
       </CardContent>
     </Card>
   );

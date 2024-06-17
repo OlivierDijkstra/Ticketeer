@@ -21,8 +21,8 @@ export default async function Page({
   });
 
   return (
-    <div>
-      <div className='mb-4 grid grid-cols-1 gap-4 sm:grid-cols-3'>
+    <div className='space-y-4'>
+      <div className='grid grid-cols-1 gap-4 sm:grid-cols-3'>
         <Suspense fallback={<SkeletonStatistic />}>
           <NewOrdersStatistic
             filters={{
@@ -39,17 +39,15 @@ export default async function Page({
         </Suspense>
       </div>
 
-      <div className='mb-4'>
-        <EventTitleCard event={event} />
-      </div>
+      <EventTitleCard event={event} />
 
-      <div className='mb-4'>
+      <div className='grid lg:grid-cols-2 gap-4 '>
         <EventMediaZone event={event} />
-      </div>
 
-      <Suspense fallback={<SkeletonGraph />}>
-        <ShowsTable event_id={event.id} page={searchParams?.page_shows} />
-      </Suspense>
+        <Suspense fallback={<SkeletonGraph />}>
+          <ShowsTable event_id={event.id} page={searchParams?.page_shows} />
+        </Suspense>
+      </div>
     </div>
   );
 }

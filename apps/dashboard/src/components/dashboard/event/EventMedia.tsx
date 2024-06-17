@@ -33,10 +33,12 @@ export default function EventMedia({
   media,
   onDelete,
   onSetCover,
+  className,
 }: {
   media: Media;
   onDelete: (media: Media) => void;
   onSetCover: () => Promise<void>;
+  className?: string;
 }) {
   const [loading, setLoading] = useState(false);
   const [dropdownIsOpen, setDropdownIsOpen] = useState(false);
@@ -50,7 +52,7 @@ export default function EventMedia({
   }
 
   return (
-    <div className='group relative isolate aspect-video w-full'>
+    <div className={cn('group relative isolate aspect-video w-full', className)}>
       <DropdownMenu open={dropdownIsOpen} onOpenChange={setDropdownIsOpen}>
         <DropdownMenuTrigger asChild autoFocus>
           <Button

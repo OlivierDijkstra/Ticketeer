@@ -69,9 +69,12 @@ export default function EventTitleCard({ event }: { event: Event }) {
   }
 
   return (
-    <Card>
+    <Card className={cn(
+      'transition-opacity',
+      loading ? 'opacity-50' : ''
+    )}>
       <CardHeader
-        className={cn(['transition-opacity', loading ? 'opacity-50' : ''])}
+        className='bg-muted/50'
       >
         <div className='flex justify-between'>
           <div className='space-y-1.5'>
@@ -90,7 +93,7 @@ export default function EventTitleCard({ event }: { event: Event }) {
       </CardHeader>
 
       <CardContent
-        className={cn(['transition-opacity', loading ? 'opacity-50' : ''])}
+        className='mt-4'
       >
         <EditableField
           value={eventData.name}
