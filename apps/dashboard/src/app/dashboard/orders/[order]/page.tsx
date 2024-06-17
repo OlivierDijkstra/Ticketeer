@@ -33,7 +33,7 @@ export default async function Page({
         <div className='grid gap-4 lg:grid-cols-2'>
           <EventCard show={order.show} />
 
-          <CustomerCard order={order} />
+          <CustomerCard customer={order.customer} />
         </div>
       </div>
 

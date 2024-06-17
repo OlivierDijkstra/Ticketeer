@@ -1,11 +1,18 @@
+'use client';
+
 import { Eye } from 'lucide-react';
 import Link from 'next/link';
+import { useParams } from 'next/navigation';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import type { Order } from '@/types/api';
+import type { Customer } from '@/types/api';
 
-export default function CustomerCard({ order }: { order: Order }) {
+export default function CustomerCard({ customer }: { customer?: Customer }) {
+  const params = useParams<{
+    customer: string;
+  }>();
+
   return (
     <Card className='overflow-hidden'>
       <CardHeader className='flex flex-row justify-between bg-muted/50 sm:items-center'>
@@ -14,9 +21,9 @@ export default function CustomerCard({ order }: { order: Order }) {
         </div>
 
         {
-          order.customer && (
+          customer && !params.customer && (
             <div>
-              <Link href={`/dashboard/customers/${order.customer?.id}`}>
+              <Link href={`/dashboard/customers/${customer?.id}`}>
                 <Button size='sm' variant='outline'>
                   <Eye className='mr-2 !size-3' /> View customer
                 </Button>
@@ -31,19 +38,19 @@ export default function CustomerCard({ order }: { order: Order }) {
           <li className='flex items-center justify-between'>
             <span className='text-muted-foreground'>Name</span>
             {
-              order.customer ?
-                (<span>{`${order.customer?.first_name} ${order.customer?.last_name}`}</span>)
+              customer ?
+                (<span>{`${customer?.first_name} ${customer?.last_name}`}</span>)
                 : (<span>-</span>)
             }
           </li>
           <li className='flex items-center justify-between'>
             <span className='text-muted-foreground'>Email</span>
-            <span>{order.customer?.email}</span>
+            <span>{customer?.email}</span>
           </li>
 
           <li className='flex items-center justify-between'>
             <span className='text-muted-foreground'>Phone</span>
-            <span>{order.customer?.phone || 'N/A'}</span>
+            <span>{customer?.phone || 'N/A'}</span>
           </li>
 
           <div className='font-medium'>Address</div>
@@ -51,28 +58,28 @@ export default function CustomerCard({ order }: { order: Order }) {
           <li className='flex items-center justify-between'>
             <span className='text-muted-foreground'>Street</span>
             <span>
-              {`${order.customer?.address.street}, ${order.customer?.address.street2 || ''}`}
+              {`${customer?.address.street}, ${customer?.address.street2 || ''}`}
             </span>
           </li>
 
           <li className='flex items-center justify-between'>
             <span className='text-muted-foreground'>City</span>
-            <span>{order.customer?.address.city}</span>
+            <span>{customer?.address.city}</span>
           </li>
 
           <li className='flex items-center justify-between'>
             <span className='text-muted-foreground'>Postal code</span>
-            <span>{order.customer?.address.postal_code}</span>
+            <span>{customer?.address.postal_code}</span>
           </li>
 
           <li className='flex items-center justify-between'>
             <span className='text-muted-foreground'>Province</span>
-            <span>{order.customer?.address.province}</span>
+            <span>{customer?.address.province}</span>
           </li>
 
           <li className='flex items-center justify-between'>
             <span className='text-muted-foreground'>Country</span>
-            <span>{order.customer?.address.country}</span>
+            <span>{customer?.address.country}</span>
           </li>
         </ul>
       </CardContent>

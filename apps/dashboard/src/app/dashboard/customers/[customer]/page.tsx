@@ -18,10 +18,7 @@ export default async function Page({
     <div className='space-y-4'>
       <div className='grid gap-4 lg:grid-cols-2'>
         <CustomerCard
-          // @ts-expect-error: customer is not defined
-          order={{
-            customer: customer,
-          }}
+          customer={customer}
         />
       </div>
     </div>
