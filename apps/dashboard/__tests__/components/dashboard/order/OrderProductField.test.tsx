@@ -203,7 +203,7 @@ describe('OrderProductField', () => {
   test('handles default values correctly', () => {
     const watcher = vi.fn();
     const amount = 5;
-    const price = 20;
+    const price = 10;
 
     const Wrapper = ({
       watcher,
@@ -238,5 +238,66 @@ describe('OrderProductField', () => {
     expect(screen.getByRole('textbox', { name: /price/i })).toHaveValue(
       formatMoney(price)
     );
+  });
+
+  test('sets product price automatically on product selection', async () => {
+    render(<Component />);
+
+    const user = userEvent.setup();
+
+    await act(async () => {
+      await user.click(screen.getByRole('combobox', { name: /products.0.id/i }));
+    });
+
+    await waitFor(() => screen.getByText('Product 1', { selector: 'span' }));
+
+    await act(async () => {
+      await user.click(screen.getByText('Product 1', { selector: 'span' }));
+    });
+
+    expect(screen.getByRole('textbox', { name: /price/i })).toHaveValue('€ 10,00');
+  });
+
+  test('sets product price automatically on product selection', async () => {
+    render(<Component />);
+
+    const user = userEvent.setup();
+
+    await act(async () => {
+      await user.click(screen.getByRole('combobox', { name: /products.0.id/i }));
+    });
+
+    await waitFor(() => screen.getByText('Product 1', { selector: 'span' }));
+
+    await act(async () => {
+      await user.click(screen.getByText('Product 1', { selector: 'span' }));
+    });
+
+    expect(screen.getByRole('textbox', { name: /price/i })).toHaveValue('€ 10,00');
+  });
+
+  test('allows manual price input after product selection', async () => {
+    render(<Component />);
+
+    const user = userEvent.setup();
+
+    await act(async () => {
+      await user.click(screen.getByRole('combobox', { name: /products.0.id/i }));
+    });
+
+    await waitFor(() => screen.getByText('Product 1', { selector: 'span' }));
+
+    await act(async () => {
+      await user.click(screen.getByText('Product 1', { selector: 'span' }));
+    });
+
+    const priceInput = screen.getByRole('textbox', { name: /price/i });
+    expect(priceInput).toHaveValue('€ 10,00');
+
+    await act(async () => {
+      fireEvent.change(priceInput, { target: { value: '12.34' } });
+    });
+
+    expect(priceInput).toHaveValue('€ 12,34');
   });
 });

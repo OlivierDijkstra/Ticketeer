@@ -21,12 +21,12 @@ import { useCurrencyInput } from '@/lib/hooks';
 import { updateProductAction } from '@/server/actions/products';
 import type { Product } from '@/types/api';
 
-const schema = z.object({
-  price: z.number().min(0),
-  vat: z.number().min(0).max(100),
-});
-
 export default function ProductPriceForm({ product }: { product: Product }) {
+  const schema = z.object({
+    price: z.number().min(0),
+    vat: z.number().min(0).max(100),
+  });
+
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     defaultValues: {
@@ -121,6 +121,7 @@ export default function ProductPriceForm({ product }: { product: Product }) {
                     onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
                   />
                 </FormControl>
+                <FormMessage />
               </FormItem>
             )}
           />
