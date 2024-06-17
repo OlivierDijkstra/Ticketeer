@@ -30,7 +30,7 @@ class ShowControllerTest extends TestCase
         $response = $this->json('GET', route('shows.index', $this->event));
 
         $response->assertStatus(200);
-        $response->assertJsonCount(1, 'data');
+        $response->assertJsonCount(1);
     }
 
     public function test_store()

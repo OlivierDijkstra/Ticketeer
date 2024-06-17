@@ -29,11 +29,16 @@ trait HandlesPaginationAndFiltering
             return $this->search($request, $query, $request->input('search'));
         }
 
-        // Apply filters and paginate the results
+        // Apply filters
         $query = $this->applyFilters($request, $query);
-        $results = $this->paginate($request, $query);
 
-        return $this->flattenPivotFields($results, $request);
+        // Apply pagination only if 'page' parameter is present
+        if ($request->has('page') || $request->has('per_page')) {
+            $results = $this->paginate($request, $query);
+            return $this->flattenPivotFields($results, $request);
+        }
+
+        return $query->get();
     }
 
     /**

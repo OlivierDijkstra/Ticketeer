@@ -18,7 +18,7 @@ export async function getCustomersAction({
 }) {
   const url = createUrl('api/customers', {
     search,
-    page: page || '1',
+    page: page || 1,
     sort: JSON.stringify(sorting),
     show_id: show_id,
   });

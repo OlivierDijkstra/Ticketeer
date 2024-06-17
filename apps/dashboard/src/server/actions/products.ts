@@ -17,7 +17,7 @@ export async function getProductsAction({
   sorting?: { id: string; desc: boolean };
 } = {}) {
   const url = createUrl('api/products', {
-    page,
+    page: page || 1,
     show_id,
     search,
     sort: JSON.stringify(sorting),

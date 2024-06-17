@@ -25,7 +25,7 @@ class EventControllerTest extends TestCase
         $response = $this->json('GET', route('events.index'));
 
         $response->assertStatus(200);
-        $response->assertJsonCount(5, 'data');
+        $response->assertJsonCount(5);
     }
 
     public function test_featured()

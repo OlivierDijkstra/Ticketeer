@@ -77,7 +77,10 @@ class HandlesPaginationAndFilteringTest extends TestCase
 
     public function testSearchOrPaginateWithoutFilters()
     {
-        $request = new Request();
+        $request = new Request([
+            'page' => 1,
+            'per_page' => 5,
+        ]);
 
         $query = Show::query();
 
@@ -90,6 +93,8 @@ class HandlesPaginationAndFilteringTest extends TestCase
     {
         $request = new Request([
             'show_id' => 999999, // Assume this ID does not exist
+            'page' => 1,
+            'per_page' => 5,
         ]);
 
         $query = Product::query();
@@ -334,5 +339,19 @@ class HandlesPaginationAndFilteringTest extends TestCase
         $relation = $this->getShowRelation($model);
 
         $this->assertNull($relation);
+    }
+
+    public function testSearchOrPaginateWithoutPageParameter()
+    {
+        $request = new Request([
+            'enabled' => 1,
+        ]);
+
+        $query = Show::query();
+
+        $result = $this->searchOrPaginate($request, $query);
+
+        $this->assertInstanceOf(\Illuminate\Support\Collection::class, $result);
+        $this->assertCount(10, $result); // Assuming there are 10 shows created in the setup
     }
 }

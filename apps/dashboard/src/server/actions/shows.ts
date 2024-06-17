@@ -31,7 +31,7 @@ export async function getShowsAction({
 }) {
   const url = createUrl('api/shows', {
     event_id,
-    page,
+    page: page || 1,
     search,
   });
 
