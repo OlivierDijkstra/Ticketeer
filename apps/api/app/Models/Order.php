@@ -85,7 +85,7 @@ class Order extends Model
             }
         }
 
-        if (!env('MOLLIE_KEY')) {
+        if (! env('MOLLIE_KEY')) {
             return config('app.url');
         }
 
