@@ -69,7 +69,7 @@ export default function ShowDateForm({ show }: { show: Show }) {
 
   return (
     <form
-      className='flex max-w-xl flex-col items-end'
+      className='flex flex-col items-end'
       onSubmit={handleSubmit(onSubmit)}
     >
       <Controller
