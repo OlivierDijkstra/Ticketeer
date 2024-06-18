@@ -3,6 +3,8 @@ import type { ResponseCookie } from "next/dist/compiled/@edge-runtime/cookies";
 import type { FieldErrors, FieldValues } from "react-hook-form";
 import { twMerge } from "tailwind-merge";
 
+export * from './tests';
+
 export * from './types';
 
 export function cn(...inputs: ClassValue[]) {
