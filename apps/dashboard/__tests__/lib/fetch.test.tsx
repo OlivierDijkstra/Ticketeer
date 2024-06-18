@@ -187,4 +187,56 @@ describe('fetchWithAuth', () => {
       method: 'POST',
     });
   });
+
+  test('it handles different HTTP methods', async () => {
+    const mockResponse = { data: 'test' };
+    fetchMock.mockResolvedValueOnce({
+      ok: true,
+      json: () => Promise.resolve(mockResponse),
+    });
+
+    await fetchWithAuth('api/test', {
+      method: 'PUT',
+      body: { foo: 'bar' },
+    });
+
+    expect(fetchMock).toHaveBeenCalledWith(`${API_URL}/api/test`, {
+      headers: fetchMock.mock.calls[0][1].headers,
+      referrer: 'http://localhost:3000',
+      credentials: 'include',
+      body: JSON.stringify({ foo: 'bar' }),
+      method: 'PUT',
+    });
+  });
+
+  test('it handles fetch errors', async () => {
+    fetchMock.mockRejectedValueOnce(new Error('Network error'));
+
+    await expect(
+      fetchWithAuth('api/test', { parseJson: true })
+    ).rejects.toThrow('Network error');
+  });
+
+  test('it sets cookies from response', async () => {
+    const mockResponse = { data: 'test' };
+    fetchMock.mockResolvedValueOnce({
+      ok: true,
+      json: () => Promise.resolve(mockResponse),
+      headers: {
+        getSetCookie: () => ['test-cookie=test-value; Path=/; HttpOnly'],
+      },
+    });
+
+    await fetchWithAuth('api/test', {
+      automaticallySetCookies: true,
+      body: { foo: 'bar' },
+    });
+
+    expect(setCookieMock).toHaveBeenCalledWith({
+      name: 'test-cookie',
+      value: 'test-value',
+      path: '/',
+      httpOnly: true,
+    });
+  });
 });

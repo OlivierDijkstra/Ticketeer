@@ -107,7 +107,7 @@ function createHeaders(
   });
 
   setXsrfToken(headers, allCookies, options);
-  headers.set('Cookie', allCookies.map((cookie) => cookie.name + '=' + cookie.value).join('; '));
+  headers.set('Cookie', allCookies.map((cookie) => `${cookie.name}=${cookie.value}`).join('; '));
 
   return headers;
 }
