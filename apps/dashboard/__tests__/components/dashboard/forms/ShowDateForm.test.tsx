@@ -1,4 +1,5 @@
 import type { Show } from '@repo/lib';
+import { generateAddress, generateEvent, generateShow } from '@repo/lib';
 import {
   act,
   fireEvent,
@@ -24,40 +25,14 @@ vi.mock('next/navigation', () => ({
 }));
 
 describe('ShowDateForm', () => {
-  const show: Show = {
+  const show: Show = generateShow({
     id: 1,
     start: '2023-05-20T14:00:00.000Z',
     end: '2023-05-20T16:00:00.000Z',
-    enabled: true,
-    guests: [],
-    event_id: 1,
     description: 'Test Show',
-    created_at: '2023-05-20T14:00:00.000Z',
-    updated_at: '2023-05-20T14:00:00.000Z',
-    deleted_at: null,
-    address: {
-      city: 'Test City',
-      country: 'Test Country',
-      postal_code: '12345',
-      province: 'Test Province',
-      street: 'Test Street',
-      street2: null,
-    },
-    event: {
-      id: 1,
-      name: 'Test Event',
-      description: 'Test Event',
-      slug: 'test-event',
-      enabled: true,
-      featured: false,
-      media: [],
-      service_price: 0,
-      statistics_slug: 'test-event',
-      created_at: '2023-05-20T14:00:00.000Z',
-      updated_at: '2023-05-20T14:00:00.000Z',
-      deleted_at: null,
-    },
-  };
+    address: generateAddress({ city: 'Test City' }),
+    event: generateEvent({ id: 1, name: 'Test Event' }),
+  });
 
   beforeEach(() => {
     vi.clearAllMocks();

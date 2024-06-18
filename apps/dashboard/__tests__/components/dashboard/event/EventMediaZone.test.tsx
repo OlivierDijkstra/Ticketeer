@@ -1,4 +1,5 @@
 import type { Event } from '@repo/lib';
+import { generateEvent, generateMedia } from '@repo/lib';
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import type { Mock } from 'vitest';
@@ -12,7 +13,14 @@ import {
   setEventCoverAction,
 } from '@/server/actions/events';
 
-import generateMedia from '../../../helpers';
+const mockEvent: Event = generateEvent({
+  id: 1,
+  name: 'Test Event',
+  media: [
+    generateMedia({ url: '/media1.jpg', name: 'media1' }),
+    generateMedia({ url: '/media2.jpg', name: 'media2' }),
+  ],
+});
 
 vi.mock('@/server/actions/events', () => ({
   addEventMediaAction: vi.fn(),
@@ -20,37 +28,14 @@ vi.mock('@/server/actions/events', () => ({
   setEventCoverAction: vi.fn(),
 }));
 
-vi.mock('@repo/lib', () => ({
-  cn: vi.fn(),
-}));
+vi.mock('@repo/lib', async () => {
+  const actual = await vi.importActual('@repo/lib');
 
-const mockEvent: Event = {
-  id: 1,
-  name: 'Test Event',
-  slug: 'test-event',
-  description: 'Test Description',
-  service_price: 0,
-  enabled: true,
-  featured: false,
-  media: [
-    generateMedia({
-      url: '/media1.jpg',
-      name: 'media1',
-      mimeType: 'image/jpeg',
-      cover: false,
-    }),
-    generateMedia({
-      url: '/media2.jpg',
-      name: 'media2',
-      mimeType: 'image/jpeg',
-      cover: false,
-    }),
-  ],
-  statistics_slug: 'test-event',
-  created_at: '2021-06-01T00:00:00',
-  updated_at: '2021-06-01T00:00:00',
-  deleted_at: null,
-};
+  return {
+    cn: vi.fn(),
+    ...actual,
+  };
+});
 
 describe('EventMediaZone', () => {
   beforeEach(() => {

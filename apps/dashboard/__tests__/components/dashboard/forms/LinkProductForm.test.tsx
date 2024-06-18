@@ -1,4 +1,5 @@
 import type { Product } from '@repo/lib';
+import { generateProduct } from '@repo/lib';
 import {
   act,
   fireEvent,
@@ -34,28 +35,8 @@ describe('LinkProductForm', () => {
   const mockCallback = vi.fn();
 
   const products: Product[] = [
-    {
-      id: 1,
-      name: 'Product 1',
-      price: '1000',
-      description: 'Product 1',
-      vat: 9,
-      is_upsell: true,
-      created_at: '2021-09-01T00:00:00Z',
-      deleted_at: null,
-      updated_at: '2021-09-01T00:00:00Z',
-    },
-    {
-      id: 2,
-      name: 'Product 2',
-      price: '2000',
-      description: 'Product 2',
-      vat: 21,
-      is_upsell: false,
-      created_at: '2021-09-01T00:00:00Z',
-      deleted_at: null,
-      updated_at: '2021-09-01T00:00:00Z',
-    },
+    generateProduct({ id: 1, name: 'Product 1', price: '1000' }),
+    generateProduct({ id: 2, name: 'Product 2', price: '2000' }),
   ];
 
   beforeEach(() => {

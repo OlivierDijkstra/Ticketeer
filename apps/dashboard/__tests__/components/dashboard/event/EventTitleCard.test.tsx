@@ -1,4 +1,5 @@
 import type { Event } from '@repo/lib';
+import { generateEvent } from '@repo/lib';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { useRouter } from 'next/navigation';
@@ -20,25 +21,21 @@ vi.mock('next/navigation', () => ({
   }),
 }));
 
-vi.mock('@repo/lib', () => ({
-  cn: vi.fn(),
-}));
+vi.mock('@repo/lib', async () => {
+  const actual = await vi.importActual('@repo/lib');
 
-const mockEvent: Event = {
+  return {
+    cn: vi.fn(),
+    ...actual,
+  };
+});
+
+const mockEvent: Event = generateEvent({
   id: 1,
   name: 'Test Event',
   slug: 'test-event',
   description: 'Test Description',
-  description_short: '',
-  service_price: 0,
-  enabled: true,
-  featured: false,
-  media: [],
-  statistics_slug: 'test-event',
-  created_at: '2021-06-01T00:00:00',
-  updated_at: '2021-06-01T00:00:00',
-  deleted_at: null,
-};
+});
 
 const mockRouter = {
   push: vi.fn(),

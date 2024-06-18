@@ -1,4 +1,5 @@
 import type { Customer, Product, Show } from '@repo/lib';
+  import { generateCustomer, generateEvent, generateProduct,generateShow } from '@repo/lib';
 import {
   act,
   fireEvent,
@@ -41,77 +42,10 @@ vi.mock('next/navigation', () => ({
 describe('CreateOrderForm', () => {
   const mockCallback = vi.fn();
 
-  const customers: Customer[] = [
-    {
-      id: '123',
-      email: 'customer1@example.com',
-      first_name: 'John',
-      last_name: 'Doe',
-      address: {
-        street: '123 Main St',
-        street2: '',
-        city: 'Anytown',
-        postal_code: '12345',
-        province: 'Anystate',
-        country: 'US',
-      },
-      phone: '123-456-7890',
-      deleted_at: null,
-      created_at: '2021-09-01T00:00:00Z',
-      updated_at: '2021-09-01T00:00:00Z',
-    },
-  ];
 
-  const shows: Show[] = [
-    {
-      id: 1,
-      event: {
-        name: 'Event 1',
-        id: 1,
-        description: 'Event 1',
-        enabled: true,
-        featured: false,
-        media: [],
-        service_price: 2.5,
-        slug: 'event-1',
-        statistics_slug: 'event-1',
-        created_at: '2021-09-01T00:00:00Z',
-        deleted_at: null,
-        updated_at: '2021-09-01T00:00:00Z',
-      },
-      start: '2021-09-01T00:00:00Z',
-      end: '2021-09-02T00:00:00Z',
-      address: {
-        street: '123 Main St',
-        street2: '',
-        city: 'Anytown',
-        postal_code: '12345',
-        province: 'Anystate',
-        country: 'US',
-      },
-      enabled: true,
-      description: 'Event 1',
-      event_id: 1,
-      guests: [],
-      created_at: '2021-09-01T00:00:00Z',
-      deleted_at: null,
-      updated_at: '2021-09-01T00:00:00Z',
-    },
-  ];
-
-  const products: Product[] = [
-    {
-      id: 1,
-      name: 'Product 1',
-      price: '1000',
-      vat: 9,
-      is_upsell: true,
-      created_at: '2021-09-01T00:00:00Z',
-      deleted_at: null,
-      updated_at: '2021-09-01T00:00:00Z',
-      description: 'Product 1',
-    },
-  ];
+  const customers: Customer[] = [generateCustomer({ id: '123', email: 'customer1@example.com', first_name: "John", last_name: "Doe" })];
+  const shows: Show[] = [generateShow({ id: 1, event: generateEvent({ id: 1, name: 'Event 1' }) })];
+  const products: Product[] = [generateProduct({ id: 1, name: 'Product 1', price: '1000' })];
 
   beforeEach(() => {
     vi.clearAllMocks();
