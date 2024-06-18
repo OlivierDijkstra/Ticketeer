@@ -98,8 +98,7 @@ class Order extends Model
                 ],
                 'description' => $this->description ?? 'Order '.$this->order_number,
                 'redirectUrl' => $redirectUrl,
-                // 'webhookUrl' => route('webhooks.mollie'),
-                'webhookUrl' => 'https://fd87-143-178-232-105.ngrok-free.app/webhooks/mollie',
+                'webhookUrl' => 'https://e93c-143-178-232-105.ngrok-free.app/webhooks/mollie',
                 'metadata' => [
                     'order_id' => $this->id,
                 ],

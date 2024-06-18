@@ -29,6 +29,7 @@ const mockEvent: Event = {
   name: 'Test Event',
   slug: 'test-event',
   description: 'Test Description',
+  description_short: '',
   service_price: 0,
   enabled: true,
   featured: false,

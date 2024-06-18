@@ -30,6 +30,7 @@ class Event extends Model implements HasMedia
         'statistics_slug',
         'service_price',
         'description',
+        'description_short',
         'enabled',
         'featured',
     ];
