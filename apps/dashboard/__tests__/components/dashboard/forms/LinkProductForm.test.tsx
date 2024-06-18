@@ -173,7 +173,7 @@ describe('LinkProductForm', () => {
           show_id: 2,
           data: {
             product_id: 1,
-            adjusted_price: 12.34,
+            adjusted_price: '12.34',
             is_upsell: false,
             amount: 5,
             enabled: true,
