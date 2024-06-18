@@ -1,5 +1,5 @@
 // eslint-disable-next-line no-redeclare
-import type { Media, Event, Show, Address, Product } from "@repo/lib";
+import type { Media, Event, Show, Address, Product, Customer } from "@repo/lib";
 
 function generateString(length: number): string {
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -118,6 +118,24 @@ export function generateAddress(address: Partial<Address> = {}): Address {
         ...address,
     }
 }
+
+export function generateCustomer(customer: Partial<Customer> = {}): Customer {
+  const id = Math.floor(Math.random() * 9999) + 1;
+
+  return {
+    id: id.toString(),
+    first_name: generateString(10),
+    last_name: generateString(10),
+    email: `${generateString(5)}@example.com`,
+    phone: generateString(10),
+    address: generateAddress(customer.address),
+    deleted_at: null,
+    created_at: "2021-06-01T00:00:00",
+    updated_at: "2021-06-01T00:00:00",
+    ...customer,
+  };
+}
+
 
 export function generateProduct(product: Partial<Product> = {}): Product {
   const id = Math.floor(Math.random() * 9999) + 1;
