@@ -32,7 +32,7 @@ describe('CreateEventForm', () => {
     );
 
     expect(screen.getByLabelText(/name/i)).toHaveValue('');
-    expect(screen.getByLabelText(/description/i)).toHaveValue('');
+    expect(screen.getByLabelText('Description')).toHaveValue('');
     expect(screen.getByLabelText(/service price/i)).toHaveValue('€ 0,00');
     expect(screen.getByLabelText(/enabled/i)).not.toBeChecked();
   });
@@ -47,11 +47,11 @@ describe('CreateEventForm', () => {
     const user = userEvent.setup();
 
     await user.type(screen.getByLabelText(/name/i), 'Test Event');
-    await user.type(screen.getByLabelText(/description/i), 'Test Description');
+    await user.type(screen.getByLabelText('Description'), 'Test Description');
     await user.type(screen.getByLabelText(/service price/i), '12.34');
 
     expect(screen.getByLabelText(/name/i)).toHaveValue('Test Event');
-    expect(screen.getByLabelText(/description/i)).toHaveValue(
+    expect(screen.getByLabelText('Description')).toHaveValue(
       'Test Description'
     );
     expect(screen.getByLabelText(/service price/i)).toHaveValue('€ 12,34');
@@ -92,7 +92,7 @@ describe('CreateEventForm', () => {
     const user = userEvent.setup();
 
     await user.type(screen.getByLabelText(/name/i), 'Test Event');
-    await user.type(screen.getByLabelText(/description/i), 'Test Description');
+    await user.type(screen.getByLabelText('Description'), 'Test Description');
     await user.type(screen.getByLabelText(/service price/i), '12.34');
     await user.click(screen.getByLabelText(/enabled/i));
 
