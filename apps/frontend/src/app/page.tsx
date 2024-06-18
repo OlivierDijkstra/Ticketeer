@@ -1,18 +1,25 @@
-import dns from 'node:dns';
+import { createUrl, type Event } from '@repo/lib';
 
-import { API_URL } from "@/lib/constants"
+import EventCard from '@/components/EventCard';
+import { fetchJson } from '@/lib/fetch';
 
-dns.setDefaultResultOrder('ipv4first');
 
 export default async function Page() {
-    const res = await fetch(API_URL + '/api/events', {
-        cache: 'no-cache'
+    const eventsUrl = createUrl('/api/events', {
+        'enabled': true
     })
-    const data = await res.json()
+
+    const events = await fetchJson<Event[]>(eventsUrl, {
+      cache: 'no-cache',
+    });
 
     return (
-        <div>
-            <pre>{JSON.stringify(data, null, 2)}</pre>
-        </div>
+        <main className='container'>
+            {
+                events.map((event) => (
+                    <EventCard key={event.id} event={event} />
+                ))
+            }
+        </main>
     )
 }

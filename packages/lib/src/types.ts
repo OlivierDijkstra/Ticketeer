@@ -50,7 +50,8 @@ export type Event = {
   name: string;
   slug: string;
   statistics_slug: string;
-  description: string;
+  description: string | null;
+  description_short: string | null;
   enabled: boolean;
   featured: boolean;
   service_price: number;
