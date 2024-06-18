@@ -27,6 +27,9 @@
     "test": {
       "dependsOn": ["^test"]
     },
+    "test:coverage": {
+      "dependsOn": ["^test:coverage"]
+    },
     "build": {
       "dependsOn": ["^build"],
       "inputs": ["$TURBO_DEFAULT$", ".env", ".env.*"],

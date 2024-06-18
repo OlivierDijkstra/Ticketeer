@@ -7,6 +7,7 @@
     "dev": "turbo dev serve --parallel",
     "serve": "turbo serve",
     "test": "turbo test",
+    "test:coverage": "turbo test:coverage",
     "lint": "turbo lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "build": "turbo build"

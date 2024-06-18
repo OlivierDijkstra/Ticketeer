@@ -9,7 +9,8 @@
         "dev": "vite dev",
         "serve": "php artisan serve",
         "lint": "./vendor/bin/pint",
-        "test": "./vendor/bin/phpunit",
+        "test": "php artisan test",
+        "test:coverage": "php artisan test --coverage",
         "build": "vite build"
     },
     "devDependencies": {
