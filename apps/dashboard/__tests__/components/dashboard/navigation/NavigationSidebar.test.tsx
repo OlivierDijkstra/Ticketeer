@@ -1,7 +1,6 @@
-
 import { render, screen } from '@testing-library/react';
 import { usePathname } from 'next/navigation';
-import type {Mock } from 'vitest';
+import type { Mock } from 'vitest';
 import { beforeEach } from 'vitest';
 import { describe, expect, test, vi } from 'vitest';
 

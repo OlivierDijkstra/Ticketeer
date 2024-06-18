@@ -51,7 +51,9 @@ describe('ProductTitleCard', () => {
       </TooltipProvider>
     );
 
-    const editButton = screen.getAllByRole('button', { name: /edit value/i })[0] as HTMLElement;
+    const editButton = screen.getAllByRole('button', {
+      name: /edit value/i,
+    })[0] as HTMLElement;
     await userEvent.click(editButton);
 
     const inputField = screen.getByRole('textbox');
@@ -74,7 +76,9 @@ describe('ProductTitleCard', () => {
       </TooltipProvider>
     );
 
-    const editButton = screen.getAllByRole('button', { name: /edit value/i })[1] as HTMLElement;
+    const editButton = screen.getAllByRole('button', {
+      name: /edit value/i,
+    })[1] as HTMLElement;
     await userEvent.click(editButton);
 
     const textareaField = screen.getByRole('textbox');

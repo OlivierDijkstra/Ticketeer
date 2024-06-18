@@ -129,7 +129,7 @@ export default function LinkProductForm({
       const formatted = new Intl.NumberFormat('nl-NL', {
         style: 'currency',
         currency: 'EUR',
-      // @ts-expect-error: selectedProduct is not defined
+        // @ts-expect-error: selectedProduct is not defined
       }).format(selectedProduct.price);
 
       label += ` - Original: ${formatted}`;

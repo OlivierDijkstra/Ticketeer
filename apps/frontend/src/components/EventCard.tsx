@@ -32,7 +32,7 @@ export default function EventCard({ event }: { event: Event }) {
           <div className='flex justify-between'>
             <CardDescription>{event.description_short}</CardDescription>
 
-            <ArrowRight className='mt-1 group-hover:translate-x-1 transition-transform' />
+            <ArrowRight className='mt-1 transition-transform group-hover:translate-x-1' />
           </div>
         </CardContent>
       </Link>

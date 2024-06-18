@@ -14,7 +14,7 @@ export default async function Page({
 
   return (
     <div className='space-y-4'>
-      <div className='lg:grid-cols-2 grid gap-4'>
+      <div className='grid gap-4 lg:grid-cols-2'>
         <ProductTitleCard product={product} />
 
         <Card>

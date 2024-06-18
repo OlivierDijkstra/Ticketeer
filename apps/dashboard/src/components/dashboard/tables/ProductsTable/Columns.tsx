@@ -76,7 +76,7 @@ export function columns(data: ColumnData): ColumnDef<Product>[] {
           <Badge />
         );
       },
-    }
+    },
   ];
 
   if (data.params.show) {

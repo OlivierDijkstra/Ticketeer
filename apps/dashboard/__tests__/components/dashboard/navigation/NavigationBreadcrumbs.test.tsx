@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { usePathname } from 'next/navigation';
-import type { Mock} from 'vitest';
+import type { Mock } from 'vitest';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 
 import NavigationBreadcrumbs from '@/components/dashboard/navigation/NavigationBreadcrumbs';
@@ -34,7 +34,9 @@ describe('NavigationBreadcrumbs', () => {
   });
 
   test('truncates long path names', () => {
-    (usePathname as Mock).mockReturnValue('/dashboard/settings/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
+    (usePathname as Mock).mockReturnValue(
+      '/dashboard/settings/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+    );
 
     render(<NavigationBreadcrumbs />);
 

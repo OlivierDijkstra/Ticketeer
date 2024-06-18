@@ -1,5 +1,10 @@
 import type { Customer, Product, Show } from '@repo/lib';
-  import { generateCustomer, generateEvent, generateProduct,generateShow } from '@repo/lib';
+import {
+  generateCustomer,
+  generateEvent,
+  generateProduct,
+  generateShow,
+} from '@repo/lib';
 import {
   act,
   fireEvent,
@@ -42,10 +47,20 @@ vi.mock('next/navigation', () => ({
 describe('CreateOrderForm', () => {
   const mockCallback = vi.fn();
 
-
-  const customers: Customer[] = [generateCustomer({ id: '123', email: 'customer1@example.com', first_name: "John", last_name: "Doe" })];
-  const shows: Show[] = [generateShow({ id: 1, event: generateEvent({ id: 1, name: 'Event 1' }) })];
-  const products: Product[] = [generateProduct({ id: 1, name: 'Product 1', price: '1000' })];
+  const customers: Customer[] = [
+    generateCustomer({
+      id: '123',
+      email: 'customer1@example.com',
+      first_name: 'John',
+      last_name: 'Doe',
+    }),
+  ];
+  const shows: Show[] = [
+    generateShow({ id: 1, event: generateEvent({ id: 1, name: 'Event 1' }) }),
+  ];
+  const products: Product[] = [
+    generateProduct({ id: 1, name: 'Product 1', price: '1000' }),
+  ];
 
   beforeEach(() => {
     vi.clearAllMocks();

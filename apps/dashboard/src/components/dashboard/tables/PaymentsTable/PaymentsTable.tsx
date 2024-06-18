@@ -27,13 +27,18 @@ export default async function PaymentsTable({
 
   return (
     <Card>
-      <CardHeader className='flex-row justify-between items-center gap-2'>
+      <CardHeader className='flex-row items-center justify-between gap-2'>
         <CardTitle>Payments</CardTitle>
 
         <CreatePayment order={order} />
       </CardHeader>
       <CardContent>
-        <DataTable columns={columns} data={payments} refetch={getPayments} tableId='payments' />
+        <DataTable
+          columns={columns}
+          data={payments}
+          refetch={getPayments}
+          tableId='payments'
+        />
       </CardContent>
     </Card>
   );

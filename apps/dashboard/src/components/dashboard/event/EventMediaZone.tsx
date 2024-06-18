@@ -121,7 +121,11 @@ export default function EventMediaZone({ event }: { event: Event }) {
         <div className='auto-cols-small grid gap-4'>
           {mediaState?.map((media) => (
             <EventMedia
-              className={media.custom_properties.cover ? 'col-span-full row-start-1 col-start-1' : ''}
+              className={
+                media.custom_properties.cover
+                  ? 'col-span-full col-start-1 row-start-1'
+                  : ''
+              }
               key={media.id}
               media={media}
               onDelete={() => handleDeleteMedia(media)}
@@ -133,7 +137,7 @@ export default function EventMediaZone({ event }: { event: Event }) {
             {...getRootProps()}
             className={cn([
               'grid aspect-video w-full cursor-pointer place-items-center rounded transition-all',
-              'border border-dashed p-8 bg-muted/50',
+              'border border-dashed bg-muted/50 p-8',
               'text-sm text-muted-foreground',
               'hover:bg-muted',
               {
@@ -151,7 +155,7 @@ export default function EventMediaZone({ event }: { event: Event }) {
               <Upload />
             )}
           </div>
-        </div>        
+        </div>
       </CardContent>
     </Card>
   );

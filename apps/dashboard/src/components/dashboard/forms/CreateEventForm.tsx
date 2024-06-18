@@ -147,8 +147,8 @@ export default function CreateEventForm({
                 <Textarea {...field} />
               </FormControl>
               <FormDescription>
-                A very short description of the event. This will be displayed on the
-                website.
+                A very short description of the event. This will be displayed on
+                the website.
               </FormDescription>
               <FormMessage />
             </FormItem>

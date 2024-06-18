@@ -22,11 +22,15 @@ describe('NavigationSheet', () => {
     const toggleButton = screen.getByRole('button', { name: /toggle menu/i });
     fireEvent.click(toggleButton);
 
-    expect(screen.getByRole('link', { name: /dashboard/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole('link', { name: /dashboard/i })
+    ).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /events/i })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /products/i })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /orders/i })).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: /customers/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole('link', { name: /customers/i })
+    ).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /settings/i })).toBeInTheDocument();
   });
 
@@ -38,7 +42,9 @@ describe('NavigationSheet', () => {
     const toggleButton = screen.getByRole('button', { name: /toggle menu/i });
     fireEvent.click(toggleButton);
 
-    expect(screen.getByRole('link', { name: /products/i })).toHaveClass('text-foreground');
+    expect(screen.getByRole('link', { name: /products/i })).toHaveClass(
+      'text-foreground'
+    );
   });
 
   test('toggles the sheet visibility', () => {

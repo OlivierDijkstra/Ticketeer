@@ -27,7 +27,6 @@ vi.mock('next/navigation', () => ({
   }),
 }));
 
-
 const mockEvent: Event = generateEvent({
   id: 1,
   name: 'Test Event',
@@ -37,7 +36,7 @@ const mockEvent: Event = generateEvent({
 
 const mockShow: Show = generateShow({
   id: 1,
-})
+});
 
 const mockRouter = {
   push: vi.fn(),

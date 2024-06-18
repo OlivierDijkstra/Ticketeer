@@ -23,9 +23,7 @@ import {
   CommandItem,
   CommandList,
 } from '@/components/ui/command';
-import {
-  DEFAULT_PRETTY_DATE_FORMAT,
-} from '@/lib/constants';
+import { DEFAULT_PRETTY_DATE_FORMAT } from '@/lib/constants';
 import { searchAction } from '@/server/actions/search';
 
 type SearchResults = {

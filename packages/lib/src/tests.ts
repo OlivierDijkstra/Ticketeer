@@ -1,9 +1,19 @@
-// eslint-disable-next-line no-redeclare
-import type { Media, Event, Show, Address, Product, Customer, User, Order } from "@repo/lib";
+/* eslint-disable no-redeclare */
+import type {
+  Media,
+  Event,
+  Show,
+  Address,
+  Product,
+  Customer,
+  User,
+  Order,
+} from "@repo/lib";
 
 function generateString(length: number): string {
-  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  let result = '';
+  const characters =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  let result = "";
   for (let i = 0; i < length; i++) {
     result += characters.charAt(Math.floor(Math.random() * characters.length));
   }
@@ -132,15 +142,15 @@ export function generateShow(show: Partial<Show> = {}): Show {
 }
 
 export function generateAddress(address: Partial<Address> = {}): Address {
-    return {
-        city: generateString(10),
-        country: generateString(10),
-        postal_code: generateString(6),
-        province: generateString(10),
-        street: generateString(5),
-        street2: null,
-        ...address,
-    }
+  return {
+    city: generateString(10),
+    country: generateString(10),
+    postal_code: generateString(6),
+    province: generateString(10),
+    street: generateString(5),
+    street2: null,
+    ...address,
+  };
 }
 
 export function generateCustomer(customer: Partial<Customer> = {}): Customer {
@@ -159,7 +169,6 @@ export function generateCustomer(customer: Partial<Customer> = {}): Customer {
     ...customer,
   };
 }
-
 
 export function generateProduct(product: Partial<Product> = {}): Product {
   const id = Math.floor(Math.random() * 9999) + 1;
@@ -189,7 +198,7 @@ export function generateOrder(order: Partial<Order> = {}): Order {
     customer_id: customer_id.toString(),
     show_id,
     order_number,
-    status: 'pending',
+    status: "pending",
     description: generateString(50),
     service_fee: Math.random() * 100,
     total: Math.random() * 1000,

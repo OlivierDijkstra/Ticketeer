@@ -2,7 +2,7 @@ import type { Customer } from '@repo/lib';
 import { generateCustomer } from '@repo/lib';
 import { render, screen } from '@testing-library/react';
 import { useParams } from 'next/navigation';
-import type { Mock} from 'vitest';
+import type { Mock } from 'vitest';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 
 import CustomerCard from '@/components/dashboard/order/CustomerCard';

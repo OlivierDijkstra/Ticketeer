@@ -41,7 +41,7 @@ export default async function Page({
 
       <EventTitleCard event={event} />
 
-      <div className='grid lg:grid-cols-2 gap-4 '>
+      <div className='grid gap-4 lg:grid-cols-2 '>
         <EventMediaZone event={event} />
 
         <Suspense fallback={<SkeletonGraph />}>

@@ -3,16 +3,16 @@ import type { ResponseCookie } from "next/dist/compiled/@edge-runtime/cookies";
 import type { FieldErrors, FieldValues } from "react-hook-form";
 import { twMerge } from "tailwind-merge";
 
-export * from './tests';
+export * from "./tests";
 
-export * from './types';
+export * from "./types";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
 export function formHasErrors(
-  errors: Record<string, string> | FieldErrors<FieldValues>
+  errors: Record<string, string> | FieldErrors<FieldValues>,
 ) {
   return Object.keys(errors).length > 0;
 }
@@ -112,7 +112,7 @@ export function createUrl(
   params: Record<
     string,
     string | number | boolean | null | undefined | Record<string, string>
-  >
+  >,
 ): string {
   // Generate the query string from the params object
   const queryString = Object.keys(params)

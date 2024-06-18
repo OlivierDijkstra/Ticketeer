@@ -32,11 +32,13 @@ const mockOrder: Order = generateOrder({
     //   pivot: { amount: 2, price: '1000', adjusted_price: 900 },
     // },
     generateProduct({
-        name: 'Product 1',
-        pivot: {
-            amount: 2, price: '10', adjusted_price: '9', 
-        }
-    })
+      name: 'Product 1',
+      pivot: {
+        amount: 2,
+        price: '10',
+        adjusted_price: '9',
+      },
+    }),
   ],
   total: 20,
   service_fee: 1,

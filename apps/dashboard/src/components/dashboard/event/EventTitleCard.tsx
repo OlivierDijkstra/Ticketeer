@@ -30,7 +30,6 @@ export default function EventTitleCard({ event }: { event: Event }) {
 
     setLoading(true);
 
-
     await toast.promise(
       updateEventAction({
         event_slug: event.slug,
@@ -98,13 +97,8 @@ export default function EventTitleCard({ event }: { event: Event }) {
   }
 
   return (
-    <Card className={cn(
-      'transition-opacity',
-      loading ? 'opacity-50' : ''
-    )}>
-      <CardHeader
-        className='bg-muted/50'
-      >
+    <Card className={cn('transition-opacity', loading ? 'opacity-50' : '')}>
+      <CardHeader className='bg-muted/50'>
         <div className='flex justify-between'>
           <div className='space-y-1.5'>
             <CardTitle>Event</CardTitle>
@@ -121,9 +115,7 @@ export default function EventTitleCard({ event }: { event: Event }) {
         </div>
       </CardHeader>
 
-      <CardContent
-        className='mt-4'
-      >
+      <CardContent className='mt-4'>
         <EditableField
           value={eventData.name}
           onChange={handleNameChange}
@@ -142,11 +134,10 @@ export default function EventTitleCard({ event }: { event: Event }) {
           placeholder='No description set'
         />
 
-        <h3 className='text-sm font-medium mt-4'>Short description</h3>
+        <h3 className='mt-4 text-sm font-medium'>Short description</h3>
         <p className='text-sm text-muted-foreground'>
           This description will be shown on the event card on the home page
         </p>
-        
 
         <EditableField
           type='textarea'

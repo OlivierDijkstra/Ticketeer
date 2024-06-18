@@ -20,28 +20,26 @@ export default function CustomerCard({ customer }: { customer?: Customer }) {
           <h1 className='font-semibold tracking-tight'>Customer details</h1>
         </div>
 
-        {
-          customer && !params.customer && (
-            <div>
-              <Link href={`/dashboard/customers/${customer?.id}`}>
-                <Button size='sm' variant='outline'>
-                  <Eye className='mr-2 !size-3' /> View customer
-                </Button>
-              </Link>
-            </div>
-          )
-        }
+        {customer && !params.customer && (
+          <div>
+            <Link href={`/dashboard/customers/${customer?.id}`}>
+              <Button size='sm' variant='outline'>
+                <Eye className='mr-2 !size-3' /> View customer
+              </Button>
+            </Link>
+          </div>
+        )}
       </CardHeader>
 
       <CardContent className='mt-4 text-sm'>
         <ul className='grid gap-3'>
           <li className='flex items-center justify-between'>
             <span className='text-muted-foreground'>Name</span>
-            {
-              customer ?
-                (<span>{`${customer?.first_name} ${customer?.last_name}`}</span>)
-                : (<span>-</span>)
-            }
+            {customer ? (
+              <span>{`${customer?.first_name} ${customer?.last_name}`}</span>
+            ) : (
+              <span>-</span>
+            )}
           </li>
           <li className='flex items-center justify-between'>
             <span className='text-muted-foreground'>Email</span>

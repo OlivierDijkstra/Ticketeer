@@ -17,9 +17,7 @@ export default async function Page({
   return (
     <div className='space-y-4'>
       <div className='grid gap-4 lg:grid-cols-2'>
-        <CustomerCard
-          customer={customer}
-        />
+        <CustomerCard customer={customer} />
       </div>
     </div>
   );

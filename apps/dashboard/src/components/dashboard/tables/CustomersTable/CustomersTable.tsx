@@ -9,7 +9,7 @@ import { columns } from './Columns';
 export default async function CustomersTable({
   show,
   page,
-  sort
+  sort,
 }: {
   show?: Show;
   page?: string;

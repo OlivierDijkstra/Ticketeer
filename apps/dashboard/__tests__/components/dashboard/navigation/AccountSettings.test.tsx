@@ -25,11 +25,13 @@ describe('AccountSettings', () => {
     const user = userEvent.setup();
 
     const toggleButton = screen.getByRole('button', { name: /user/i });
-    
+
     await user.click(toggleButton);
 
     expect(screen.getByText('John Doe')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /theme switcher/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: /theme switcher/i })
+    ).toBeInTheDocument();
   });
 
   test('calls signOut on logout click', async () => {
@@ -38,11 +40,11 @@ describe('AccountSettings', () => {
     const user = userEvent.setup();
 
     const toggleButton = screen.getByRole('button', { name: /user/i });
-    
+
     await user.click(toggleButton);
 
     const logoutButton = screen.getByRole('menuitem', { name: /logout/i });
-    
+
     await user.click(logoutButton);
 
     expect(signOut).toHaveBeenCalled();

@@ -21,8 +21,8 @@ export default async function Page({
   });
 
   return (
-    <div className='grid md:grid-cols-3 gap-4'>
-      <div className='space-y-4 row-start-2 md:row-start-1 md:col-span-2'>
+    <div className='grid gap-4 md:grid-cols-3'>
+      <div className='row-start-2 space-y-4 md:col-span-2 md:row-start-1'>
         <Suspense fallback={<SkeletonGraph />}>
           <PaymentsTable
             page={searchParams?.page_payments}

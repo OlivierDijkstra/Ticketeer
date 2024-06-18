@@ -1,5 +1,5 @@
 import type { Show } from '@repo/lib';
-import { generateEvent,generateShow } from '@repo/lib';
+import { generateEvent, generateShow } from '@repo/lib';
 import { render, screen } from '@testing-library/react';
 import { format } from 'date-fns';
 import { describe, expect, test } from 'vitest';

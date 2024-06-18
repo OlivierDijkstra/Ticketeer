@@ -37,10 +37,10 @@ export default function CreateOrderForm({
 }) {
   const params = useParams<{ show: string }>();
 
-  const schema = z
-    .object({
-      show_id: z.number(),
-      customer: z.object({
+  const schema = z.object({
+    show_id: z.number(),
+    customer: z
+      .object({
         email: z.string().email(),
         first_name: z.string(),
         last_name: z.string(),
@@ -50,17 +50,18 @@ export default function CreateOrderForm({
         postal_code: z.string(),
         province: z.string(),
         phone: z.string().optional(),
-      }).optional(),
-      products: z.array(
-        z.object({
-          id: z.number(),
-          amount: z.number().min(1),
-          price: z.string().optional(),
-        }),
-        { message: 'You are required to have at least one product.' }
-      ),
-      note: z.string().optional(),
-    });
+      })
+      .optional(),
+    products: z.array(
+      z.object({
+        id: z.number(),
+        amount: z.number().min(1),
+        price: z.string().optional(),
+      }),
+      { message: 'You are required to have at least one product.' }
+    ),
+    note: z.string().optional(),
+  });
 
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),

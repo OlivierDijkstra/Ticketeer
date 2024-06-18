@@ -246,7 +246,9 @@ describe('OrderProductField', () => {
     const user = userEvent.setup();
 
     await act(async () => {
-      await user.click(screen.getByRole('combobox', { name: /products.0.id/i }));
+      await user.click(
+        screen.getByRole('combobox', { name: /products.0.id/i })
+      );
     });
 
     await waitFor(() => screen.getByText('Product 1', { selector: 'span' }));
@@ -255,7 +257,9 @@ describe('OrderProductField', () => {
       await user.click(screen.getByText('Product 1', { selector: 'span' }));
     });
 
-    expect(screen.getByRole('textbox', { name: /price/i })).toHaveValue('€ 10,00');
+    expect(screen.getByRole('textbox', { name: /price/i })).toHaveValue(
+      '€ 10,00'
+    );
   });
 
   test('sets product price automatically on product selection', async () => {
@@ -264,7 +268,9 @@ describe('OrderProductField', () => {
     const user = userEvent.setup();
 
     await act(async () => {
-      await user.click(screen.getByRole('combobox', { name: /products.0.id/i }));
+      await user.click(
+        screen.getByRole('combobox', { name: /products.0.id/i })
+      );
     });
 
     await waitFor(() => screen.getByText('Product 1', { selector: 'span' }));
@@ -273,7 +279,9 @@ describe('OrderProductField', () => {
       await user.click(screen.getByText('Product 1', { selector: 'span' }));
     });
 
-    expect(screen.getByRole('textbox', { name: /price/i })).toHaveValue('€ 10,00');
+    expect(screen.getByRole('textbox', { name: /price/i })).toHaveValue(
+      '€ 10,00'
+    );
   });
 
   test('allows manual price input after product selection', async () => {
@@ -282,7 +290,9 @@ describe('OrderProductField', () => {
     const user = userEvent.setup();
 
     await act(async () => {
-      await user.click(screen.getByRole('combobox', { name: /products.0.id/i }));
+      await user.click(
+        screen.getByRole('combobox', { name: /products.0.id/i })
+      );
     });
 
     await waitFor(() => screen.getByText('Product 1', { selector: 'span' }));

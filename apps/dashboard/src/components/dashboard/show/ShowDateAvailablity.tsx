@@ -38,7 +38,7 @@ export default function ShowTitleCard({ show }: { show: Show }) {
   }
 
   return (
-    <Card className={loading ? 'opacity-50 pointer-events-none' : ''}>
+    <Card className={loading ? 'pointer-events-none opacity-50' : ''}>
       <CardHeader className='bg-muted/50'>
         <div className='flex justify-between'>
           <CardTitle>Show</CardTitle>

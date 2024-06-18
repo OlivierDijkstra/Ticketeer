@@ -61,7 +61,10 @@ const ProductCombobox = ({
 
   function onChange(value: undefined | number | string | boolean) {
     field.onChange(value);
-    form.setValue(`products.${index}.price`, products?.find((product) => product.id === value)?.price);
+    form.setValue(
+      `products.${index}.price`,
+      products?.find((product) => product.id === value)?.price
+    );
   }
 
   return (
@@ -151,7 +154,10 @@ export default function OrderProductField({
   const previousProductId = useRef(null);
 
   const watcher = form.watch(`products.${index}.id`);
-  const memoizedProduct = useMemo(() => products?.find((product) => product.id === watcher), [products, watcher]);
+  const memoizedProduct = useMemo(
+    () => products?.find((product) => product.id === watcher),
+    [products, watcher]
+  );
 
   useEffect(() => {
     if (watcher && memoizedProduct && previousProductId.current !== watcher) {
@@ -226,4 +232,3 @@ export default function OrderProductField({
     </div>
   );
 }
-

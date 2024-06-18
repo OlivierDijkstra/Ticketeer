@@ -58,7 +58,7 @@ export async function createOrdersAction(data: {
   }
 
   redirect_url += 'dashboard/orders';
-  
+
   return await fetchWithAuth<
     Order & {
       payment_url: string;

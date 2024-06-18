@@ -118,7 +118,9 @@ export default function ProductPriceForm({ product }: { product: Product }) {
                     inputMode='numeric'
                     type='number'
                     value={field.value.toString()}
-                    onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
+                    onChange={(e) =>
+                      field.onChange(parseFloat(e.target.value) || 0)
+                    }
                   />
                 </FormControl>
                 <FormMessage />
@@ -127,7 +129,7 @@ export default function ProductPriceForm({ product }: { product: Product }) {
           />
         </div>
 
-        <div className='mt-4 flex gap-2 items-center justify-end'>
+        <div className='mt-4 flex items-center justify-end gap-2'>
           <Button
             size='sm'
             type='button'

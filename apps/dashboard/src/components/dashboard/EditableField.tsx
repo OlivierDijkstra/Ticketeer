@@ -163,7 +163,7 @@ export default function EditableField({
                 onClick={() => setIsEditing(!isEditing)}
                 size='icon'
                 variant='outline'
-                className='text-primary rounded-full'
+                className='rounded-full text-primary'
                 aria-label='edit value'
               >
                 <span className='sr-only'>{tooltipText}</span>

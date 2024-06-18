@@ -43,7 +43,18 @@ interface ComboboxProps {
 }
 
 export default function Combobox({
-  items, placeholder = 'Select item...', onOpenChange, onValueChange, onSearch, open, loading, value: valueProp, required, className, async, name,
+  items,
+  placeholder = 'Select item...',
+  onOpenChange,
+  onValueChange,
+  onSearch,
+  open,
+  loading,
+  value: valueProp,
+  required,
+  className,
+  async,
+  name,
 }: ComboboxProps) {
   const [data, setData] = useState(items);
   const [openState, setOpenState] = useState(open);
@@ -95,7 +106,8 @@ export default function Combobox({
                 name={`${name}-search`}
                 aria-label={`${name} search`}
                 className='m-0 flex h-9 w-full rounded-md border-none bg-transparent p-0 py-3 text-sm outline-none !ring-0 placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50'
-                onChange={(e) => onSearch && onSearch(e.target.value)} />
+                onChange={(e) => onSearch && onSearch(e.target.value)}
+              />
             </div>
           ) : (
             <CommandInput placeholder={placeholder} className='h-9' />
@@ -122,11 +134,13 @@ export default function Combobox({
                         setValue(newValue);
                         onValueChange?.(item.value);
                         setOpenState(false);
-                      } }
-                      disabled={required &&
+                      }}
+                      disabled={
+                        required &&
                         (async
-                          ? (value as { value: Value; })?.value === item.value
-                          : value === item.value)}
+                          ? (value as { value: Value })?.value === item.value
+                          : value === item.value)
+                      }
                     >
                       <div>
                         <span className='block'>{item.label}</span>
@@ -141,13 +155,14 @@ export default function Combobox({
                           'ml-2 h-4 w-4',
                           (
                             async
-                              ? (value as { value: Value; })?.value ===
-                              item.value
+                              ? (value as { value: Value })?.value ===
+                                item.value
                               : value === item.value
                           )
                             ? 'opacity-100'
                             : 'opacity-0'
-                        )} />
+                        )}
+                      />
                     </CommandItem>
                   ))}
                 </CommandGroup>

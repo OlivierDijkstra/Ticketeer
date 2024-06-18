@@ -33,10 +33,10 @@ export default function EventCard({ show }: { show: Show }) {
 
           <li className='flex items-center justify-between'>
             <span className='text-muted-foreground'>Time</span>
-            
-            <div className='flex justify-between text-center items-center space-x-2'>
+
+            <div className='flex items-center justify-between space-x-2 text-center'>
               <span>{format(new Date(show.start), DEFAULT_DATE_FORMAT)}</span>
-              <ArrowRight className='size-2 text-muted-foreground'/>
+              <ArrowRight className='size-2 text-muted-foreground' />
               <span>{format(new Date(show.end), DEFAULT_DATE_FORMAT)}</span>
             </div>
           </li>

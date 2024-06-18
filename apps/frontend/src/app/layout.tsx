@@ -21,7 +21,7 @@ export default function RootLayout({
     <html lang='en' suppressHydrationWarning>
       <body className={inter.className}>
         <nav className=' mb-2 h-12 bg-primary-foreground'>
-          <div className='container flex items-center h-full justify-center gap-2'>
+          <div className='container flex h-full items-center justify-center gap-2'>
             <span className='sr-only'>{process.env.NEXT_PUBLIC_APP_NAME}</span>
             <div className='flex items-center justify-center'>
               <Image

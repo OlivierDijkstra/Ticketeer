@@ -63,12 +63,12 @@ export type Event = {
 
 export type CreateEvent = Omit<
   Event,
-  | 'id'
-  | 'created_at'
-  | 'updated_at'
-  | 'deleted_at'
-  | 'media'
-  | 'statistics_slug'
+  | "id"
+  | "created_at"
+  | "updated_at"
+  | "deleted_at"
+  | "media"
+  | "statistics_slug"
 >;
 
 export type Show = {
@@ -88,13 +88,13 @@ export type Show = {
 
 export type CreateShow = Omit<
   Show,
-  | 'id'
-  | 'event_id'
-  | 'created_at'
-  | 'updated_at'
-  | 'deleted_at'
-  | 'address'
-  | 'event'
+  | "id"
+  | "event_id"
+  | "created_at"
+  | "updated_at"
+  | "deleted_at"
+  | "address"
+  | "event"
 >;
 
 export type ProductShowPivot = {
@@ -119,7 +119,7 @@ export type Product = {
 
 export type CreateProduct = Omit<
   Product,
-  'id' | 'created_at' | 'updated_at' | 'deleted_at'
+  "id" | "created_at" | "updated_at" | "deleted_at"
 >;
 
 export type LinkProduct = {
@@ -193,11 +193,11 @@ export type Customer = {
 };
 
 export type OrderStatus =
-  | 'pending'
-  | 'paid'
-  | 'cancelled'
-  | 'refunded'
-  | 'partially_refunded';
+  | "pending"
+  | "paid"
+  | "cancelled"
+  | "refunded"
+  | "partially_refunded";
 
 export type Order = {
   id: string;
@@ -221,15 +221,15 @@ export type Order = {
 };
 
 export type PaymentStatus =
-  | 'open'
-  | 'pending'
-  | 'processing'
-  | 'paid'
-  | 'cancelled'
-  | 'refunded'
-  | 'partially_refunded'
-  | 'failed'
-  | 'chargeback';
+  | "open"
+  | "pending"
+  | "processing"
+  | "paid"
+  | "cancelled"
+  | "refunded"
+  | "partially_refunded"
+  | "failed"
+  | "chargeback";
 
 export type Payment = {
   id: string;

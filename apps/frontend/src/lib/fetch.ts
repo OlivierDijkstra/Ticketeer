@@ -21,9 +21,8 @@ export async function fetchJson<T>(
     // Get the cookies from the repsonse
     const cookies = response.headers.getSetCookie();
     console.log(cookies);
-    return {} as T
+    return {} as T;
   }
-
 
   const data: T = await response.json();
   return data;

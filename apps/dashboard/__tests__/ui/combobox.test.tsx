@@ -179,7 +179,7 @@ describe('Combobox', () => {
         screen.getByRole('combobox', { name: /test-combobox/i })
       );
     });
-    
+
     await waitFor(() => {
       expect(screen.getByText(/loading/i)).toBeInTheDocument();
     });

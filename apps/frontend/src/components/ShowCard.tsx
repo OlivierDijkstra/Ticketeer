@@ -18,7 +18,7 @@ export default function ShowCard({ show }: { show: Show }) {
   const endDate = format(new Date(show.end), 'yyyy-MM-dd');
 
   return (
-    <Card className='transition-all hover:scale-[1.01] hover:shadow-lg contain-paint'>
+    <Card className='transition-all contain-paint hover:scale-[1.01] hover:shadow-lg'>
       <Link href={`/${show.event.slug}/${show.id}`}>
         <CardHeader className='bg-muted/50'>
           <CardDescription className='font-medium text-foreground/75'>

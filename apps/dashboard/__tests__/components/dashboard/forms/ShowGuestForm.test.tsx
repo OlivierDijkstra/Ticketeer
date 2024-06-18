@@ -49,7 +49,9 @@ describe('ShowGuestsForm', () => {
   test('handles guest removal and submission', async () => {
     render(<ShowGuestsForm show={mockShow} />);
 
-    const removeButtons = screen.getAllByRole('button', { name: /remove guest/i });
+    const removeButtons = screen.getAllByRole('button', {
+      name: /remove guest/i,
+    });
     expect(removeButtons).toHaveLength(2);
     fireEvent.click(removeButtons[0] as HTMLElement);
 

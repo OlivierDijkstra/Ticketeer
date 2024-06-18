@@ -42,18 +42,21 @@ To get started with TicketGate, follow these setup instructions for each compone
 ### Setup Instructions
 
 1. **Clone the Repository:**
+
    ```sh
    git clone https://github.com/your-repo/ticketgate-monorepo.git
    cd ticketgate-monorepo
    ```
 
 2. **Install Dependencies:**
+
    ```sh
    yarn install
    ```
 
 3. **Configure Environment Variables:**
    Copy the example environment files and adjust them if necessary.
+
    ```sh
    cp .env.example .env
    cp apps/api/.env.example apps/api/.env
@@ -62,10 +65,13 @@ To get started with TicketGate, follow these setup instructions for each compone
 
 4. **Build and Start the Containers:**
    For development:
+
    ```sh
    make dev
    ```
+
    For production:
+
    ```sh
    make prod
    ```
@@ -84,11 +90,13 @@ To get started with TicketGate, follow these setup instructions for each compone
 ### Additional Commands
 
 - **Run Tests:**
+
   ```sh
   yarn test
   ```
 
 - **Lint Code:**
+
   ```sh
   yarn lint
   ```
