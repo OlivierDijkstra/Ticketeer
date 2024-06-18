@@ -1,5 +1,6 @@
 import type { Event } from '@repo/lib';
 import { describe, expect, it } from 'vitest';
+
 import * as utils from '@/lib/utils'
 
 import generateMedia from '../helpers';

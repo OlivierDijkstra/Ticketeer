@@ -5,7 +5,7 @@
     "type": "module",
     "scripts": {
         "postinstall": "composer install",
-        "clean": "php artisan optimize:clear && rm -rf vendor node_modules storage/app/public/*",
+        "clean": "rm -rf vendor node_modules storage/app/public/*",
         "dev": "vite dev",
         "serve": "php artisan serve",
         "lint": "./vendor/bin/pint",
