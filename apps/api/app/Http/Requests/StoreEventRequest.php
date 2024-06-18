@@ -26,6 +26,7 @@ class StoreEventRequest extends FormRequest
             'slug' => 'required|string|max:255',
             'service_price' => 'required|numeric',
             'description' => 'nullable|string',
+            'description_short' => 'nullable|string',
             'enabled' => 'required|boolean',
             'featured' => 'required|boolean',
         ];
