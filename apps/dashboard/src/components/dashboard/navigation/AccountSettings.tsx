@@ -33,6 +33,7 @@ export default function AccountSettings({
         <Button
           variant='outline'
           size='icon'
+          aria-label='user'
           className='overflow-hidden rounded-full'
         >
           <User size={18} />

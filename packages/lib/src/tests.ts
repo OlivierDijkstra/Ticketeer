@@ -1,5 +1,5 @@
 // eslint-disable-next-line no-redeclare
-import type { Media, Event, Show, Address, Product, Customer } from "@repo/lib";
+import type { Media, Event, Show, Address, Product, Customer, User, Order } from "@repo/lib";
 
 function generateString(length: number): string {
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -8,6 +8,30 @@ function generateString(length: number): string {
     result += characters.charAt(Math.floor(Math.random() * characters.length));
   }
   return result;
+}
+
+export function generateUser({
+  id = generateString(10),
+  name = "John Doe",
+  email = "johndoe@example.com",
+  email_verified_at = null,
+  two_factor_secret = null,
+  two_factor_recovery_codes = null,
+  two_factor_confirmed_at = null,
+  created_at = new Date().toISOString(),
+  updated_at = new Date().toISOString(),
+}: Partial<User> = {}): User {
+  return {
+    id,
+    name,
+    email,
+    email_verified_at,
+    two_factor_secret,
+    two_factor_recovery_codes,
+    two_factor_confirmed_at,
+    created_at,
+    updated_at,
+  };
 }
 
 export function generateMedia({
@@ -151,5 +175,34 @@ export function generateProduct(product: Partial<Product> = {}): Product {
     updated_at: "2021-06-01T00:00:00",
     deleted_at: null,
     ...product,
+  };
+}
+
+export function generateOrder(order: Partial<Order> = {}): Order {
+  const id = Math.floor(Math.random() * 9999) + 1;
+  const show_id = Math.floor(Math.random() * 9999) + 1;
+  const customer_id = Math.floor(Math.random() * 9999) + 1;
+  const order_number = `ORD-${id}`;
+
+  return {
+    id: id.toString(),
+    customer_id: customer_id.toString(),
+    show_id,
+    order_number,
+    status: 'pending',
+    description: generateString(50),
+    service_fee: Math.random() * 100,
+    total: Math.random() * 1000,
+    disount: Math.random() * 100,
+    paid_at: null,
+    deleted_at: null,
+    created_at: "2021-06-01T00:00:00",
+    updated_at: "2021-06-01T00:00:00",
+    customer: generateCustomer(),
+    show: generateShow(),
+    event: generateEvent(),
+    products: [generateProduct()],
+    payments: [],
+    ...order,
   };
 }

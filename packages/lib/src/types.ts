@@ -98,7 +98,7 @@ export type CreateShow = Omit<
 >;
 
 export type ProductShowPivot = {
-  adjusted_price?: number;
+  adjusted_price?: string;
   price?: string;
   amount: number;
   enabled?: boolean;
@@ -124,7 +124,7 @@ export type CreateProduct = Omit<
 
 export type LinkProduct = {
   product_id: number;
-  adjusted_price: number;
+  adjusted_price: string;
   is_upsell: boolean;
   amount: number;
   enabled: boolean;

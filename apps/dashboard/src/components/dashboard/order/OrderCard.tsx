@@ -93,9 +93,11 @@ export default function OrderCard({ order }: { order: Order }) {
                 {product.pivot?.adjusted_price && (
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <Badge className='h-3 w-10 self-end px-0.5 text-[0.5rem]'>
-                        Adjusted
-                      </Badge>
+                      <span>
+                        <Badge className='h-3 w-10 self-end px-0.5 text-[0.5rem]'>
+                          Adjusted
+                        </Badge>
+                      </span>
                     </TooltipTrigger>
                     <TooltipContent>
                       <p className='flex flex-wrap gap-1 text-xs font-normal'>

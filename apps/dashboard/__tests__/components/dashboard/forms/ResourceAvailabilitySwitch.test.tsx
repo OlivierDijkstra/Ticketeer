@@ -1,5 +1,5 @@
-import type { Event } from '@repo/lib';
-import { generateEvent } from '@repo/lib';
+import type { Event, Show } from '@repo/lib';
+import { generateEvent, generateShow } from '@repo/lib';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { useRouter } from 'next/navigation';
@@ -9,16 +9,21 @@ import { beforeEach, describe, expect, test, vi } from 'vitest';
 import ResourceAvailabilitySwitch from '@/components/dashboard/forms/ResourceAvailabilitySwitch';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { updateEventAction } from '@/server/actions/events';
-
+import { updateShowAction } from '@/server/actions/shows';
 
 vi.mock('@/server/actions/events', () => ({
   updateEventAction: vi.fn(),
+}));
+
+vi.mock('@/server/actions/shows', () => ({
+  updateShowAction: vi.fn(),
 }));
 
 vi.mock('next/navigation', () => ({
   useRouter: vi.fn(),
   useParams: vi.fn().mockReturnValue({
     event: 'test-event',
+    show: '1',
   }),
 }));
 
@@ -27,7 +32,12 @@ const mockEvent: Event = generateEvent({
   id: 1,
   name: 'Test Event',
   description: 'Test Description',
+  enabled: true,
 });
+
+const mockShow: Show = generateShow({
+  id: 1,
+})
 
 const mockRouter = {
   push: vi.fn(),
@@ -71,7 +81,7 @@ describe('ResourceAvailabilitySwitch', () => {
     await waitFor(() => expect(switchElement).not.toBeDisabled());
   });
 
-  test('calls updateApiResource with correct data', async () => {
+  test('calls updateEventAction with correct data', async () => {
     const updatedEvent = { ...mockEvent, enabled: false };
     (updateEventAction as Mock).mockResolvedValue(updatedEvent);
 
@@ -90,6 +100,34 @@ describe('ResourceAvailabilitySwitch', () => {
     await waitFor(() => {
       expect(updateEventAction).toHaveBeenCalledWith({
         event_slug: 'test-event',
+        data: {
+          enabled: false,
+        },
+      });
+    });
+
+    expect(switchElement).not.toBeChecked();
+  });
+
+  test('calls updateShowAction with correct data', async () => {
+    const updatedShow = { ...mockShow, enabled: false };
+    (updateShowAction as Mock).mockResolvedValue(updatedShow);
+
+    render(
+      <TooltipProvider>
+        <ResourceAvailabilitySwitch type='show' data={mockShow} />
+      </TooltipProvider>
+    );
+
+    const switchElement = screen.getByRole('switch');
+
+    expect(switchElement).toBeChecked();
+
+    await userEvent.click(switchElement);
+
+    await waitFor(() => {
+      expect(updateShowAction).toHaveBeenCalledWith({
+        show_id: 1,
         data: {
           enabled: false,
         },

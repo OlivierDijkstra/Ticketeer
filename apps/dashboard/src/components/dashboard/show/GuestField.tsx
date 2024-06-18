@@ -53,7 +53,8 @@ export default function GuestField({
             <span className='text-sm'>{guest}</span>
 
             <Button
-              name='remove-guest'
+              name='remove guest'
+              aria-label='remove guest'
               type='button'
               onClick={() => removeGuest(index)}
               size='icon'

@@ -164,6 +164,7 @@ export default function EditableField({
                 size='icon'
                 variant='outline'
                 className='text-primary rounded-full'
+                aria-label='edit value'
               >
                 <span className='sr-only'>{tooltipText}</span>
                 <Pencil />

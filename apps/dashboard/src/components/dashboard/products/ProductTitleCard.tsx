@@ -86,10 +86,10 @@ export default function ProductTitleCard({ product }: { product: Product }) {
         },
       });
 
-      setUpsell(data.is_upsell);
+      setUpsell(data?.is_upsell);
 
       toast.success(
-        data.is_upsell ? 'Product is now an upsell' : 'Product is now a ticket'
+        data?.is_upsell ? 'Product is now an upsell' : 'Product is now a ticket'
       );
     } catch (error) {
       toast.error('Failed to update upsell status', {
@@ -140,7 +140,7 @@ export default function ProductTitleCard({ product }: { product: Product }) {
         className={cn(['transition-opacity', loading ? 'opacity-50' : ''])}
       >
         <EditableField
-          value={productData.name}
+          value={productData?.name}
           onChange={handleNameChange}
           className='text-xl font-semibold'
           tooltipText='Edit product name'
@@ -150,7 +150,7 @@ export default function ProductTitleCard({ product }: { product: Product }) {
 
         <EditableField
           type='textarea'
-          value={productData.description}
+          value={productData?.description}
           onChange={handleDescriptionChange}
           className='text-sm text-muted-foreground'
           tooltipText='Edit product description'
