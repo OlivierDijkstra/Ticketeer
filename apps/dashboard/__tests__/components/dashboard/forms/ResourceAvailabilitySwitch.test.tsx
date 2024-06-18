@@ -1,4 +1,5 @@
 import type { Event } from '@repo/lib';
+import { generateEvent } from '@repo/lib';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { useRouter } from 'next/navigation';
@@ -8,6 +9,7 @@ import { beforeEach, describe, expect, test, vi } from 'vitest';
 import ResourceAvailabilitySwitch from '@/components/dashboard/forms/ResourceAvailabilitySwitch';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { updateEventAction } from '@/server/actions/events';
+
 
 vi.mock('@/server/actions/events', () => ({
   updateEventAction: vi.fn(),
@@ -20,20 +22,12 @@ vi.mock('next/navigation', () => ({
   }),
 }));
 
-const mockEvent: Event = {
+
+const mockEvent: Event = generateEvent({
   id: 1,
   name: 'Test Event',
-  slug: 'test-event',
   description: 'Test Description',
-  service_price: 0,
-  enabled: true,
-  featured: false,
-  media: [],
-  statistics_slug: 'test-event',
-  created_at: '2021-06-01T00:00:00',
-  updated_at: '2021-06-01T00:00:00',
-  deleted_at: null,
-};
+});
 
 const mockRouter = {
   push: vi.fn(),

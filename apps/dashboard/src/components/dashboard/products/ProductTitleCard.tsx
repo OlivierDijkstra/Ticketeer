@@ -27,8 +27,10 @@ export default function ProductTitleCard({ product }: { product: Product }) {
   const [loading, setLoading] = useState(false);
   const [upsell, setUpsell] = useState(product.is_upsell);
 
-  async function handleNameChange(value: string) {
+  async function handleNameChange(value: string | null) {
     setLoading(true);
+
+    if (!value) return;
 
     await toast.promise(
       updateProductAction({
@@ -50,7 +52,7 @@ export default function ProductTitleCard({ product }: { product: Product }) {
     setLoading(false);
   }
 
-  async function handleDescriptionChange(value: string) {
+  async function handleDescriptionChange(value: string | null) {
     setLoading(true);
 
     try {

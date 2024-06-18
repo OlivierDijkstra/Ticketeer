@@ -35,6 +35,7 @@ trait HandlesPaginationAndFiltering
         // Apply pagination only if 'page' parameter is present
         if ($request->has('page') || $request->has('per_page')) {
             $results = $this->paginate($request, $query);
+
             return $this->flattenPivotFields($results, $request);
         }
 

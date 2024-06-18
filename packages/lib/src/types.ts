@@ -107,7 +107,7 @@ export type ProductShowPivot = {
 export type Product = {
   id: number;
   name: string;
-  description: string;
+  description: string | null;
   price: string;
   vat: number;
   is_upsell: boolean;

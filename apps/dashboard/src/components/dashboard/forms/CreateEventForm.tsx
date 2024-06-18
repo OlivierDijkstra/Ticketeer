@@ -44,6 +44,12 @@ export default function CreateEventForm({
         message: 'Description must be at most 255 characters long',
       })
       .optional(),
+    description_short: z
+      .string()
+      .max(100, {
+        message: 'Short description must be at most 100 characters long',
+      })
+      .optional(),
     enabled: z.boolean().optional(),
     service_price: z.number().min(0),
   });
@@ -53,6 +59,7 @@ export default function CreateEventForm({
     defaultValues: {
       name: '',
       description: '',
+      description_short: '',
       enabled: false,
       service_price: 0,
     },
@@ -66,7 +73,7 @@ export default function CreateEventForm({
         data: {
           ...data,
           description: data.description || '',
-
+          description_short: data.description_short || '',
           enabled: data.enabled || false,
           slug,
           featured: false,
@@ -123,6 +130,24 @@ export default function CreateEventForm({
               </FormControl>
               <FormDescription>
                 A short description of the event. This will be displayed on the
+                website.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name='description_short'
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Short Description</FormLabel>
+              <FormControl>
+                <Textarea {...field} />
+              </FormControl>
+              <FormDescription>
+                A very short description of the event. This will be displayed on the
                 website.
               </FormDescription>
               <FormMessage />
