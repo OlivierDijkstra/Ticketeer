@@ -98,7 +98,7 @@ describe('fetchWithAuth', () => {
 
     const headers = fetchMock.mock.calls[0][1].headers;
     expect(headers.get('Cookie')).toEqual(
-      'laravel_session=custom-session-cookie'
+      'XSRF-TOKEN=test-xsrf-token'
     );
     expect(result).toEqual(mockResponse);
   });
