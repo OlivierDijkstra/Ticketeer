@@ -110,7 +110,7 @@ export default function EditableField({
         return;
       }
 
-      confirmChange();
+      await confirmChange();
     }
   }
 

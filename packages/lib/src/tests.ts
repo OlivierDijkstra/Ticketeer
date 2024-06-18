@@ -202,7 +202,7 @@ export function generateOrder(order: Partial<Order> = {}): Order {
     description: generateString(50),
     service_fee: Math.random() * 100,
     total: Math.random() * 1000,
-    disount: Math.random() * 100,
+    discount: Math.random() * 100,
     paid_at: null,
     deleted_at: null,
     created_at: "2021-06-01T00:00:00",

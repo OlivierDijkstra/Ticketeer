@@ -208,7 +208,7 @@ export type Order = {
   description: string | null;
   service_fee: number;
   total: number;
-  disount: number | null;
+  discount: number | null;
   paid_at: string | null;
   deleted_at: string | null;
   created_at: string;
