@@ -35,10 +35,10 @@ export default function EditableField({
   placeholder = 'No value',
   required = false,
 }: {
-  value: string;
+  value: string | null;
   tooltipText?: string;
   className?: string;
-  onChange: (value: string) => void;
+  onChange: (value: string | null) => void;
   disabled?: boolean;
   minLength?: number;
   type?: 'input' | 'textarea';
@@ -125,7 +125,7 @@ export default function EditableField({
     return type === 'input' ? (
       <Input
         autoFocus
-        defaultValue={stateValue}
+        defaultValue={stateValue || undefined}
         onChange={onChangeHandler}
         onBlur={onBlurHandler}
         onKeyDown={onKeyDownHandler}
@@ -135,7 +135,7 @@ export default function EditableField({
       <Textarea
         autoFocus
         className='w-full'
-        value={stateValue}
+        value={stateValue || undefined}
         onChange={onChangeHandler}
         onBlur={onBlurHandler}
         onKeyDown={onKeyDownHandler}
