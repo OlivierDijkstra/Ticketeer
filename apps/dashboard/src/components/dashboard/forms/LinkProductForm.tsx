@@ -66,7 +66,10 @@ export default function LinkProductForm({
       linkProductToShowAction({
         show_id: parseInt(params.show),
         product_id: data.product_id,
-        data: data,
+        data: {
+          ...data,
+          adjusted_price: `${data.adjusted_price}`,
+        },
       }),
       {
         loading: 'Linking product...',

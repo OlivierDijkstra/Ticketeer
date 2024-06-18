@@ -95,14 +95,14 @@ export function columns(data: ColumnData): ColumnDef<Product>[] {
           });
 
           if (
-            row.original.pivot?.adjusted_price === 0 ||
+            row.original.pivot?.adjusted_price === '0' ||
             !row.original.pivot?.adjusted_price
           ) {
             return 'Free';
           }
 
           return currencyFormatter.format(
-            row.original.pivot?.adjusted_price as number
+            parseFloat(row.original.pivot?.adjusted_price)
           );
         },
       },
