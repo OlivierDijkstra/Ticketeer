@@ -29,6 +29,7 @@ class OrderController extends Controller
     public function index(Request $request)
     {
         $query = Order::query()
+            ->orderBy('created_at', 'desc')
             ->with(['event', 'show', 'customer']);
 
         return $this->searchOrPaginate($request, $query);
@@ -44,20 +45,31 @@ class OrderController extends Controller
         $customer = $request->input('customer');
 
         if ($customer) {
+            $customerData = $customer;
             $customer = Customer::firstOrCreate([
-                'first_name' => $customer['first_name'],
-                'last_name' => $customer['last_name'],
-                'email' => $customer['email'],
-                'phone' => $customer['phone'],
+                'first_name' => $customerData['first_name'],
+                'last_name' => $customerData['last_name'],
+                'email' => $customerData['email'],
             ]);
 
-            $customer->address()->updateOrCreate([
-                'street' => $customer['street'],
-                'street2' => $customer['street2'],
-                'city' => $customer['city'],
-                'postal_code' => $customer['postal_code'],
-                'province' => $customer['province'],
-            ]);
+            $customer->phone = $customerData['phone'] ?? null;
+            $customer->save();
+
+            $address = $customer->address;
+
+            $addressData = [
+                'street' => $customerData['street'],
+                'street2' => $customerData['street2'] ?? null,
+                'city' => $customerData['city'],
+                'postal_code' => $customerData['postal_code'],
+                'province' => $customerData['province'],
+            ];
+
+            if ($customer->address()->exists()) {
+                $customer->address->update($addressData);
+            } else {
+                $customer->address()->create($addressData);
+            }
         }
 
         $order = $show->orders()->create([
