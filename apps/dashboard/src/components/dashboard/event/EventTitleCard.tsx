@@ -22,8 +22,14 @@ export default function EventTitleCard({ event }: { event: Event }) {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  async function handleNameChange(value: string) {
+  async function handleNameChange(value: string | null) {
+    if (!value) {
+      toast.error('Event name is required');
+      return;
+    }
+
     setLoading(true);
+
 
     await toast.promise(
       updateEventAction({
@@ -45,7 +51,7 @@ export default function EventTitleCard({ event }: { event: Event }) {
     setLoading(false);
   }
 
-  async function handleDescriptionChange(value: string) {
+  async function handleDescriptionChange(value: string | null) {
     setLoading(true);
 
     try {
@@ -53,6 +59,29 @@ export default function EventTitleCard({ event }: { event: Event }) {
         event_slug: event.slug,
         data: {
           description: value,
+        },
+      });
+
+      setEventData(data);
+
+      toast.success('Event updated successfully');
+    } catch (error) {
+      toast.error('Failed to update event', {
+        description: 'Please try again later',
+      });
+    }
+
+    setLoading(false);
+  }
+
+  async function handleDescriptionShortChange(value: string | null) {
+    setLoading(true);
+
+    try {
+      const data = await updateEventAction({
+        event_slug: event.slug,
+        data: {
+          description_short: value,
         },
       });
 
@@ -110,7 +139,22 @@ export default function EventTitleCard({ event }: { event: Event }) {
           onChange={handleDescriptionChange}
           className='text-sm text-muted-foreground'
           tooltipText='Edit event description'
-          placeholder='No description'
+          placeholder='No description set'
+        />
+
+        <h3 className='text-sm font-medium mt-4'>Short description</h3>
+        <p className='text-sm text-muted-foreground'>
+          This description will be shown on the event card on the home page
+        </p>
+        
+
+        <EditableField
+          type='textarea'
+          value={eventData.description_short}
+          onChange={handleDescriptionShortChange}
+          className='text-sm text-muted-foreground'
+          tooltipText='Edit event short description, shown on the event card on the home page'
+          placeholder='No short description set'
         />
       </CardContent>
     </Card>

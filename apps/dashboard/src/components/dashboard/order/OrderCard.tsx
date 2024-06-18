@@ -23,14 +23,14 @@ export default function OrderCard({ order }: { order: Order }) {
   const [description, setDescription] = useState(order.description);
   const [loading, setLoading] = useState(false);
 
-  async function handleDescriptionChange(value: string) {
+  async function handleDescriptionChange(value: string | null) {
     setLoading(true);
 
     await toast.promise(
       updateOrderAction({
         order_id: order.id,
         data: {
-          description: value,
+          description: value || '',
         },
       }),
       {
@@ -52,7 +52,7 @@ export default function OrderCard({ order }: { order: Order }) {
       <CardHeader className='bg-muted/50'>
         <Badge className='mb-1 max-w-fit'>{order.status}</Badge>
 
-        <CopyToClipboard value={order.id}>
+        <CopyToClipboard value={order.order_number}>
           <h1 className='group flex min-w-0 items-center gap-2 font-semibold tracking-tight'>
             Order {order.order_number}
           </h1>
@@ -103,7 +103,6 @@ export default function OrderCard({ order }: { order: Order }) {
                           The price was adjusted from the default price of
                         </span>
 
-                        {/* @ts-expect-error: product.price is not defined */}
                         <span>{formatMoney(product.price)}</span>
                         <span>to</span>
 
@@ -116,9 +115,7 @@ export default function OrderCard({ order }: { order: Order }) {
                 )}
 
                 <span>
-
                   {formatMoney(
-                    // @ts-expect-error: AAA
                     product.pivot?.adjusted_price || product.pivot?.price || 0
                   )}
                 </span>
@@ -136,7 +133,7 @@ export default function OrderCard({ order }: { order: Order }) {
         <ul className='grid gap-3'>
           <li className='flex items-center justify-between'>
             <span className='text-muted-foreground'>Subtotal</span>
-            <span>{formatMoney(order.total - order.service_fee)}</span>
+            <span>{formatMoney(order.total)}</span>
           </li>
           <li className='flex items-center justify-between'>
             <span className='text-muted-foreground'>Service Costs</span>
@@ -144,7 +141,7 @@ export default function OrderCard({ order }: { order: Order }) {
           </li>
           <li className='flex items-center justify-between font-semibold'>
             <span className='text-muted-foreground'>Total</span>
-            <span>{formatMoney(order.total)}</span>
+            <span>{formatMoney(order.total + order.service_fee)}</span>
           </li>
         </ul>
       </CardContent>

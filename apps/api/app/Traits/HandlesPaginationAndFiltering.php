@@ -74,7 +74,11 @@ trait HandlesPaginationAndFiltering
         $filters = ['enabled', 'event_id', 'customer_id'];
         foreach ($filters as $filter) {
             if ($request->has($filter)) {
-                $query->where($filter, $request->input($filter));
+                if ($filter === 'enabled') {
+                    $query->where($filter, $request->input($filter) ? 1 : 0);
+                } else {
+                    $query->where($filter, $request->input($filter));
+                }
             }
         }
 
@@ -167,7 +171,7 @@ trait HandlesPaginationAndFiltering
         }
 
         // Transform results to include pivot fields
-        $results->getCollection()->transform(function ($item) {
+        collect($results->items())->transform(function ($item) {
             if ($item->relationLoaded('shows')) {
                 foreach ($item->shows as $show) {
                     $pivot = [];

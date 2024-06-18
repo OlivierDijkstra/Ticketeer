@@ -31,7 +31,7 @@ export default function CopyToClipboard({
         size='icon'
         onClick={copyToClipboard}
       >
-        <Copy className='size-2.5' />
+        <Copy className='!size-2.5' />
       </Button>
     </div>
   );
