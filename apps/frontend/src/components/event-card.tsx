@@ -25,7 +25,7 @@ export default function EventCard({ event }: { event: Event }) {
         priority
       />
 
-      <Link href={`/${event.slug}`}>
+      <Link href={`/event/${event.slug}`}>
         <CardContent className='space-y-2 p-4'>
           <CardTitle className='text-xl font-semibold'>{event.name}</CardTitle>
 

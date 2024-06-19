@@ -117,7 +117,7 @@ export default function CreateOrderForm({
     try {
       const order = await createOrder({
         ...values,
-        redirect_url: `${window.location.origin}`,
+        redirect_url: `${window.location.origin}/poll`,
       });
 
       window.location.replace(order.payment_url);

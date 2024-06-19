@@ -3,6 +3,7 @@ import { format } from 'date-fns';
 import { Calendar, Clock, MapPin, Ticket } from 'lucide-react';
 import Link from 'next/link';
 
+import GuestBadge from '@/components/guest-badge';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -19,7 +20,7 @@ export default function ShowCard({ show }: { show: Show }) {
 
   return (
     <Card className='transition-all contain-paint hover:scale-[1.01] hover:shadow-lg'>
-      <Link href={`/${show.event.slug}/${show.id}`}>
+      <Link href={`/event/${show.event.slug}/${show.id}`}>
         <CardHeader className='bg-muted/50'>
           <CardDescription className='font-medium text-foreground/75'>
             {show.description}
@@ -55,12 +56,7 @@ export default function ShowCard({ show }: { show: Show }) {
 
             <div className='flex flex-row flex-wrap items-center gap-1'>
               {show.guests.map((guest) => (
-                <span
-                  key={guest}
-                  className='rounded-md bg-foreground/5 px-2 py-1 text-sm'
-                >
-                  {guest}
-                </span>
+                <GuestBadge key={guest}>{guest}</GuestBadge>
               ))}
             </div>
           </div>
