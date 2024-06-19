@@ -129,8 +129,7 @@ export function columns(data: ColumnData): ColumnDef<Product>[] {
     id: 'actions',
     cell: ({ row }) => {
       const params = data.params;
-      // eslint-disable-next-line react-hooks/rules-of-hooks
-
+      
       async function detachProduct() {
         toast.promise(
           unlinkProductFromShowAction({
