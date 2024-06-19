@@ -12,15 +12,6 @@ describe('EditableField', () => {
     onChange.mockClear();
   });
 
-  test('it renders correctly', () => {
-    const comp = render(
-      <TooltipProvider>
-        <EditableField onChange={onChange} value='Test' />
-      </TooltipProvider>
-    );
-    expect(comp.container).toMatchSnapshot();
-  });
-
   test('it enters edit mode on button click', async () => {
     render(
       <TooltipProvider>

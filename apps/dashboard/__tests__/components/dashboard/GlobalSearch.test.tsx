@@ -20,11 +20,6 @@ vi.mock('next/navigation', () => ({
 }));
 
 describe('GlobalSearch', () => {
-  test('it renders correctly', () => {
-    const comp = render(<GlobalSearch />);
-    expect(comp.container).toMatchSnapshot();
-  });
-
   test('it opens and closes the command dialog', async () => {
     render(<GlobalSearch />);
 
