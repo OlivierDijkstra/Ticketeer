@@ -48,7 +48,7 @@ export default function CreateOrderForm({
         street2: z.string().optional(),
         city: z.string(),
         postal_code: z.string(),
-        province: z.string(),
+        state: z.string(),
         phone: z.string().optional(),
       })
       .optional(),
@@ -146,7 +146,7 @@ export default function CreateOrderForm({
           street2: data.address.street2 || undefined,
           city: data.address.city,
           postal_code: data.address.postal_code,
-          province: data.address.province,
+          state: data.address.state,
           phone: data.phone,
         });
       }

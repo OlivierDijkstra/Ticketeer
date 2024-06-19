@@ -80,7 +80,7 @@ describe('CreateEventForm', () => {
       name: 'Test Event',
       description: 'Test Description',
       enabled: true,
-      service_fee: 1234,
+      service_fee: '12.34',
     });
 
     render(
@@ -106,8 +106,9 @@ describe('CreateEventForm', () => {
           data: expect.objectContaining({
             name: 'Test Event',
             description: 'Test Description',
+            description_short: '',
             enabled: true,
-            service_fee: 12.34,
+            service_fee: '12.34',
             slug: 'test-event',
             featured: false,
           }),

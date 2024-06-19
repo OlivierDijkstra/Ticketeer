@@ -14,7 +14,7 @@ class Address extends Model
         'street',
         'street2',
         'city',
-        'province',
+        'state',
         'postal_code',
         'country',
     ];

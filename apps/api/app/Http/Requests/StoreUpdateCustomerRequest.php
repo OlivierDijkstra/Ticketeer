@@ -29,7 +29,7 @@ class StoreUpdateCustomerRequest extends FormRequest
             'address.street' => 'required||string',
             'address.street2' => 'nullable|string',
             'address.city' => 'required|string',
-            'address.province' => 'required|string',
+            'address.state' => 'required|string',
             'address.country' => 'required|string',
             'address.postal_code' => 'required|string',
         ];

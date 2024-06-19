@@ -164,7 +164,7 @@ export interface Address {
   street2?: string | null; // Optional field
   city: string;
   postal_code: string;
-  province: string;
+  state: string;
   country: string;
 }
 

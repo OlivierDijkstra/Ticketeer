@@ -42,7 +42,7 @@ export async function createOrdersAction(data: {
     street2?: string;
     city: string;
     postal_code: string;
-    province: string;
+    state: string;
     phone?: string;
   };
   products: {

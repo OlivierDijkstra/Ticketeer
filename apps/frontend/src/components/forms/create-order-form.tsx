@@ -31,7 +31,7 @@ const formSchema = z.object({
       street2: z.string().optional(),
       city: z.string(),
       postal_code: z.string(),
-      province: z.string(),
+      state: z.string(),
       phone: z.string().optional(),
     })
     .optional(),
@@ -81,7 +81,7 @@ export default function CreateOrderForm({
         street2: '',
         city: 'Amsterdam',
         postal_code: '1234AB',
-        province: 'North Holland',
+        state: 'North Holland',
         phone: '+31612345678',
       },
     },
@@ -261,12 +261,12 @@ export default function CreateOrderForm({
 
         <FormField
           control={form.control}
-          name='customer.province'
+          name='customer.state'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Province</FormLabel>
+              <FormLabel>state</FormLabel>
               <FormControl>
-                <Input placeholder='Province' {...field} />
+                <Input placeholder='state' {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

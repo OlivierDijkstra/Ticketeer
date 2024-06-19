@@ -146,7 +146,7 @@ export function generateAddress(address: Partial<Address> = {}): Address {
     city: generateString(10),
     country: generateString(10),
     postal_code: generateString(6),
-    province: generateString(10),
+    state: generateString(10),
     street: generateString(5),
     street2: null,
     ...address,

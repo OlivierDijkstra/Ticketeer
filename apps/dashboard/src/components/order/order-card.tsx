@@ -136,7 +136,9 @@ export default function OrderCard({ order }: { order: Order }) {
           </li>
           <li className='flex items-center justify-between font-semibold'>
             <span className='text-muted-foreground'>Total</span>
-            <span>{formatMoney(order.total + order.service_fee)}</span>
+            <span>
+              {formatMoney(parseFloat(order.total) + parseFloat(order.service_fee))}
+            </span>
           </li>
         </ul>
       </CardContent>

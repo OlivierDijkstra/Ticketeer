@@ -20,7 +20,7 @@ class AddressFactory extends Factory
             'street' => fake()->streetAddress(),
             'street2' => fake()->secondaryAddress(),
             'city' => fake()->city(),
-            'province' => fake()->state(),
+            'state' => fake()->state(),
             'postal_code' => fake()->postcode(),
             'country' => fake()->country(),
         ];

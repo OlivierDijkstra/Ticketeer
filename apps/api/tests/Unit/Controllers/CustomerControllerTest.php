@@ -37,7 +37,7 @@ class CustomerControllerTest extends TestCase
             'address' => [
                 'street' => '123 Main St',
                 'city' => 'Springfield',
-                'province' => 'IL',
+                'state' => 'IL',
                 'country' => 'USA',
                 'postal_code' => '62701',
             ],
@@ -54,7 +54,7 @@ class CustomerControllerTest extends TestCase
         $this->assertDatabaseHas('addresses', [
             'street' => '123 Main St',
             'city' => 'Springfield',
-            'province' => 'IL',
+            'state' => 'IL',
             'country' => 'USA',
             'postal_code' => '62701',
         ]);
@@ -106,7 +106,7 @@ class CustomerControllerTest extends TestCase
         $this->assertDatabaseHas('addresses', [
             'street' => $needle2,
             'city' => $address->city,
-            'province' => $address->province,
+            'state' => $address->state,
             'country' => $address->country,
             'postal_code' => $address->postal_code,
         ]);

@@ -62,7 +62,7 @@ class OrderController extends Controller
                 'street2' => $customerData['street2'] ?? null,
                 'city' => $customerData['city'],
                 'postal_code' => $customerData['postal_code'],
-                'province' => $customerData['province'],
+                'state' => $customerData['state'],
             ];
 
             if ($customer->address()->exists()) {
