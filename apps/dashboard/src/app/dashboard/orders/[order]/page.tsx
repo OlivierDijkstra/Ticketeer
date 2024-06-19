@@ -20,8 +20,6 @@ export default async function Page({
     order_id: params?.order,
   });
 
-  console.log('order', order.products[0])
-
   return (
     <div className='grid gap-4 md:grid-cols-3'>
       <div className='row-start-2 space-y-4 md:col-span-2 md:row-start-1'>

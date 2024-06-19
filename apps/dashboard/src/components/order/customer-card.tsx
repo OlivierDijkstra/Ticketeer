@@ -71,7 +71,7 @@ export default function CustomerCard({ customer }: { customer?: Customer }) {
           </li>
 
           <li className='flex items-center justify-between'>
-            <span className='text-muted-foreground'>state</span>
+            <span className='text-muted-foreground'>State</span>
             <span>{customer?.address.state}</span>
           </li>
 

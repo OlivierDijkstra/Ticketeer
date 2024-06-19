@@ -22,8 +22,6 @@ export default async function PaymentsTable({
     return await getPaymentsActions({ order_id, page });
   }
 
-  console.log(order);
-
   const payments = await getPayments({ page });
 
   return (

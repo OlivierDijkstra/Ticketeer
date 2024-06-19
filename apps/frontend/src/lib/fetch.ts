@@ -18,9 +18,6 @@ export async function fetchJson<T>(
   }
 
   if (response.status === 204) {
-    // Get the cookies from the repsonse
-    const cookies = response.headers.getSetCookie();
-    console.log(cookies);
     return {} as T;
   }
 
