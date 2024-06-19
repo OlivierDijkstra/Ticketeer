@@ -93,7 +93,7 @@ class Order extends Model
             ->payments
             ->create([
                 'amount' => [
-                    'currency' => 'EUR',
+                    'currency' => config('app.currency'),
                     'value' => number_format($total, 2, '.', ''), // You must send the correct number of decimals, thus we format it to 2 decimals
                 ],
                 'description' => $this->description ?? 'Order '.$this->order_number,

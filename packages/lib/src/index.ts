@@ -132,8 +132,10 @@ export function createUrl(
 }
 
 export default function formatMoney(amount: number | string | undefined) {
-  return new Intl.NumberFormat("nl-NL", {
+  // eslint-disable-next-line no-undef
+  return new Intl.NumberFormat(process.env.NEXT_PUBLIC_LOCALE || "en-US", {
     style: "currency",
-    currency: "EUR",
+    // eslint-disable-next-line no-undef
+    currency: process.env.NEXT_PUBLIC_CURRENCY || "USD",
   }).format(parseFloat((amount as string) || '0'));
 }

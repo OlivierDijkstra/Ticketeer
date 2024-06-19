@@ -5,7 +5,9 @@
     "NEXT_PUBLIC_DEBUG",
     "NEXT_PUBLIC_REFERRER_URL",
     "NEXT_PUBLIC_BACKEND_API_URL",
-    "NEXT_PUBLIC_APP_NAME"
+    "NEXT_PUBLIC_APP_NAME",
+    "NEXT_PUBLIC_LOCALE",
+    "NEXT_PUBLIC_CURRENCY"
   ],
   "$schema": "https://turbo.build/schema.json",
   "tasks": {

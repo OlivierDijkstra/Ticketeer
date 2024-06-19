@@ -84,6 +84,8 @@ return [
 
     'faker_locale' => env('APP_FAKER_LOCALE', 'en_US'),
 
+    'currency' => env('APP_CURRENCY', 'EUR'),
+
     /*
     |--------------------------------------------------------------------------
     | Encryption Key
