@@ -17,7 +17,7 @@ import { useParams } from 'next/navigation';
 import type { Mock } from 'vitest';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 
-import CreateOrderForm from '@/components/dashboard/forms/CreateOrderForm';
+import CreateOrderForm from '@/components/forms/CreateOrderForm';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { getCustomersAction } from '@/server/actions/customers';
 import { createOrdersAction } from '@/server/actions/orders';

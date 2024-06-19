@@ -3,7 +3,7 @@ import { usePathname } from 'next/navigation';
 import type { Mock } from 'vitest';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 
-import NavigationSheet from '@/components/dashboard/navigation/NavigationSheet';
+import NavigationSheet from '@/components/navigation/NavigationSheet';
 
 vi.mock('next/navigation', () => ({
   usePathname: vi.fn(),

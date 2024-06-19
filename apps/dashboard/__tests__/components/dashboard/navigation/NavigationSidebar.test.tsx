@@ -4,7 +4,7 @@ import type { Mock } from 'vitest';
 import { beforeEach } from 'vitest';
 import { describe, expect, test, vi } from 'vitest';
 
-import NavigationSidebar from '@/components/dashboard/navigation/NavigationSidebar';
+import NavigationSidebar from '@/components/navigation/NavigationSidebar';
 import { TooltipProvider } from '@/components/ui/tooltip';
 
 vi.mock('next/navigation', () => ({

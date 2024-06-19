@@ -2,7 +2,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import type { Mock } from 'vitest';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 
-import RevenueGraph from '@/components/dashboard/statistics/RevenueGraph';
+import RevenueGraph from '@/components/statistics/RevenueGraph';
 import { Statistics } from '@/lib/statistics';
 
 vi.mock('@/lib/statistics', () => ({

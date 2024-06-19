@@ -1,4 +1,4 @@
-import SkeletonTable from '@/components/dashboard/skeletons/SkeletonTable';
+import SkeletonTable from '@/components/skeletons/SkeletonTable';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 

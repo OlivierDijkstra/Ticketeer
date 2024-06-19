@@ -1,12 +1,12 @@
 import { Suspense } from 'react';
 
-import EventMediaZone from '@/components/dashboard/event/EventMediaZone';
-import EventTitleCard from '@/components/dashboard/event/EventTitleCard';
-import SkeletonGraph from '@/components/dashboard/skeletons/SkeletonGraph';
-import SkeletonStatistic from '@/components/dashboard/skeletons/SkeletonStatistic';
-import NewOrdersStatistic from '@/components/dashboard/statistics/NewOrdersStatistic';
-import RevenueStatistic from '@/components/dashboard/statistics/RevenueStatistic';
-import ShowsTable from '@/components/dashboard/tables/ShowsTable/ShowsTable';
+import EventMediaZone from '@/components/event/EventMediaZone';
+import EventTitleCard from '@/components/event/EventTitleCard';
+import SkeletonGraph from '@/components/skeletons/SkeletonGraph';
+import SkeletonStatistic from '@/components/skeletons/SkeletonStatistic';
+import NewOrdersStatistic from '@/components/statistics/NewOrdersStatistic';
+import RevenueStatistic from '@/components/statistics/RevenueStatistic';
+import ShowsTable from '@/components/tables/ShowsTable/ShowsTable';
 import { getEventAction } from '@/server/actions/events';
 
 export default async function Page({

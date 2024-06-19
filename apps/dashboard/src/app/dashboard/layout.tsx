@@ -1,10 +1,10 @@
 import type { ReactNode } from 'react';
 
-import GlobalSearch from '@/components/dashboard/GlobalSearch';
-import AccountSettings from '@/components/dashboard/navigation/AccountSettings';
-import NavigationBreadcrumbs from '@/components/dashboard/navigation/NavigationBreadcrumbs';
-import NavigationSheet from '@/components/dashboard/navigation/NavigationSheet';
-import NavigationSidebar from '@/components/dashboard/navigation/NavigationSidebar';
+import GlobalSearch from '@/components/GlobalSearch';
+import AccountSettings from '@/components/navigation/AccountSettings';
+import NavigationBreadcrumbs from '@/components/navigation/NavigationBreadcrumbs';
+import NavigationSheet from '@/components/navigation/NavigationSheet';
+import NavigationSidebar from '@/components/navigation/NavigationSidebar';
 import { Toaster } from '@/components/ui/sonner';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { auth } from '@/lib/auth';

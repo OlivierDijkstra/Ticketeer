@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, test } from 'vitest';
 
-import NumberStatistic from '@/components/dashboard/statistics/NumberStatistic';
+import NumberStatistic from '@/components/statistics/NumberStatistic';
 
 describe('NumberStatistic', () => {
   test('renders with default values', () => {

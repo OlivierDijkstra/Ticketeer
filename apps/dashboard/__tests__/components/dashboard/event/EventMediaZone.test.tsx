@@ -11,7 +11,7 @@ import userEvent from '@testing-library/user-event';
 import type { Mock } from 'vitest';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 
-import EventMediaZone from '@/components/dashboard/event/EventMediaZone';
+import EventMediaZone from '@/components/event/EventMediaZone';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import {
   addEventMediaAction,

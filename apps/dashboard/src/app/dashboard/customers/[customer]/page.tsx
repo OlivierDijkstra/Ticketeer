@@ -1,4 +1,4 @@
-import CustomerCard from '@/components/dashboard/order/CustomerCard';
+import CustomerCard from '@/components/order/CustomerCard';
 import { getCustomerAction } from '@/server/actions/customers';
 
 export default async function Page({

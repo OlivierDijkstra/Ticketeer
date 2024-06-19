@@ -1,7 +1,7 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 
-import StartEndDateInputs from '@/components/dashboard/show/StartEndDateInputs';
+import StartEndDateInputs from '@/components/show/StartEndDateInputs';
 
 vi.mock('@/components/ui/date-picker', () => ({
   DatePicker: ({

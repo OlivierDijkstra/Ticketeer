@@ -11,7 +11,7 @@ import userEvent from '@testing-library/user-event';
 import type { Mock } from 'vitest';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 
-import LinkProductForm from '@/components/dashboard/forms/LinkProductForm';
+import LinkProductForm from '@/components/forms/LinkProductForm';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { getProductsAction } from '@/server/actions/products';
 import { linkProductToShowAction } from '@/server/actions/shows';

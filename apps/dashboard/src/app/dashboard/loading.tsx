@@ -1,6 +1,6 @@
-import SkeletonGraph from '@/components/dashboard/skeletons/SkeletonGraph';
-import SkeletonStatistic from '@/components/dashboard/skeletons/SkeletonStatistic';
-import SkeletonTable from '@/components/dashboard/skeletons/SkeletonTable';
+import SkeletonGraph from '@/components/skeletons/SkeletonGraph';
+import SkeletonStatistic from '@/components/skeletons/SkeletonStatistic';
+import SkeletonTable from '@/components/skeletons/SkeletonTable';
 
 export default function Loading() {
   return (

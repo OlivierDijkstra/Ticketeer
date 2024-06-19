@@ -4,7 +4,7 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { toast } from 'sonner';
 import { describe, expect, test, vi } from 'vitest';
 
-import ShowGuestsForm from '@/components/dashboard/forms/ShowGuestsForm';
+import ShowGuestsForm from '@/components/forms/ShowGuestsForm';
 import { updateShowAction } from '@/server/actions/shows';
 
 vi.mock('@/server/actions/shows', () => ({

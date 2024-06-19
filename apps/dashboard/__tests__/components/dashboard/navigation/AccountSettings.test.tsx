@@ -5,7 +5,7 @@ import type { Session } from 'next-auth';
 import { signOut } from 'next-auth/react';
 import { describe, expect, test, vi } from 'vitest';
 
-import AccountSettings from '@/components/dashboard/navigation/AccountSettings';
+import AccountSettings from '@/components/navigation/AccountSettings';
 
 vi.mock('next-auth/react', () => ({
   signOut: vi.fn(),

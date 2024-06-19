@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 
-import GuestField from '@/components/dashboard/show/GuestField';
+import GuestField from '@/components/show/GuestField';
 
 describe('GuestField', () => {
   const mockOnChange = vi.fn();

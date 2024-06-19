@@ -5,7 +5,7 @@ import userEvent from '@testing-library/user-event';
 import { toast } from 'sonner';
 import { describe, expect, test, vi } from 'vitest';
 
-import ShowDateAvailablity from '@/components/dashboard/show/ShowDateAvailablity';
+import ShowDateAvailablity from '@/components/show/ShowDateAvailablity';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { updateShowAction } from '@/server/actions/shows';
 

@@ -9,7 +9,7 @@ import userEvent from '@testing-library/user-event';
 import type { Mock } from 'vitest';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 
-import CreateEventForm from '@/components/dashboard/forms/CreateEventForm';
+import CreateEventForm from '@/components/forms/CreateEventForm';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { createEventAction } from '@/server/actions/events';
 

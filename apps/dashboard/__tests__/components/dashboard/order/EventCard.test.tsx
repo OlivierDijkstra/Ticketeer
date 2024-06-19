@@ -4,7 +4,7 @@ import { render, screen } from '@testing-library/react';
 import { format } from 'date-fns';
 import { describe, expect, test } from 'vitest';
 
-import EventCard from '@/components/dashboard/order/EventCard';
+import EventCard from '@/components/order/EventCard';
 import { DEFAULT_DATE_FORMAT } from '@/lib/constants';
 
 const mockShow: Show = generateShow({

@@ -1,10 +1,10 @@
 import { Suspense } from 'react';
 
-import ShowGuestsForm from '@/components/dashboard/forms/ShowGuestsForm';
-import ShowDateAvailablity from '@/components/dashboard/show/ShowDateAvailablity';
-import SkeletonGraph from '@/components/dashboard/skeletons/SkeletonGraph';
-import OrdersTable from '@/components/dashboard/tables/OrdersTable/OrdersTable';
-import ProductsTable from '@/components/dashboard/tables/ProductsTable/ProductsTable';
+import ShowGuestsForm from '@/components/forms/ShowGuestsForm';
+import ShowDateAvailablity from '@/components/show/ShowDateAvailablity';
+import SkeletonGraph from '@/components/skeletons/SkeletonGraph';
+import OrdersTable from '@/components/tables/OrdersTable/OrdersTable';
+import ProductsTable from '@/components/tables/ProductsTable/ProductsTable';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { getShowAction } from '@/server/actions/shows';
 

@@ -3,7 +3,7 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { toast } from 'sonner';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 
-import ProductPriceForm from '@/components/dashboard/forms/ProductPriceForm';
+import ProductPriceForm from '@/components/forms/ProductPriceForm';
 import { updateProductAction } from '@/server/actions/products';
 
 vi.mock('@/server/actions/products', () => ({

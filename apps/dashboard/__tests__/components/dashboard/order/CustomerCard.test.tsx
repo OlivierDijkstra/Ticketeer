@@ -5,7 +5,7 @@ import { useParams } from 'next/navigation';
 import type { Mock } from 'vitest';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 
-import CustomerCard from '@/components/dashboard/order/CustomerCard';
+import CustomerCard from '@/components/order/CustomerCard';
 
 vi.mock('next/navigation', () => ({
   useParams: vi.fn(),

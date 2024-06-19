@@ -4,7 +4,7 @@ import type { useRouter } from 'next/navigation';
 import type { Mock } from 'vitest';
 import { describe, expect, test, vi } from 'vitest';
 
-import GlobalSearch from '@/components/dashboard/GlobalSearch';
+import GlobalSearch from '@/components/GlobalSearch';
 import { searchAction } from '@/server/actions/search';
 
 const routerMock = {

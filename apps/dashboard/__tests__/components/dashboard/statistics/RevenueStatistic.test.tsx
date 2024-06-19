@@ -3,7 +3,7 @@ import { format, subMonths } from 'date-fns';
 import type { Mock } from 'vitest';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 
-import RevenueStatistic from '@/components/dashboard/statistics/RevenueStatistic';
+import RevenueStatistic from '@/components/statistics/RevenueStatistic';
 import { Statistics } from '@/lib/statistics';
 
 vi.mock('date-fns', () => ({

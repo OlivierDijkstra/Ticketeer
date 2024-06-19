@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import type { Mock } from 'vitest';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 
-import EventTitleCard from '@/components/dashboard/event/EventTitleCard';
+import EventTitleCard from '@/components/event/EventTitleCard';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { updateEventAction } from '@/server/actions/events';
 

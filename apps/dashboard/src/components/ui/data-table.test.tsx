@@ -12,7 +12,7 @@ import { useSearchParams } from 'next/navigation';
 import { toast } from 'sonner';
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 
-import SortButton from '@/components/dashboard/tables/SortButton';
+import SortButton from '@/components/tables/SortButton';
 import { DataTable } from '@/components/ui/data-table';
 
 interface MockData {

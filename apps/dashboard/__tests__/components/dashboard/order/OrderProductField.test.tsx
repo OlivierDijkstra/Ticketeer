@@ -13,7 +13,7 @@ import type { UseFormReturn } from 'react-hook-form';
 import { useForm } from 'react-hook-form';
 import { describe, expect, test, vi } from 'vitest';
 
-import OrderProductField from '@/components/dashboard/order/OrderProductField';
+import OrderProductField from '@/components/order/OrderProductField';
 import { TooltipProvider } from '@/components/ui/tooltip';
 
 const products: Product[] = [

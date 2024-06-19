@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
 
-import SkeletonGraph from '@/components/dashboard/skeletons/SkeletonGraph';
-import OrdersTable from '@/components/dashboard/tables/OrdersTable/OrdersTable';
+import SkeletonGraph from '@/components/skeletons/SkeletonGraph';
+import OrdersTable from '@/components/tables/OrdersTable/OrdersTable';
 
 export default async function Page({
   searchParams,

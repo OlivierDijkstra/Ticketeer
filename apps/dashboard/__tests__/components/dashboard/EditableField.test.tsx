@@ -3,7 +3,7 @@ import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, test, vi } from 'vitest';
 
-import EditableField from '@/components/dashboard/EditableField';
+import EditableField from '@/components/EditableField';
 
 const onChange = vi.fn();
 

@@ -3,7 +3,7 @@ import { subDays } from 'date-fns';
 import type { Mock } from 'vitest';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 
-import NewOrdersStatistic from '@/components/dashboard/statistics/NewOrdersStatistic';
+import NewOrdersStatistic from '@/components/statistics/NewOrdersStatistic';
 import { Statistics } from '@/lib/statistics';
 
 vi.mock('date-fns', () => ({

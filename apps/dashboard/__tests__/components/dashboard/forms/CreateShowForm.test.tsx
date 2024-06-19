@@ -10,7 +10,7 @@ import { format } from 'date-fns';
 import type { Mock } from 'vitest';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 
-import CreateShowForm from '@/components/dashboard/forms/CreateShowForm';
+import CreateShowForm from '@/components/forms/CreateShowForm';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { createShowAction } from '@/server/actions/shows';
 

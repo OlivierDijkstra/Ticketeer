@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, test } from 'vitest';
 
-import GraphTooltip from '@/components/dashboard/statistics/graphs/GraphTooltip';
+import GraphTooltip from '@/components/statistics/graphs/GraphTooltip';
 
 describe('GraphTooltip', () => {
   const formatter = (value: number | string) => `$${value}`;

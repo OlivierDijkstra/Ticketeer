@@ -4,7 +4,7 @@ import { toast } from 'sonner';
 import type { Mock } from 'vitest';
 import { describe, expect, test, vi } from 'vitest';
 
-import CreatePayment from '@/components/dashboard/order/CreatePayment';
+import CreatePayment from '@/components/order/CreatePayment';
 import { createPaymentAction } from '@/server/actions/orders';
 
 vi.mock('@/server/actions/orders', () => ({

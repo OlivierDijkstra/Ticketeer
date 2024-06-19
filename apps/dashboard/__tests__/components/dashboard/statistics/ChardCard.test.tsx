@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, test } from 'vitest';
 
-import ChartCard from '@/components/dashboard/statistics/ChartCard';
+import ChartCard from '@/components/statistics/ChartCard';
 
 describe('ChartCard', () => {
   test('renders with default name', () => {

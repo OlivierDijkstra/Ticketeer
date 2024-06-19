@@ -1,5 +1,5 @@
-import ProductPriceForm from '@/components/dashboard/forms/ProductPriceForm';
-import ProductTitleCard from '@/components/dashboard/products/ProductTitleCard';
+import ProductPriceForm from '@/components/forms/ProductPriceForm';
+import ProductTitleCard from '@/components/products/ProductTitleCard';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { getProductAction } from '@/server/actions/products';
 

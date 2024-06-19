@@ -5,7 +5,7 @@ import userEvent from '@testing-library/user-event';
 import { toast } from 'sonner';
 import { describe, expect, test, vi } from 'vitest';
 
-import ProductTitleCard from '@/components/dashboard/products/ProductTitleCard';
+import ProductTitleCard from '@/components/products/ProductTitleCard';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { updateProductAction } from '@/server/actions/products';
 

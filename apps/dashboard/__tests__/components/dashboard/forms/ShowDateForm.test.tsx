@@ -11,7 +11,7 @@ import { format } from 'date-fns';
 import type { Mock } from 'vitest';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 
-import ShowDateForm from '@/components/dashboard/forms/ShowDateForm';
+import ShowDateForm from '@/components/forms/ShowDateForm';
 import { updateShowAction } from '@/server/actions/shows';
 
 vi.mock('@/server/actions/shows', () => ({
