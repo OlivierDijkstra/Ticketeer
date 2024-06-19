@@ -1,5 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
+type Period = 'week' | 'month';
+
 export default function NumberStatistic({
   name = 'Statistic',
   value = 0,
@@ -11,7 +13,7 @@ export default function NumberStatistic({
   value: number | string;
   percentage: number;
   up: boolean | null;
-  period?: 'week' | 'month';
+  period?: Period;
 }) {
   return (
     <Card className='h-full max-h-none sm:max-w-sm'>
