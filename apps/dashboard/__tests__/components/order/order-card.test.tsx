@@ -10,12 +10,12 @@ import { TooltipProvider } from '@/components/ui/tooltip';
 import { updateOrderAction } from '@/server/actions/orders';
 
 vi.mock('@/server/actions/orders', () => ({
-  updateOrderAction: vi.fn(),
+  updateOrderAction: vi.fn().mockResolvedValue(() => generateOrder()),
 }));
 
 vi.mock('sonner', () => ({
   toast: {
-    promise: vi.fn(),
+    success: vi.fn(),
   },
 }));
 
@@ -26,11 +26,6 @@ const mockOrder: Order = generateOrder({
   created_at: new Date().toISOString(),
   description: 'Test order description',
   products: [
-    // {
-    //   id: 1,
-    //   name: 'Product 1',
-    //   pivot: { amount: 2, price: '1000', adjusted_price: 900 },
-    // },
     generateProduct({
       name: 'Product 1',
       pivot: {
@@ -88,7 +83,7 @@ describe('OrderCard', () => {
     await userEvent.type(inputField, 'Updated description{enter}');
 
     await waitFor(() => {
-      expect(toast.promise).toHaveBeenCalled();
+      expect(toast.success).toHaveBeenCalled();
       expect(updateOrderAction).toHaveBeenCalledWith({
         order_id: mockOrder.id,
         data: { description: 'Updated description' },

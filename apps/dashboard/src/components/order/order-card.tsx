@@ -4,7 +4,6 @@ import type { Order } from '@repo/lib';
 import formatMoney, { cn } from '@repo/lib';
 import { format } from 'date-fns';
 import { useState } from 'react';
-import { toast } from 'sonner';
 
 import CopyToClipboard from '@/components/copy-to-clipboard';
 import EditableField from '@/components/editable-field';
@@ -16,35 +15,29 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { DEFAULT_PRETTY_DATE_FORMAT } from '@/lib/constants';
+import { handleFieldUpdate } from '@/lib/utils';
 import { updateOrderAction } from '@/server/actions/orders';
-import { revalidate } from '@/server/helpers';
 
 export default function OrderCard({ order }: { order: Order }) {
   const [description, setDescription] = useState(order.description);
   const [loading, setLoading] = useState(false);
 
   async function handleDescriptionChange(value: string | null) {
-    setLoading(true);
-
-    await toast.promise(
-      updateOrderAction({
+    await handleFieldUpdate<Order, typeof updateOrderAction>({
+      updateAction: updateOrderAction,
+      data: {
         order_id: order.id,
         data: {
           description: value || '',
         },
-      }),
-      {
-        loading: 'Updating order...',
-        success: (data) => {
-          revalidate('order');
-          setDescription(data.description);
-          return 'Order updated successfully';
-        },
-        error: 'Failed to update order',
-      }
-    );
-
-    setLoading(false);
+      },
+      setLoading,
+      setData: (data: Order) => {
+        setDescription(data.description);
+      },
+      successMessage: 'Order updated successfully',
+      errorMessage: 'Failed to update order',
+    });
   }
 
   return (

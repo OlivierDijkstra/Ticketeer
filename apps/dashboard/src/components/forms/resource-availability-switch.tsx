@@ -1,8 +1,8 @@
 'use client';
 
+import type { Show } from '@repo/lib';
 import { useParams } from 'next/navigation';
 import { useState } from 'react';
-import { toast } from 'sonner';
 
 import { Switch } from '@/components/ui/switch';
 import {
@@ -10,6 +10,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+import { handleFieldUpdate } from '@/lib/utils';
 import { updateEventAction } from '@/server/actions/events';
 import { updateShowAction } from '@/server/actions/shows';
 
@@ -33,41 +34,41 @@ export default function ResourceAvailabilitySwitch({
   const [loading, setLoading] = useState(false);
 
   async function handleAvailabilityChange(checked: boolean) {
-    setLoading(true);
-
-    try {
-      switch (type) {
-        case 'event':
-          await updateEventAction({
+    switch (type) {
+      case 'event':
+        await handleFieldUpdate<Event, typeof updateEventAction>({
+          updateAction: updateEventAction,
+          data: {
             event_slug: params.event as string,
             data: {
               enabled: checked,
             },
-          });
-          break;
-        case 'product':
-          // await updateProductAvailability(checked);
-          break;
-        case 'show':
-          await updateShowAction({
+          },
+          setLoading,
+          setData: () => setEnabled(checked),
+          successMessage: 'Event updated successfully',
+          errorMessage: 'Failed to update event',
+        });
+        break;
+      case 'show':
+        await handleFieldUpdate<Show, typeof updateShowAction>({
+          updateAction: updateShowAction,
+          data: {
             show_id: parseInt(params.show as string),
             data: {
               enabled: checked,
             },
-          });
-          break;
-      }
-
-      setEnabled(checked);
-
-      toast.success('Availability updated', {
-        description: `Resource is now ${checked ? 'enabled' : 'disabled'}`,
-      });
-    } catch (error) {
-      toast.error('Failed to update availability');
+          },
+          setLoading,
+          setData: () => setEnabled(checked),
+          successMessage: 'Show updated successfully',
+          errorMessage: 'Failed to update show',
+        });
+        break;
+      case 'product':
+        // await updateProductAvailability(checked);
+        break;
     }
-
-    setLoading(false);
   }
 
   return (

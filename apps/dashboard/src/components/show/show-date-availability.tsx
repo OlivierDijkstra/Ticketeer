@@ -2,12 +2,12 @@
 
 import type { Show } from '@repo/lib';
 import { useState } from 'react';
-import { toast } from 'sonner';
 
 import EditableField from '@/components/editable-field';
 import ResourceAvailabilitySwitch from '@/components/forms/resource-availability-switch';
 import ShowDateForm from '@/components/forms/show-date-form';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { handleFieldUpdate } from '@/lib/utils';
 import { updateShowAction } from '@/server/actions/shows';
 
 export default function ShowTitleCard({ show }: { show: Show }) {
@@ -15,26 +15,21 @@ export default function ShowTitleCard({ show }: { show: Show }) {
   const [showData, setShowData] = useState(show);
 
   async function handleDescriptionChange(value: string | null) {
-    setLoading(true);
-
-    try {
-      const data = await updateShowAction({
+    await handleFieldUpdate<Show, typeof updateShowAction>({
+      updateAction: updateShowAction,
+      data: {
         show_id: show.id,
         data: {
-          description: value || undefined,
+          description: value || '',
         },
-      });
-
-      setShowData(data);
-
-      toast.success('Show updated successfully');
-    } catch (error) {
-      toast.error('Failed to update show', {
-        description: 'Please try again later',
-      });
-    }
-
-    setLoading(false);
+      },
+      setLoading,
+      setData: (data: Show) => {
+        setShowData(data);
+      },
+      successMessage: 'Show updated successfully',
+      errorMessage: 'Failed to update show',
+    });
   }
 
   return (

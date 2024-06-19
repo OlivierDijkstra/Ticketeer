@@ -4,7 +4,6 @@ import type { Event } from '@repo/lib';
 import { cn } from '@repo/lib';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { toast } from 'sonner';
 
 import EditableField from '@/components/editable-field';
 import ResourceAvailabilitySwitch from '@/components/forms/resource-availability-switch';
@@ -15,6 +14,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import { handleFieldUpdate } from '@/lib/utils';
 import { updateEventAction } from '@/server/actions/events';
 
 export default function EventTitleCard({ event }: { event: Event }) {
@@ -23,77 +23,54 @@ export default function EventTitleCard({ event }: { event: Event }) {
   const router = useRouter();
 
   async function handleNameChange(value: string | null) {
-    if (!value) {
-      toast.error('Event name is required');
-      return;
-    }
-
-    setLoading(true);
-
-    await toast.promise(
-      updateEventAction({
+    await handleFieldUpdate<Event, typeof updateEventAction>({
+      updateAction: updateEventAction,
+      data: {
         event_slug: event.slug,
         data: {
-          name: value,
+          name: value ?? undefined,
         },
-      }),
-      {
-        loading: 'Updating event...',
-        success: (data) => {
-          router.push(`/dashboard/events/${data.slug}`);
-          return 'Event updated successfully';
-        },
-        error: 'Failed to update event',
-      }
-    );
-
-    setLoading(false);
+      },
+      setLoading,
+      setData: (data: Event) => {
+        setEventData(data);
+        router.push(`/dashboard/events/${data.slug}`);
+      },
+      successMessage: 'Event updated successfully',
+      errorMessage: 'Failed to update event',
+    });
   }
 
   async function handleDescriptionChange(value: string | null) {
-    setLoading(true);
-
-    try {
-      const data = await updateEventAction({
+    await handleFieldUpdate<Event, typeof updateEventAction>({
+      updateAction: updateEventAction,
+      data: {
         event_slug: event.slug,
         data: {
           description: value,
         },
-      });
-
-      setEventData(data);
-
-      toast.success('Event updated successfully');
-    } catch (error) {
-      toast.error('Failed to update event', {
-        description: 'Please try again later',
-      });
-    }
-
-    setLoading(false);
+      },
+      setLoading,
+      setData: setEventData,
+      successMessage: 'Event updated successfully',
+      errorMessage: 'Failed to update event',
+    });
   }
 
   async function handleDescriptionShortChange(value: string | null) {
-    setLoading(true);
-
-    try {
-      const data = await updateEventAction({
+    await handleFieldUpdate<Event, typeof updateEventAction>({
+      updateAction: updateEventAction,
+      data: {
         event_slug: event.slug,
         data: {
           description_short: value,
         },
-      });
-
-      setEventData(data);
-
-      toast.success('Event updated successfully');
-    } catch (error) {
-      toast.error('Failed to update event', {
-        description: 'Please try again later',
-      });
-    }
-
-    setLoading(false);
+      },
+      setLoading,
+      setData: setEventData,
+      successMessage: 'Event updated successfully',
+      errorMessage: 'Failed to update event',
+    });
   }
 
   return (

@@ -20,6 +20,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+import { handleFieldUpdate } from '@/lib/utils';
 import { updateProductAction } from '@/server/actions/products';
 
 export default function ProductTitleCard({ product }: { product: Product }) {
@@ -76,28 +77,21 @@ export default function ProductTitleCard({ product }: { product: Product }) {
   }
 
   async function handleUpsellChange() {
-    setLoading(true);
-
-    try {
-      const data = await updateProductAction({
-        product_id: `${product.id}`,
+    await handleFieldUpdate<Product, typeof updateProductAction>({
+      updateAction: updateProductAction,
+      data: {
+        product_id: product.id?.toString(),
         data: {
           is_upsell: !upsell,
         },
-      });
-
-      setUpsell(data?.is_upsell);
-
-      toast.success(
-        data?.is_upsell ? 'Product is now an upsell' : 'Product is now a ticket'
-      );
-    } catch (error) {
-      toast.error('Failed to update upsell status', {
-        description: 'Please try again later',
-      });
-    }
-
-    setLoading(false);
+      },
+      setLoading,
+      setData: (data: Product) => {
+        setUpsell(data.is_upsell);
+      },
+      successMessage: 'Product updated successfully',
+      errorMessage: 'Failed to update product',
+    });
   }
 
   return (
