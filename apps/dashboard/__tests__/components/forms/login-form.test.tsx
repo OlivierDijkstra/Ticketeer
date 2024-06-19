@@ -1,7 +1,7 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { useSearchParams } from 'next/navigation';
 import { signIn } from 'next-auth/react';
-import type { Mock} from 'vitest';
+import type { Mock } from 'vitest';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 
 import LoginForm from '@/components/forms/login-form';

@@ -129,7 +129,7 @@ export function columns(data: ColumnData): ColumnDef<Product>[] {
     id: 'actions',
     cell: ({ row }) => {
       const params = data.params;
-      
+
       async function detachProduct() {
         toast.promise(
           unlinkProductFromShowAction({
