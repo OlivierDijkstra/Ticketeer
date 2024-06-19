@@ -161,7 +161,7 @@ export default function CreateEventForm({
           name='service_fee'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Service Price</FormLabel>
+              <FormLabel>Service Fee</FormLabel>
               <FormControl>
                 <Input
                   {...field}
@@ -171,7 +171,7 @@ export default function CreateEventForm({
                 />
               </FormControl>
               <FormDescription>
-                Service price is what the customers will pay additonally to the
+                Service fee is what the customers will pay additonally to the
                 total cost of the order.
               </FormDescription>
               <FormMessage />

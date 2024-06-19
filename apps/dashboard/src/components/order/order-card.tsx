@@ -131,7 +131,7 @@ export default function OrderCard({ order }: { order: Order }) {
             <span>{formatMoney(order.total)}</span>
           </li>
           <li className='flex items-center justify-between'>
-            <span className='text-muted-foreground'>Service Costs</span>
+            <span className='text-muted-foreground'>Service Fee</span>
             <span>{formatMoney(order.service_fee)}</span>
           </li>
           <li className='flex items-center justify-between font-semibold'>
