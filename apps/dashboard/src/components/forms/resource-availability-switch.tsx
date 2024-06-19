@@ -1,6 +1,6 @@
 'use client';
 
-import type { Show } from '@repo/lib';
+import type { Event, Show } from '@repo/lib';
 import { useParams } from 'next/navigation';
 import { useState } from 'react';
 
@@ -14,11 +14,7 @@ import { handleFieldUpdate } from '@/lib/utils';
 import { updateEventAction } from '@/server/actions/events';
 import { updateShowAction } from '@/server/actions/shows';
 
-type Data = {
-  enabled: boolean;
-} & {
-  [key: string]: unknown;
-};
+type Data = Event | Show;
 
 export default function ResourceAvailabilitySwitch({
   type,

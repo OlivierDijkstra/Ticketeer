@@ -35,7 +35,7 @@ export default function EditableField({
   placeholder = 'No value',
   required = false,
 }: {
-  value: string | null;
+  value?: string | null;
   tooltipText?: string;
   className?: string;
   onChange: (value: string | null) => void;
@@ -46,7 +46,7 @@ export default function EditableField({
   placeholder?: string;
   required?: boolean;
 }) {
-  const [confirmedValue, setConfirmedValue] = useState<string | null>(value);
+  const [confirmedValue, setConfirmedValue] = useState<string | null>(value || null);
   const [stateValue, setStateValue] = useState(value);
   const [error, setError] = useState<string | null>(null);
   const [isEditing, setIsEditing] = useState(false);
@@ -80,8 +80,8 @@ export default function EditableField({
     setIsEditing(false);
 
     try {
-      await onChange(stateValue);
-      setConfirmedValue(stateValue);
+      await onChange(stateValue || null);
+      setConfirmedValue(stateValue || null);
     } catch (error) {
       setStateValue(value);
     }
