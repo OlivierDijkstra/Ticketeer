@@ -76,6 +76,7 @@ export default function CreateEventForm({
           description_short: data.description_short || '',
           enabled: data.enabled || false,
           slug,
+          service_price: `${data.service_price}`,
           featured: false,
         },
       }),

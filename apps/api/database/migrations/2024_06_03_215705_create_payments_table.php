@@ -25,12 +25,12 @@ return new class extends Migration
             $table->enum('status', ['open', 'paid', 'cancelled', 'refunded', 'partially_refunded', 'failed', 'chargeback'])
                 ->default('open');
 
-            $table->float('amount');
+            $table->integer('amount');
 
             $table->string('payment_method')
                 ->nullable();
 
-            $table->float('refunded_amount')
+            $table->decimal('price', 10, 2)
                 ->nullable();
 
             $table->timestamp('paid_at')

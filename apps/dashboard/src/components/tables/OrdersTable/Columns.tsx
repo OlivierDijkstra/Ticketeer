@@ -46,7 +46,7 @@ export function columns(_data: ColumnData): ColumnDef<Order>[] {
         return Intl.NumberFormat('nl-NL', {
           style: 'currency',
           currency: 'EUR',
-        }).format(row.original.total);
+        }).format(parseFloat(row.original.total));
       },
     },
     {

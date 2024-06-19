@@ -31,13 +31,13 @@ return new class extends Migration
             $table->longText('description')
                 ->nullable();
 
-            $table->float('service_fee', 8, 2)
+            $table->decimal('service_fee', 10, 2)
                 ->nullable();
 
-            $table->float('total', 8, 2)
+            $table->decimal('total', 10, 2)
                 ->nullable();
 
-            $table->float('discount', 8, 2)
+            $table->decimal('discount', 10, 2)
                 ->nullable();
 
             $table->softDeletes();

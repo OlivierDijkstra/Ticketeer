@@ -28,7 +28,7 @@ return new class extends Migration
             $table->integer('amount')
                 ->default(0);
 
-            $table->float('price', 8, 2)
+            $table->decimal('price', 10, 2)
                 ->nullable();
         });
     }

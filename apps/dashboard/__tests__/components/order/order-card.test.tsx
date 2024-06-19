@@ -35,8 +35,8 @@ const mockOrder: Order = generateOrder({
       },
     }),
   ],
-  total: 20,
-  service_fee: 1,
+  total: '20',
+  service_fee: '1',
 });
 
 describe('OrderCard', () => {
