@@ -87,7 +87,7 @@ export default function LoginForm() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Email</FormLabel>
-                    <Input {...field} inputMode='email' type='email' />
+                    <Input {...field} aria-label='email' inputMode='email' type='email' />
                     <FormMessage />
                   </FormItem>
                 )}
@@ -99,7 +99,7 @@ export default function LoginForm() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Password</FormLabel>
-                    <Input {...field} type='password' />
+                    <Input {...field} aria-label="password" type='password' />
                     <FormMessage />
                   </FormItem>
                 )}
@@ -111,6 +111,7 @@ export default function LoginForm() {
                   control={form.control}
                   render={({ field }) => (
                     <Checkbox
+                      aria-label="remember me"
                       name={field.name}
                       checked={field.value || false}
                       onCheckedChange={field.onChange}
