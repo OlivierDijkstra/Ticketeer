@@ -71,7 +71,7 @@ describe('NewCustomersStatistic', () => {
     await waitFor(() => {
       expect(screen.getByText('New Customers This Month')).toBeInTheDocument();
       expect(screen.getByText('100')).toBeInTheDocument();
-      expect(screen.getByText('+20% from last week')).toBeInTheDocument();
+      expect(screen.getByText('+20% from last month')).toBeInTheDocument();
     });
   });
 
@@ -92,7 +92,7 @@ describe('NewCustomersStatistic', () => {
     await waitFor(() => {
       expect(screen.getByText('New Customers This Month')).toBeInTheDocument();
       expect(screen.getByText('50')).toBeInTheDocument();
-      expect(screen.getByText('-10% from last week')).toBeInTheDocument();
+      expect(screen.getByText('-10% from last month')).toBeInTheDocument();
     });
   });
 
@@ -114,7 +114,7 @@ describe('NewCustomersStatistic', () => {
     await waitFor(() => {
       expect(screen.getByText('New Customers This Month')).toBeInTheDocument();
       expect(screen.getByText('70')).toBeInTheDocument();
-      expect(screen.getByText('+15% from last week')).toBeInTheDocument();
+      expect(screen.getByText('+15% from last month')).toBeInTheDocument();
     });
 
     expect(Statistics.fetchStatistics).toHaveBeenCalledWith({
