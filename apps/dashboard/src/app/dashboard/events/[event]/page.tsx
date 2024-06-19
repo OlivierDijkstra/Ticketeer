@@ -6,7 +6,7 @@ import SkeletonGraph from '@/components/skeletons/skeleton-graph';
 import SkeletonStatistic from '@/components/skeletons/skeleton-statistic';
 import NewOrdersStatistic from '@/components/statistics/new-orders-statstic';
 import RevenueStatistic from '@/components/statistics/revenue-statistic';
-import ShowsTable from '@/components/tables/ShowsTable/ShowsTable';
+import ShowsTable from '@/components/tables/ShowsTable/shows-table';
 import { getEventAction } from '@/server/actions/events';
 
 export default async function Page({
