@@ -1,5 +1,6 @@
 'use client';
 
+import formatMoney from '@repo/lib';
 import { format } from 'date-fns';
 import { Line, LineChart, ResponsiveContainer, Tooltip, XAxis } from 'recharts';
 
@@ -22,14 +23,7 @@ export default function LineGraph({ data }: { data: DataPoint[] }) {
 
         <Tooltip
           content={
-            <GraphTooltip
-              formatter={(value: number) =>
-                Intl.NumberFormat('nl-NL', {
-                  style: 'currency',
-                  currency: 'EUR',
-                }).format(value)
-              }
-            />
+            <GraphTooltip formatter={(value: number) => formatMoney(value)} />
           }
         />
 

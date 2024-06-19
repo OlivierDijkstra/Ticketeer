@@ -9,6 +9,7 @@ import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { DEFAULT_DATE_FORMAT } from '@/lib/constants';
+import formatMoney from '@repo/lib';
 
 export function columns(_data: ColumnData): ColumnDef<Order>[] {
   const baseColumns: ColumnDef<Order>[] = [
@@ -43,10 +44,7 @@ export function columns(_data: ColumnData): ColumnDef<Order>[] {
       cell: ({ row }) => {
         if (!row.original.total) return 'Free';
 
-        return Intl.NumberFormat('nl-NL', {
-          style: 'currency',
-          currency: 'EUR',
-        }).format(parseFloat(row.original.total));
+        return formatMoney(row.original.total);
       },
     },
     {

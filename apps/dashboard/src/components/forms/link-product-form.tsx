@@ -2,6 +2,7 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import type { Product } from '@repo/lib';
+import formatMoney from '@repo/lib';
 import { useParams } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -126,11 +127,7 @@ export default function LinkProductForm({
     }
 
     if (selectedProduct) {
-      const formatted = new Intl.NumberFormat('nl-NL', {
-        style: 'currency',
-        currency: 'EUR',
-        // @ts-expect-error: selectedProduct is not defined
-      }).format(selectedProduct.price);
+      const formatted = formatMoney(selectedProduct.price);
 
       label += ` - Original: ${formatted}`;
     }

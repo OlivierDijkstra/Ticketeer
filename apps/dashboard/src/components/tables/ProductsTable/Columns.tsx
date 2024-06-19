@@ -1,6 +1,7 @@
 'use client';
 
 import type { ColumnData, Product } from '@repo/lib';
+import formatMoney from '@repo/lib';
 import type { ColumnDef } from '@tanstack/react-table';
 import { Badge, BadgeCheck, Eye, Trash, Unlink } from 'lucide-react';
 import { MoreHorizontal } from 'lucide-react';
@@ -55,12 +56,7 @@ export function columns(data: ColumnData): ColumnDef<Product>[] {
       accessorKey: 'price',
       header: data.params.show ? 'Base Price' : 'Price',
       cell: ({ row }) => {
-        const currencyFormatter = new Intl.NumberFormat('nl-NL', {
-          style: 'currency',
-          currency: 'EUR',
-        });
-
-        return currencyFormatter.format(parseFloat(row.original.price));
+        return formatMoney(row.original.price);
       },
     },
     {
@@ -93,11 +89,6 @@ export function columns(data: ColumnData): ColumnDef<Product>[] {
         accessorKey: 'pivot.adjusted_price',
         header: 'Adjusted price',
         cell: ({ row }) => {
-          const currencyFormatter = new Intl.NumberFormat('nl-NL', {
-            style: 'currency',
-            currency: 'EUR',
-          });
-
           if (
             row.original.pivot?.adjusted_price === '0' ||
             !row.original.pivot?.adjusted_price
@@ -105,9 +96,7 @@ export function columns(data: ColumnData): ColumnDef<Product>[] {
             return 'Free';
           }
 
-          return currencyFormatter.format(
-            parseFloat(row.original.pivot?.adjusted_price)
-          );
+          return formatMoney(row.original.pivot?.adjusted_price);
         },
       },
     ];
