@@ -76,6 +76,7 @@ export interface Show {
   guests: string[];
   description: string;
   address: Address;
+  products: Product[];
   deleted_at?: string | null; // Optional field
   created_at: string; // Dates as strings
   updated_at: string; // Dates as strings
@@ -88,6 +89,8 @@ export type CreateShow = Omit<
 >;
 
 export interface ProductShowPivot {
+  show_id: number;
+  product_id: number;
   adjusted_price?: string;
   price?: string;
   amount: number;
