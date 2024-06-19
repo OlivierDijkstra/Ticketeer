@@ -38,6 +38,7 @@ export default async function NewCustomersStatistic({
       name='New Customers This Month'
       percentage={statistics.getPercentageIncrease()}
       value={newCustomers}
+      period='month'
     />
   );
 }

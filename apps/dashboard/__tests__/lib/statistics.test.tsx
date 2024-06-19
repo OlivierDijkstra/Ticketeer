@@ -126,6 +126,6 @@ describe('Statistics', () => {
 
     const statistics = new Statistics(zeroOldValueDataPoints);
     const percentageIncrease = statistics.getPercentageIncrease();
-    expect(percentageIncrease).toBe(0);
+    expect(percentageIncrease).toBe(100);
   });
 });

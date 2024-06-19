@@ -131,9 +131,9 @@ export function createUrl(
   return `${base}?${queryString}`;
 }
 
-export default function formatMoney(amount: number | string) {
+export default function formatMoney(amount: number | string | undefined) {
   return new Intl.NumberFormat("nl-NL", {
     style: "currency",
     currency: "EUR",
-  }).format(parseFloat(amount as string));
+  }).format(parseFloat((amount as string) || '0'));
 }

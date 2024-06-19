@@ -75,7 +75,7 @@ export class Statistics {
     const oldValue = this.dataPoints[this.dataPoints.length - 2]?.value || 0;
 
     if (oldValue === 0) {
-      return 0;
+      return newValue > 0 ? 100 : 0;
     }
 
     const increase = newValue - oldValue;
