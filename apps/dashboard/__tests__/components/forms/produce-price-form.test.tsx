@@ -1,4 +1,4 @@
-import { generateProduct } from '@repo/lib';
+import formatMoney, { generateProduct } from '@repo/lib';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { toast } from 'sonner';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
@@ -30,7 +30,7 @@ describe('ProductPriceForm', () => {
   test('renders with initial values', () => {
     render(<ProductPriceForm product={product} />);
 
-    expect(screen.getByLabelText(/price/i)).toHaveValue('€ 10,00');
+    expect(screen.getByLabelText(/price/i)).toHaveValue(formatMoney(10));
     expect(screen.getByLabelText(/vat/i)).toHaveValue(19);
   });
 
@@ -44,7 +44,7 @@ describe('ProductPriceForm', () => {
       target: { value: '20' },
     });
 
-    expect(screen.getByLabelText(/price/i)).toHaveValue('€ 12,34');
+    expect(screen.getByLabelText(/price/i)).toHaveValue(formatMoney(12.34));
     expect(screen.getByLabelText(/vat/i)).toHaveValue(20);
   });
 

@@ -1,3 +1,4 @@
+import formatMoney from '@repo/lib';
 import {
   act,
   fireEvent,
@@ -39,7 +40,7 @@ describe('CreateProductForm', () => {
 
     expect(screen.getByLabelText(/name/i)).toHaveValue('');
     expect(screen.getByLabelText(/description/i)).toHaveValue('');
-    expect(screen.getByLabelText(/price/i)).toHaveValue('€ 0,00');
+    expect(screen.getByLabelText(/price/i)).toHaveValue(formatMoney(0));
     expect(screen.getByLabelText(/vat/i)).toHaveValue(9);
     expect(screen.getByLabelText(/upsell/i)).not.toBeChecked();
     expect(screen.getByLabelText(/total available/i)).toHaveValue(0);
@@ -73,7 +74,7 @@ describe('CreateProductForm', () => {
     expect(screen.getByLabelText(/description/i)).toHaveValue(
       'Test Description'
     );
-    expect(screen.getByLabelText(/price/i)).toHaveValue('€ 123,45');
+    expect(screen.getByLabelText(/price/i)).toHaveValue(formatMoney(123.45));
     expect(screen.getByLabelText(/vat/i)).toHaveValue(19);
     expect(screen.getByLabelText(/total available/i)).toHaveValue(100);
   });

@@ -1,3 +1,4 @@
+import formatMoney from '@repo/lib';
 import { render, screen, waitFor } from '@testing-library/react';
 import { format, subMonths } from 'date-fns';
 import type { Mock } from 'vitest';
@@ -70,7 +71,7 @@ describe('RevenueStatistic', () => {
 
     await waitFor(() => {
       expect(screen.getByText('Revenue This Month')).toBeInTheDocument();
-      expect(screen.getByText('€ 10.000,00')).toBeInTheDocument();
+      expect(screen.getByText(formatMoney(10000))).toBeInTheDocument();
       expect(screen.getByText('+20% from last month')).toBeInTheDocument();
     });
   });
@@ -89,7 +90,7 @@ describe('RevenueStatistic', () => {
 
     await waitFor(() => {
       expect(screen.getByText('Revenue This Month')).toBeInTheDocument();
-      expect(screen.getByText('€ 5.000,00')).toBeInTheDocument();
+      expect(screen.getByText(formatMoney(5000))).toBeInTheDocument();
       expect(screen.getByText('-10% from last month')).toBeInTheDocument();
     });
   });
@@ -109,7 +110,7 @@ describe('RevenueStatistic', () => {
 
     await waitFor(() => {
       expect(screen.getByText('Revenue This Month')).toBeInTheDocument();
-      expect(screen.getByText('€ 7.000,00')).toBeInTheDocument();
+      expect(screen.getByText(formatMoney(7000))).toBeInTheDocument();
       expect(screen.getByText('+15% from last month')).toBeInTheDocument();
     });
 

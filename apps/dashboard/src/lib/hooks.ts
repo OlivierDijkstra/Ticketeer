@@ -1,3 +1,4 @@
+import formatMoney from '@repo/lib';
 import { useTheme } from 'next-themes';
 import { useEffect, useMemo, useState } from 'react';
 
@@ -23,21 +24,12 @@ export function useGraphColors() {
 }
 
 function formatCurrency(value: string): string {
-  const formatter = new Intl.NumberFormat('nl-NL', {
-    style: 'currency',
-    currency: 'EUR',
-    minimumFractionDigits: 2,
-  });
-
-  // Remove all non-digit characters
   const numericValue = value.replace(/[^\d]/g, '');
 
-  if (!numericValue) return formatter.format(0);
+  if (!numericValue) return formatMoney(0);
 
   // Convert to a number and format as currency
-  const formattedValue = formatter.format(parseFloat(numericValue) / 100);
-
-  return formattedValue;
+  return formatMoney(parseFloat(numericValue) / 100);
 }
 
 export function useCurrencyInput(

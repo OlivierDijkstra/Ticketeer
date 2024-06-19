@@ -1,3 +1,4 @@
+import formatMoney from '@repo/lib';
 import { act, renderHook } from '@testing-library/react';
 import { afterEach, describe, expect, test, vi } from 'vitest';
 
@@ -65,7 +66,7 @@ describe('hooks', () => {
     test('initializes with formatted currency', () => {
       const { result } = renderHook(() => hooks.useCurrencyInput('12345'));
 
-      expect(formatCurrency(result.current[0])).toBe('€ 123,45');
+      expect(formatCurrency(result.current[0])).toBe(formatMoney(123.45));
     });
 
     test('handles input change and formats value', () => {
@@ -75,7 +76,7 @@ describe('hooks', () => {
         result.current[1]('67890');
       });
 
-      expect(formatCurrency(result.current[0])).toBe('€ 678,90');
+      expect(formatCurrency(result.current[0])).toBe(formatMoney(678.9));
     });
 
     test('returns normalized value', () => {
@@ -91,13 +92,13 @@ describe('hooks', () => {
         result.current[1]('67890');
       });
 
-      expect(formatCurrency(result.current[0])).toBe('€ 678,90');
+      expect(formatCurrency(result.current[0])).toBe(formatMoney(678.9));
 
       act(() => {
         result.current[3]();
       });
 
-      expect(formatCurrency(result.current[0])).toBe('€ 123,45');
+      expect(formatCurrency(result.current[0])).toBe(formatMoney(123.45));
     });
   });
 

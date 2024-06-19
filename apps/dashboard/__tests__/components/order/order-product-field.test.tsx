@@ -137,7 +137,7 @@ describe('OrderProductField', () => {
       screen.getByRole('textbox', {
         name: /price/i,
       })
-    ).toHaveValue('€ 12,34');
+    ).toHaveValue(formatMoney(12.34));
   });
 
   test('removes product correctly', async () => {
@@ -188,7 +188,7 @@ describe('OrderProductField', () => {
     render(<Component />);
 
     expect(screen.getByRole('textbox', { name: /price/i })).toHaveValue(
-      '€ 0,00'
+      formatMoney(0)
     );
 
     fireEvent.change(screen.getByRole('textbox', { name: /price/i }), {
@@ -196,7 +196,7 @@ describe('OrderProductField', () => {
     });
 
     expect(screen.getByRole('textbox', { name: /price/i })).toHaveValue(
-      '€ 12,34'
+      formatMoney(12.34)
     );
   });
 
@@ -258,7 +258,7 @@ describe('OrderProductField', () => {
     });
 
     expect(screen.getByRole('textbox', { name: /price/i })).toHaveValue(
-      '€ 10,00'
+      formatMoney(10)
     );
   });
 
@@ -280,7 +280,7 @@ describe('OrderProductField', () => {
     });
 
     expect(screen.getByRole('textbox', { name: /price/i })).toHaveValue(
-      '€ 10,00'
+      formatMoney(10)
     );
   });
 
@@ -302,12 +302,12 @@ describe('OrderProductField', () => {
     });
 
     const priceInput = screen.getByRole('textbox', { name: /price/i });
-    expect(priceInput).toHaveValue('€ 10,00');
+    expect(priceInput).toHaveValue(formatMoney(10));
 
     await act(async () => {
       fireEvent.change(priceInput, { target: { value: '12.34' } });
     });
 
-    expect(priceInput).toHaveValue('€ 12,34');
+    expect(priceInput).toHaveValue(formatMoney(12.34));
   });
 });

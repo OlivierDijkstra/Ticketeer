@@ -1,5 +1,5 @@
 import type { Product } from '@repo/lib';
-import { generateProduct } from '@repo/lib';
+import formatMoney, { generateProduct } from '@repo/lib';
 import {
   act,
   fireEvent,
@@ -52,7 +52,7 @@ describe('LinkProductForm', () => {
     );
 
     expect(screen.getByRole('combobox')).toBeInTheDocument();
-    expect(screen.getByLabelText(/adjusted price/i)).toHaveValue('€ 0,00');
+    expect(screen.getByLabelText(/adjusted price/i)).toHaveValue(formatMoney(0));
     expect(screen.getByLabelText(/total available/i)).toHaveValue(1);
     expect(screen.getByLabelText(/enabled/i)).not.toBeChecked();
   });
@@ -93,7 +93,9 @@ describe('LinkProductForm', () => {
       target: { value: '5' },
     });
 
-    expect(screen.getByLabelText(/adjusted price/i)).toHaveValue('€ 12,34');
+    expect(screen.getByLabelText(/adjusted price/i)).toHaveValue(
+      formatMoney(12.34)
+    );
     expect(screen.getByLabelText(/total available/i)).toHaveValue(5);
   });
 

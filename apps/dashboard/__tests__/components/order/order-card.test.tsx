@@ -1,5 +1,5 @@
 import type { Order } from '@repo/lib';
-import { generateOrder, generateProduct } from '@repo/lib';
+import formatMoney, { generateOrder, generateProduct } from '@repo/lib';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { toast } from 'sonner';
@@ -62,10 +62,10 @@ describe('OrderCard', () => {
 
     expect(getByTextContent('Product 1 x 2')).toBeInTheDocument();
     expect(screen.getByText('Adjusted')).toBeInTheDocument();
-    expect(getByTextContent('€ 9,00')).toBeInTheDocument();
-    expect(getByTextContent('€ 20,00')).toBeInTheDocument();
-    expect(getByTextContent('€ 1,00')).toBeInTheDocument();
-    expect(getByTextContent('€ 21,00')).toBeInTheDocument();
+    expect(getByTextContent(formatMoney(9))).toBeInTheDocument();
+    expect(getByTextContent(formatMoney(20))).toBeInTheDocument();
+    expect(getByTextContent(formatMoney(1))).toBeInTheDocument();
+    expect(getByTextContent(formatMoney(21))).toBeInTheDocument();
   });
 
   test('handles description change', async () => {
