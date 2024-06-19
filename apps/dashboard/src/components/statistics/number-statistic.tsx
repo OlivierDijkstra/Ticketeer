@@ -5,11 +5,13 @@ export default function NumberStatistic({
   value = 0,
   percentage = 0,
   up,
+  period = 'week',
 }: {
   name: string;
   value: number | string;
   percentage: number;
   up: boolean | null;
+  period?: 'week' | 'month';
 }) {
   return (
     <Card className='h-full max-h-none sm:max-w-sm'>
@@ -19,7 +21,7 @@ export default function NumberStatistic({
       {up != null && (
         <CardContent>
           <div className='text-2xl font-bold'>{value}</div>
-          <p className='text-xs text-muted-foreground'>{`${up ? '+' : ''}${percentage}% from last week`}</p>
+          <p className='text-xs text-muted-foreground'>{`${up ? '+' : ''}${percentage}% from last ${period}`}</p>
         </CardContent>
       )}
     </Card>

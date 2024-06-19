@@ -50,6 +50,7 @@ export default async function RevenueStatistic({
         .format(revenueThisMonth)
         .toString()}
       up={up}
+      period='month'
     />
   );
 }

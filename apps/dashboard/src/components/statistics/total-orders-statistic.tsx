@@ -42,6 +42,7 @@ export default async function TotalOrdersStatistic({
       percentage={statistics.calculatePercentageIncrease()}
       value={totalOrders}
       up={up}
+      period='month'
     />
   );
 }

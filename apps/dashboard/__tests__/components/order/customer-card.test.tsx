@@ -22,7 +22,7 @@ const mockCustomer: Customer = generateCustomer({
     street2: '',
     city: 'Anytown',
     postal_code: '12345',
-    state: 'State',
+    state: 'Something',
     country: 'Country',
   },
 });

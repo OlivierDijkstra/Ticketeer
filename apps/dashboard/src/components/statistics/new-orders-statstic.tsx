@@ -41,6 +41,7 @@ export default async function NewOrdersStatistic({
       percentage={statistics.calculatePercentageIncrease()}
       value={ordersThisWeek}
       up={up}
+      period='week'
     />
   );
 }
