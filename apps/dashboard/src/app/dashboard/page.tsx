@@ -4,7 +4,7 @@ import RevenueGraph from '@/components/graphs/revenue-graph';
 import SkeletonGraph from '@/components/skeletons/skeleton-graph';
 import SkeletonStatistic from '@/components/skeletons/skeleton-statistic';
 import SkeletonTable from '@/components/skeletons/skeleton-table';
-import NewOrdersStatistic from '@/components/statistics/new-orders-statstic';
+import NewOrdersStatistic from '@/components/statistics/new-orders-statistic';
 import RevenueStatistic from '@/components/statistics/revenue-statistic';
 import EventsTable from '@/components/tables/EventsTable/events-table';
 

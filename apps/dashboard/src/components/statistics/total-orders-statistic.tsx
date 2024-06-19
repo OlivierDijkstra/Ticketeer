@@ -27,21 +27,17 @@ export default async function TotalOrdersStatistic({
         name='Error fetching total orders'
         percentage={0}
         value={0}
-        up={null}
       />
     );
   }
 
-  const totalOrders =
-    statistics.getTotalIncrementsAndDecrements().totalIncrements;
-  const up = statistics.calculatePercentageIncrease() > 0;
+  const totalOrders = statistics.getTotalChanges().totalIncrements;
 
   return (
     <NumberStatistic
       name='Total Orders This Month'
-      percentage={statistics.calculatePercentageIncrease()}
+      percentage={statistics.getPercentageIncrease()}
       value={totalOrders}
-      up={up}
       period='month'
     />
   );

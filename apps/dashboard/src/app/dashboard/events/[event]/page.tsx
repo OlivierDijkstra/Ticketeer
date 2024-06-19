@@ -4,7 +4,7 @@ import EventMediaZone from '@/components/event/event-media-zone';
 import EventTitleCard from '@/components/event/event-title-card';
 import SkeletonGraph from '@/components/skeletons/skeleton-graph';
 import SkeletonStatistic from '@/components/skeletons/skeleton-statistic';
-import NewOrdersStatistic from '@/components/statistics/new-orders-statstic';
+import NewOrdersStatistic from '@/components/statistics/new-orders-statistic';
 import RevenueStatistic from '@/components/statistics/revenue-statistic';
 import ShowsTable from '@/components/tables/ShowsTable/shows-table';
 import { getEventAction } from '@/server/actions/events';

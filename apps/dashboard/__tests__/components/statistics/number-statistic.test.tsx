@@ -10,7 +10,6 @@ describe('NumberStatistic', () => {
         name='Test Statistic'
         value={100}
         percentage={10}
-        up={true}
       />
     );
 
@@ -24,7 +23,6 @@ describe('NumberStatistic', () => {
         name='Test Statistic'
         value={100}
         percentage={10}
-        up={true}
       />
     );
 
@@ -37,25 +35,10 @@ describe('NumberStatistic', () => {
         name='Test Statistic'
         value={100}
         percentage={-10}
-        up={false}
       />
     );
 
     expect(screen.getByText('-10% from last week')).toBeInTheDocument();
-  });
-
-  test('does not display percentage text when up is null', () => {
-    render(
-      <NumberStatistic
-        name='Test Statistic'
-        value={100}
-        percentage={10}
-        up={null}
-      />
-    );
-
-    expect(screen.queryByText('+10% from last week')).not.toBeInTheDocument();
-    expect(screen.queryByText('-10% from last week')).not.toBeInTheDocument();
   });
 
   test('displays value as a string', () => {
@@ -64,7 +47,6 @@ describe('NumberStatistic', () => {
         name='Test Statistic'
         value='100k'
         percentage={10}
-        up={true}
       />
     );
 

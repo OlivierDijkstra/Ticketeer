@@ -27,21 +27,17 @@ export default async function NewCustomersStatistic({
         name='Error fetching new customers'
         percentage={0}
         value={0}
-        up={null}
       />
     );
   }
 
-  const newCustomers =
-    statistics.getTotalIncrementsAndDecrements().totalIncrements;
-  const up = statistics.calculatePercentageIncrease() > 0;
+  const newCustomers = statistics.getTotalChanges().totalIncrements;
 
   return (
     <NumberStatistic
       name='New Customers This Month'
-      percentage={statistics.calculatePercentageIncrease()}
+      percentage={statistics.getPercentageIncrease()}
       value={newCustomers}
-      up={up}
     />
   );
 }

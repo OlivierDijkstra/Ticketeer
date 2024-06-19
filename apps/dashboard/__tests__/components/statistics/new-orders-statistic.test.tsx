@@ -3,7 +3,7 @@ import { subDays } from 'date-fns';
 import type { Mock } from 'vitest';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 
-import NewOrdersStatistic from '@/components/statistics/new-orders-statstic';
+import NewOrdersStatistic from '@/components/statistics/new-orders-statistic';
 import { Statistics } from '@/lib/statistics';
 
 vi.mock('date-fns', () => ({
@@ -27,8 +27,8 @@ async function resolvedComponent(
 
 describe('NewOrdersStatistic', () => {
   const mockStatistics = {
-    getLastDataPoint: vi.fn(),
-    calculatePercentageIncrease: vi.fn(),
+    getLastPoint: vi.fn(),
+    getPercentageIncrease: vi.fn(),
   };
 
   beforeEach(() => {
@@ -53,8 +53,8 @@ describe('NewOrdersStatistic', () => {
   });
 
   test('renders statistic with fetched data', async () => {
-    mockStatistics.getLastDataPoint.mockReturnValue({ increments: 100 });
-    mockStatistics.calculatePercentageIncrease.mockReturnValue(20);
+    mockStatistics.getLastPoint.mockReturnValue({ increments: 100 });
+    mockStatistics.getPercentageIncrease.mockReturnValue(20);
 
     (Statistics.fetchStatistics as Mock).mockResolvedValue(mockStatistics);
 
@@ -72,8 +72,8 @@ describe('NewOrdersStatistic', () => {
   });
 
   test('renders statistic with fetched data and down percentage', async () => {
-    mockStatistics.getLastDataPoint.mockReturnValue({ increments: 50 });
-    mockStatistics.calculatePercentageIncrease.mockReturnValue(-10);
+    mockStatistics.getLastPoint.mockReturnValue({ increments: 50 });
+    mockStatistics.getPercentageIncrease.mockReturnValue(-10);
 
     (Statistics.fetchStatistics as Mock).mockResolvedValue(mockStatistics);
 
@@ -91,8 +91,8 @@ describe('NewOrdersStatistic', () => {
   });
 
   test('renders statistic with filters', async () => {
-    mockStatistics.getLastDataPoint.mockReturnValue({ increments: 70 });
-    mockStatistics.calculatePercentageIncrease.mockReturnValue(15);
+    mockStatistics.getLastPoint.mockReturnValue({ increments: 70 });
+    mockStatistics.getPercentageIncrease.mockReturnValue(15);
 
     (Statistics.fetchStatistics as Mock).mockResolvedValue(mockStatistics);
 

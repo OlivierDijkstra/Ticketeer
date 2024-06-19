@@ -27,8 +27,8 @@ async function resolvedComponent(
 
 describe('TotalOrdersStatistic', () => {
   const mockStatistics = {
-    getTotalIncrementsAndDecrements: vi.fn(),
-    calculatePercentageIncrease: vi.fn(),
+    getTotalChanges: vi.fn(),
+    getPercentageIncrease: vi.fn(),
   };
 
   beforeEach(() => {
@@ -55,10 +55,10 @@ describe('TotalOrdersStatistic', () => {
   });
 
   test('renders statistic with fetched data', async () => {
-    mockStatistics.getTotalIncrementsAndDecrements.mockReturnValue({
+    mockStatistics.getTotalChanges.mockReturnValue({
       totalIncrements: 100,
     });
-    mockStatistics.calculatePercentageIncrease.mockReturnValue(20);
+    mockStatistics.getPercentageIncrease.mockReturnValue(20);
 
     (Statistics.fetchStatistics as Mock).mockResolvedValue(mockStatistics);
 
@@ -76,10 +76,10 @@ describe('TotalOrdersStatistic', () => {
   });
 
   test('renders statistic with fetched data and down percentage', async () => {
-    mockStatistics.getTotalIncrementsAndDecrements.mockReturnValue({
+    mockStatistics.getTotalChanges.mockReturnValue({
       totalIncrements: 50,
     });
-    mockStatistics.calculatePercentageIncrease.mockReturnValue(-10);
+    mockStatistics.getPercentageIncrease.mockReturnValue(-10);
 
     (Statistics.fetchStatistics as Mock).mockResolvedValue(mockStatistics);
 
@@ -97,10 +97,10 @@ describe('TotalOrdersStatistic', () => {
   });
 
   test('renders statistic with filters', async () => {
-    mockStatistics.getTotalIncrementsAndDecrements.mockReturnValue({
+    mockStatistics.getTotalChanges.mockReturnValue({
       totalIncrements: 70,
     });
-    mockStatistics.calculatePercentageIncrease.mockReturnValue(15);
+    mockStatistics.getPercentageIncrease.mockReturnValue(15);
 
     (Statistics.fetchStatistics as Mock).mockResolvedValue(mockStatistics);
 

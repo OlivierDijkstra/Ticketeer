@@ -60,32 +60,32 @@ describe('Statistics', () => {
         group_by: 'week',
         filters: {},
       })
-    ).rejects.toThrow('Failed to parse statistics data.');
+    ).rejects.toThrow('Failed to fetch statistics data.');
   });
 
-  test('getFirstDataPoint returns the first data point', () => {
+  test('getFirstPoint returns the first data point', () => {
     const statistics = new Statistics(mockDataPoints);
-    expect(statistics.getFirstDataPoint()).toEqual(mockDataPoints[0]);
+    expect(statistics.getFirstPoint()).toEqual(mockDataPoints[0]);
   });
 
-  test('getLastDataPoint returns the last data point', () => {
+  test('getLastPoint returns the last data point', () => {
     const statistics = new Statistics(mockDataPoints);
-    expect(statistics.getLastDataPoint()).toEqual(mockDataPoints[1]);
+    expect(statistics.getLastPoint()).toEqual(mockDataPoints[1]);
   });
 
-  test('getTotalIncrementsAndDecrements calculates totals correctly', () => {
+  test('getTotalChanges calculates totals correctly', () => {
     const statistics = new Statistics(mockDataPoints);
-    const totals = statistics.getTotalIncrementsAndDecrements();
+    const totals = statistics.getTotalChanges();
     expect(totals).toEqual({ totalIncrements: 25, totalDecrements: 10 });
   });
 
-  test('calculatePercentageIncrease calculates percentage increase correctly', () => {
+  test('getPercentageIncrease calculates percentage increase correctly', () => {
     const statistics = new Statistics(mockDataPoints);
-    const percentageIncrease = statistics.calculatePercentageIncrease();
+    const percentageIncrease = statistics.getPercentageIncrease();
     expect(percentageIncrease).toBe(20);
   });
 
-  test('calculatePercentageIncrease throws error if less than two data points', () => {
+  test('getPercentageIncrease throws error if less than two data points', () => {
     const singleDataPoint: DataPoint[] = [
       {
         start: '2024-01-01',
@@ -99,12 +99,12 @@ describe('Statistics', () => {
 
     const statistics = new Statistics(singleDataPoint);
 
-    expect(() => statistics.calculatePercentageIncrease()).toThrow(
+    expect(() => statistics.getPercentageIncrease()).toThrow(
       'At least two data points are required to calculate a percentage increase.'
     );
   });
 
-  test('calculatePercentageIncrease handles zero oldValue gracefully', () => {
+  test('getPercentageIncrease handles zero oldValue gracefully', () => {
     const zeroOldValueDataPoints: DataPoint[] = [
       {
         start: '2024-01-01',
@@ -125,7 +125,7 @@ describe('Statistics', () => {
     ];
 
     const statistics = new Statistics(zeroOldValueDataPoints);
-    const percentageIncrease = statistics.calculatePercentageIncrease();
+    const percentageIncrease = statistics.getPercentageIncrease();
     expect(percentageIncrease).toBe(0);
   });
 });

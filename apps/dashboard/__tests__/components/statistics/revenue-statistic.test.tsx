@@ -28,8 +28,8 @@ async function resolvedComponent(
 
 describe('RevenueStatistic', () => {
   const mockStatistics = {
-    getLastDataPoint: vi.fn(),
-    calculatePercentageIncrease: vi.fn(),
+    getLastPoint: vi.fn(),
+    getPercentageIncrease: vi.fn(),
   };
 
   beforeEach(() => {
@@ -57,8 +57,8 @@ describe('RevenueStatistic', () => {
   });
 
   test('renders statistic with fetched data', async () => {
-    mockStatistics.getLastDataPoint.mockReturnValue({ increments: 10000 });
-    mockStatistics.calculatePercentageIncrease.mockReturnValue(20);
+    mockStatistics.getLastPoint.mockReturnValue({ increments: 10000 });
+    mockStatistics.getPercentageIncrease.mockReturnValue(20);
 
     (Statistics.fetchStatistics as Mock).mockResolvedValue(mockStatistics);
 
@@ -76,8 +76,8 @@ describe('RevenueStatistic', () => {
   });
 
   test('renders statistic with fetched data and down percentage', async () => {
-    mockStatistics.getLastDataPoint.mockReturnValue({ increments: 5000 });
-    mockStatistics.calculatePercentageIncrease.mockReturnValue(-10);
+    mockStatistics.getLastPoint.mockReturnValue({ increments: 5000 });
+    mockStatistics.getPercentageIncrease.mockReturnValue(-10);
 
     (Statistics.fetchStatistics as Mock).mockResolvedValue(mockStatistics);
 
@@ -95,8 +95,8 @@ describe('RevenueStatistic', () => {
   });
 
   test('renders statistic with filters', async () => {
-    mockStatistics.getLastDataPoint.mockReturnValue({ increments: 7000 });
-    mockStatistics.calculatePercentageIncrease.mockReturnValue(15);
+    mockStatistics.getLastPoint.mockReturnValue({ increments: 7000 });
+    mockStatistics.getPercentageIncrease.mockReturnValue(15);
 
     (Statistics.fetchStatistics as Mock).mockResolvedValue(mockStatistics);
 

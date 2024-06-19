@@ -27,20 +27,17 @@ export default async function NewOrdersStatistic({
         name='Error fetching new orders'
         percentage={0}
         value={0}
-        up={null}
       />
     );
   }
 
-  const ordersThisWeek = statistics.getLastDataPoint().increments;
-  const up = statistics.calculatePercentageIncrease() > 0;
+  const ordersThisWeek = statistics.getLastPoint()?.increments;
 
   return (
     <NumberStatistic
       name='New Orders This Week'
-      percentage={statistics.calculatePercentageIncrease()}
-      value={ordersThisWeek}
-      up={up}
+      percentage={statistics.getPercentageIncrease()}
+      value={ordersThisWeek || 0}
       period='week'
     />
   );

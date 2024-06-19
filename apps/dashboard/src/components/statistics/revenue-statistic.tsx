@@ -1,3 +1,4 @@
+import formatMoney from '@repo/lib';
 import { format, subMonths } from 'date-fns';
 
 import NumberStatistic from '@/components/statistics/number-statistic';
@@ -27,29 +28,17 @@ export default async function RevenueStatistic({
     });
   } catch (error) {
     return (
-      <NumberStatistic
-        name='Error fetching revenue'
-        percentage={0}
-        value={0}
-        up={null}
-      />
+      <NumberStatistic name='Error fetching revenue' percentage={0} value={0} />
     );
   }
 
-  const revenueThisMonth = statistics.getLastDataPoint().increments;
-  const up = statistics.calculatePercentageIncrease() > 0;
+  const revenueThisMonth = statistics.getLastPoint()?.increments;
 
   return (
     <NumberStatistic
       name='Revenue This Month'
-      percentage={statistics.calculatePercentageIncrease()}
-      value={Intl.NumberFormat('nl-NL', {
-        style: 'currency',
-        currency: 'EUR',
-      })
-        .format(revenueThisMonth)
-        .toString()}
-      up={up}
+      percentage={statistics.getPercentageIncrease()}
+      value={formatMoney(revenueThisMonth)}
       period='month'
     />
   );
