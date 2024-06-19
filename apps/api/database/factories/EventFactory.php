@@ -24,7 +24,7 @@ class EventFactory extends Factory
         return [
             'name' => $name,
             'slug' => $slug,
-            'service_price' => 2.5,
+            'service_fee' => 2.5,
             'description' => fake()->text(),
             'enabled' => true,
             'featured' => false,

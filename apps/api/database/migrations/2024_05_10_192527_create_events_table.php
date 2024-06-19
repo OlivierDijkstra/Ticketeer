@@ -15,7 +15,7 @@ class CreateEventsTable extends Migration
             $table->string('slug');
             $table->string('statistics_slug');
 
-            $table->decimal('service_price', 10, 2);
+            $table->decimal('service_fee', 10, 2);
 
             $table->longText('description')->nullable();
 

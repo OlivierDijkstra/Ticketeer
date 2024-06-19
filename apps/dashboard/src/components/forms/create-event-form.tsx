@@ -51,7 +51,7 @@ export default function CreateEventForm({
       })
       .optional(),
     enabled: z.boolean().optional(),
-    service_price: z.number().min(0),
+    service_fee: z.number().min(0),
   });
 
   const form = useForm<z.infer<typeof schema>>({
@@ -61,7 +61,7 @@ export default function CreateEventForm({
       description: '',
       description_short: '',
       enabled: false,
-      service_price: 0,
+      service_fee: 0,
     },
   });
 
@@ -76,7 +76,7 @@ export default function CreateEventForm({
           description_short: data.description_short || '',
           enabled: data.enabled || false,
           slug,
-          service_price: `${data.service_price}`,
+          service_fee: `${data.service_fee}`,
           featured: false,
         },
       }),
@@ -95,7 +95,7 @@ export default function CreateEventForm({
 
   useEffect(() => {
     form.setValue(
-      'service_price',
+      'service_fee',
       parseFloat(servicePrice.replace(/[^\d]/g, '')) / 100 || 0
     );
   }, [form, servicePrice]);
@@ -158,7 +158,7 @@ export default function CreateEventForm({
 
         <FormField
           control={form.control}
-          name='service_price'
+          name='service_fee'
           render={({ field }) => (
             <FormItem>
               <FormLabel>Service Price</FormLabel>

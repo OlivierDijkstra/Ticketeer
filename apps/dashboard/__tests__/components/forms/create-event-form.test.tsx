@@ -80,7 +80,7 @@ describe('CreateEventForm', () => {
       name: 'Test Event',
       description: 'Test Description',
       enabled: true,
-      service_price: 1234,
+      service_fee: 1234,
     });
 
     render(
@@ -107,7 +107,7 @@ describe('CreateEventForm', () => {
             name: 'Test Event',
             description: 'Test Description',
             enabled: true,
-            service_price: 12.34,
+            service_fee: 12.34,
             slug: 'test-event',
             featured: false,
           }),

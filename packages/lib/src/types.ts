@@ -55,7 +55,7 @@ export interface Event {
   description_short?: string | null; // Optional field
   enabled: boolean;
   featured: boolean;
-  service_price: string;
+  service_fee: string;
   media: Media[];
   deleted_at?: string | null; // Optional field
   created_at: string; // Dates as strings

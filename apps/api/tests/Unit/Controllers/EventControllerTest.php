@@ -47,7 +47,7 @@ class EventControllerTest extends TestCase
         $response = $this->json('POST', route('events.store'), [
             'name' => 'Test Event',
             'slug' => 'test-event',
-            'service_price' => 100.00,
+            'service_fee' => 100.00,
             'description' => 'Test Description',
             'enabled' => true,
             'featured' => false,

@@ -28,7 +28,7 @@ class Event extends Model implements HasMedia
         'name',
         'slug',
         'statistics_slug',
-        'service_price',
+        'service_fee',
         'description',
         'description_short',
         'enabled',
@@ -36,7 +36,7 @@ class Event extends Model implements HasMedia
     ];
 
     protected $casts = [
-        'service_price' => 'float',
+        'service_fee' => 'float',
         'enabled' => 'boolean',
         'featured' => 'boolean',
     ];

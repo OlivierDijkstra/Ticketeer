@@ -24,7 +24,7 @@ class UpdateEventRequest extends FormRequest
         return [
             'name' => 'nullable|string|max:255',
             'slug' => 'nullable|string|max:255',
-            'service_price' => 'nullable|numeric',
+            'service_fee' => 'nullable|numeric',
             'description' => 'nullable|string',
             'description_short' => 'nullable|string',
             'enabled' => 'nullable|boolean',

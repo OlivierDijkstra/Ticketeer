@@ -77,7 +77,7 @@ class OrderController extends Controller
             'show_id' => $show->id,
             'description' => $request->input('description'),
             'order_number' => Order::GenerateOrderNumber(),
-            'service_fee' => $show->event->service_price,
+            'service_fee' => $show->event->service_fee,
         ]);
 
         $products = $request->input('products');

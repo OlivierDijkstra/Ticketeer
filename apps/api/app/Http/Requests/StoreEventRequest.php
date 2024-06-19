@@ -24,7 +24,7 @@ class StoreEventRequest extends FormRequest
         return [
             'name' => 'required|string|max:255',
             'slug' => 'required|string|max:255',
-            'service_price' => 'required|numeric',
+            'service_fee' => 'required|numeric',
             'description' => 'nullable|string',
             'description_short' => 'nullable|string',
             'enabled' => 'required|boolean',

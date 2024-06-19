@@ -70,7 +70,7 @@ class Order extends Model
 
     public function total()
     {
-        return $this->total + $this->show->event->service_price;
+        return $this->total + $this->show->event->service_fee;
     }
 
     public function createPayment(float $total, string $redirectUrl)
