@@ -62,6 +62,7 @@ Route::apiResource('products', ProductController::class);
 //
 Route::apiResource('orders', OrderController::class);
 Route::post('orders/{order}/payment-link', [OrderController::class, 'createPaymentLink'])->name('orders.payment-link');
+Route::get('orders/{order:order_number}/is-paid', [OrderController::class, 'isPaid'])->name('orders.is-paid');
 
 //
 // Payments

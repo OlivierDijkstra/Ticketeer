@@ -150,4 +150,11 @@ class OrderController extends Controller
             'payment_url' => $payment_url,
         ]);
     }
+
+    public function isPaid(Order $order)
+    {
+        return response()->json([
+            'is_paid' => $order->status === 'paid',
+        ]);
+    }
 }

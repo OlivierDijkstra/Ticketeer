@@ -97,8 +97,8 @@ class Order extends Model
                     'value' => number_format($total, 2, '.', ''), // You must send the correct number of decimals, thus we format it to 2 decimals
                 ],
                 'description' => $this->description ?? 'Order '.$this->order_number,
-                'redirectUrl' => $redirectUrl,
-                'webhookUrl' => 'https://e93c-143-178-232-105.ngrok-free.app/webhooks/mollie',
+                'redirectUrl' => $redirectUrl . '?order_id=' . $this->order_number . '&show_id=' . $this->show_id,
+                'webhookUrl' => 'https://b3b9-143-178-232-105.ngrok-free.app/webhooks/mollie',
                 'metadata' => [
                     'order_id' => $this->id,
                 ],
