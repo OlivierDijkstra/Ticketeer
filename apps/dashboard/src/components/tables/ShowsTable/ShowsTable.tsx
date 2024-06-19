@@ -1,6 +1,6 @@
 import type { PaginatedResponse, Show } from '@repo/lib';
 
-import CreateShowDialog from '@/components/dialogs/CreateShowDialog';
+import CreateShowDialog from '@/components/dialogs/create-show-dialog';
 import { columns } from '@/components/tables/ShowsTable/Columns';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { DataTable } from '@/components/ui/data-table';

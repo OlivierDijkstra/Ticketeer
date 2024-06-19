@@ -1,6 +1,6 @@
 import { createUrl, type Event, type Show } from '@repo/lib';
 
-import ShowCard from '@/components/ShowCard';
+import ShowCard from '@/components/show-card';
 import { fetchJson } from '@/lib/fetch';
 
 export default async function Page({ params }: { params: { event: string } }) {

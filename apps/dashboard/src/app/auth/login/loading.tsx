@@ -1,4 +1,4 @@
-import Spinner from '@/components/Spinner';
+import Spinner from '@/components/spinner';
 
 export default function Loading() {
   return <Spinner size='lg' />;

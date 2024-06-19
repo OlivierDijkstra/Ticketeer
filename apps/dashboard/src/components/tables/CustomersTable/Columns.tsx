@@ -5,7 +5,7 @@ import type { ColumnDef } from '@tanstack/react-table';
 import { Eye } from 'lucide-react';
 import Link from 'next/link';
 
-import SortButton from '@/components/tables/SortButton';
+import TableSortButton from '@/components/tables/table-sort-button';
 import { Button } from '@/components/ui/button';
 
 export function columns(data: ColumnData): ColumnDef<Customer>[] {
@@ -14,13 +14,13 @@ export function columns(data: ColumnData): ColumnDef<Customer>[] {
       accessorKey: 'first_name',
       header: () => {
         return (
-          <SortButton
+          <TableSortButton
             name='first_name'
             onClick={data.onSort}
             sort={data.sorting}
           >
             First Name
-          </SortButton>
+          </TableSortButton>
         );
       },
     },
@@ -28,13 +28,13 @@ export function columns(data: ColumnData): ColumnDef<Customer>[] {
       accessorKey: 'last_name',
       header: () => {
         return (
-          <SortButton
+          <TableSortButton
             name='last_name'
             onClick={data.onSort}
             sort={data.sorting}
           >
             Last Name
-          </SortButton>
+          </TableSortButton>
         );
       },
     },

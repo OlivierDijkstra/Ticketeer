@@ -1,12 +1,12 @@
 import { Suspense } from 'react';
 
-import SkeletonGraph from '@/components/skeletons/SkeletonGraph';
-import SkeletonStatistic from '@/components/skeletons/SkeletonStatistic';
-import SkeletonTable from '@/components/skeletons/SkeletonTable';
-import NewOrdersStatistic from '@/components/statistics/NewOrdersStatistic';
-import RevenueGraph from '@/components/statistics/RevenueGraph';
-import RevenueStatistic from '@/components/statistics/RevenueStatistic';
-import EventsTable from '@/components/tables/EventsTable/EventsTable';
+import RevenueGraph from '@/components/graphs/revenue-graph';
+import SkeletonGraph from '@/components/skeletons/skeleton-graph';
+import SkeletonStatistic from '@/components/skeletons/skeleton-statistic';
+import SkeletonTable from '@/components/skeletons/skeleton-table';
+import NewOrdersStatistic from '@/components/statistics/new-orders-statstic';
+import RevenueStatistic from '@/components/statistics/revenue-statistic';
+import EventsTable from '@/components/tables/EventsTable/events-table';
 
 export default async function Page({
   searchParams,

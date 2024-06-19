@@ -5,7 +5,7 @@ import { CommandList } from 'cmdk';
 import { Check, ChevronsUpDown, Search } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
-import Spinner from '@/components/Spinner';
+import Spinner from '@/components/spinner';
 import { Button } from '@/components/ui/button';
 import {
   Command,

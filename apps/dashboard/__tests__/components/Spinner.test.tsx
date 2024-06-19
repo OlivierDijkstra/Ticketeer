@@ -1,7 +1,7 @@
 import { render } from '@testing-library/react';
 import { describe, expect, test } from 'vitest';
 
-import Spinner, { variants } from '@/components/Spinner';
+import Spinner, { variants } from '@/components/spinner';
 
 type VariantKeys = keyof typeof variants.variant;
 const variantArr: VariantKeys[] = Object.keys(

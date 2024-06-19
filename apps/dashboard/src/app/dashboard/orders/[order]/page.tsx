@@ -1,10 +1,10 @@
 import { Suspense } from 'react';
 
-import CustomerCard from '@/components/order/CustomerCard';
-import EventCard from '@/components/order/EventCard';
-import OrderCard from '@/components/order/OrderCard';
-import SkeletonGraph from '@/components/skeletons/SkeletonGraph';
-import PaymentsTable from '@/components/tables/PaymentsTable/PaymentsTable';
+import CustomerCard from '@/components/order/customer-card';
+import EventCard from '@/components/order/event-card';
+import OrderCard from '@/components/order/order-card';
+import SkeletonGraph from '@/components/skeletons/skeleton-graph';
+import PaymentsTable from '@/components/tables/PaymentsTable/payments-table';
 import { getOrderAction } from '@/server/actions/orders';
 
 export default async function Page({

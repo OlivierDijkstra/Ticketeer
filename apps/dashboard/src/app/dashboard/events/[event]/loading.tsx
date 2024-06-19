@@ -1,5 +1,5 @@
-import SkeletonStatistic from '@/components/skeletons/SkeletonStatistic';
-import SkeletonTable from '@/components/skeletons/SkeletonTable';
+import SkeletonStatistic from '@/components/skeletons/skeleton-statistic';
+import SkeletonTable from '@/components/skeletons/skeleton-table';
 
 export default function Loading() {
   return (

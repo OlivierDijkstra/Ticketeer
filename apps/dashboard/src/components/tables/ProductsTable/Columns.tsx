@@ -7,7 +7,7 @@ import { MoreHorizontal } from 'lucide-react';
 import Link from 'next/link';
 import { toast } from 'sonner';
 
-import SortButton from '@/components/tables/SortButton';
+import TableSortButton from '@/components/tables/table-sort-button';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -41,9 +41,13 @@ export function columns(data: ColumnData): ColumnDef<Product>[] {
       accessorKey: 'name',
       header: () => {
         return (
-          <SortButton name='name' onClick={data.onSort} sort={data.sorting}>
+          <TableSortButton
+            name='name'
+            onClick={data.onSort}
+            sort={data.sorting}
+          >
             Name
-          </SortButton>
+          </TableSortButton>
         );
       },
     },

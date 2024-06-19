@@ -1,11 +1,11 @@
 import { Suspense } from 'react';
 
-import EventMediaZone from '@/components/event/EventMediaZone';
-import EventTitleCard from '@/components/event/EventTitleCard';
-import SkeletonGraph from '@/components/skeletons/SkeletonGraph';
-import SkeletonStatistic from '@/components/skeletons/SkeletonStatistic';
-import NewOrdersStatistic from '@/components/statistics/NewOrdersStatistic';
-import RevenueStatistic from '@/components/statistics/RevenueStatistic';
+import EventMediaZone from '@/components/event/event-media-zone';
+import EventTitleCard from '@/components/event/event-title-card';
+import SkeletonGraph from '@/components/skeletons/skeleton-graph';
+import SkeletonStatistic from '@/components/skeletons/skeleton-statistic';
+import NewOrdersStatistic from '@/components/statistics/new-orders-statstic';
+import RevenueStatistic from '@/components/statistics/revenue-statistic';
 import ShowsTable from '@/components/tables/ShowsTable/ShowsTable';
 import { getEventAction } from '@/server/actions/events';
 

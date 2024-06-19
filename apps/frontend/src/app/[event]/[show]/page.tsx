@@ -1,6 +1,6 @@
 import { createUrl, type Event, type Product, type Show } from '@repo/lib';
 
-import CreateOrderForm from '@/components/forms/CreateOrderForm';
+import CreateOrderForm from '@/components/forms/create-order-form';
 import { fetchJson } from '@/lib/fetch';
 
 export default async function Page({
