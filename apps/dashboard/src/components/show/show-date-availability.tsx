@@ -51,6 +51,7 @@ export default function ShowTitleCard({ show }: { show: Show }) {
 
         <hr className='my-4' />
 
+        <p className='text-sm font-medium'>Description</p>
         <EditableField
           type='textarea'
           minLength={0}
