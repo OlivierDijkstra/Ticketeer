@@ -1,8 +1,9 @@
 'use client';
 
-import type { Event, Show } from '@repo/lib';
+import type { Event, Product, Show } from '@repo/lib';
 import { useParams } from 'next/navigation';
 import { useState } from 'react';
+import { toast } from 'sonner';
 
 import { Switch } from '@/components/ui/switch';
 import {
@@ -12,9 +13,9 @@ import {
 } from '@/components/ui/tooltip';
 import { handleFieldUpdate } from '@/lib/utils';
 import { updateEventAction } from '@/server/actions/events';
-import { updateShowAction } from '@/server/actions/shows';
+import { updateProductShowPivotAction, updateShowAction } from '@/server/actions/shows';
 
-type Data = Event | Show;
+type Data = Event | Show | Product;
 
 export default function ResourceAvailabilitySwitch({
   type,
@@ -26,7 +27,9 @@ export default function ResourceAvailabilitySwitch({
   tooltipText?: string;
 }) {
   const params = useParams<{ event?: string; show?: string }>();
-  const [enabled, setEnabled] = useState(data.enabled);
+  const [enabled, setEnabled] = useState(
+    (data as Event | Show).enabled || (data as Product).pivot?.enabled || false
+  );
   const [loading, setLoading] = useState(false);
 
   async function handleAvailabilityChange(checked: boolean) {
@@ -62,7 +65,28 @@ export default function ResourceAvailabilitySwitch({
         });
         break;
       case 'product':
-        // await updateProductAvailability(checked);
+        if (!(data as Product).pivot) {
+          toast.error('Failed to update product', {
+            description: 'Please try again later',
+          });
+          
+          throw new Error('Product pivot is required');
+        }
+
+        await handleFieldUpdate<Product, typeof updateProductShowPivotAction>({
+          updateAction: updateProductShowPivotAction,
+          data: {
+            show_id: (data as Product).pivot?.show_id as number,
+            product_id: (data as Product).id,
+            data: {
+              enabled: checked,
+            },
+          },
+          setLoading,
+          setData: () => setEnabled(checked),
+          successMessage: 'Product updated successfully',
+          errorMessage: 'Failed to update product',
+        });
         break;
     }
   }

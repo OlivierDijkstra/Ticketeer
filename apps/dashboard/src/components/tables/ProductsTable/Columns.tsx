@@ -1,7 +1,7 @@
 'use client';
 
 import type { ColumnData, Product } from '@repo/lib';
-import formatMoney from '@repo/lib';
+import formatMoney, { createUrl } from '@repo/lib';
 import type { ColumnDef } from '@tanstack/react-table';
 import { Badge, BadgeCheck, Eye, Trash, Unlink } from 'lucide-react';
 import { MoreHorizontal } from 'lucide-react';
@@ -90,10 +90,10 @@ export function columns(data: ColumnData): ColumnDef<Product>[] {
         header: 'Adjusted price',
         cell: ({ row }) => {
           if (
-            row.original.pivot?.adjusted_price === '0' ||
-            !row.original.pivot?.adjusted_price
+            !row.original.pivot?.adjusted_price ||
+            row.original.pivot?.adjusted_price === '0.00'
           ) {
-            return 'Free';
+            return '-';
           }
 
           return formatMoney(row.original.pivot?.adjusted_price);
@@ -169,9 +169,13 @@ export function columns(data: ColumnData): ColumnDef<Product>[] {
         );
       }
 
+      const link = createUrl(`/dashboard/products/${row.original.id}`, {
+        show_id: params.show as string,
+      });
+
       return (
         <div className='flex justify-end gap-2'>
-          <Link href={`/dashboard/products/${row.original.id}`}>
+          <Link href={link}>
             <Button variant='outline' size='sm'>
               <Eye className='mr-1 !size-3' />
               <span>View</span>
