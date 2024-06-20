@@ -3,11 +3,12 @@
 import type { ColumnData, Product } from '@repo/lib';
 import formatMoney, { createUrl } from '@repo/lib';
 import type { ColumnDef } from '@tanstack/react-table';
-import { Badge, BadgeCheck, Eye, Trash, Unlink } from 'lucide-react';
+import { Badge, BadgeCheck, Eye, Pencil, Trash, Unlink } from 'lucide-react';
 import { MoreHorizontal } from 'lucide-react';
 import Link from 'next/link';
 import { toast } from 'sonner';
 
+import EditProductShowPivotDialog from '@/components/dialogs/edit-product-show-pivot-dialog.tsx';
 import TableSortButton from '@/components/tables/table-sort-button';
 import {
   AlertDialog,
@@ -195,6 +196,16 @@ export function columns(data: ColumnData): ColumnDef<Product>[] {
 
                 {!!params.show && (
                   <>
+                    <EditProductShowPivotDialog product={row.original}>
+                      <DropdownMenuItem
+                        onSelect={(e) => e.preventDefault()}
+                        className='flex items-center gap-2'
+                      >
+                        <Pencil className='!size-3' />
+                        <span>Edit Product</span>
+                      </DropdownMenuItem>
+                    </EditProductShowPivotDialog>
+
                     <DropdownMenuItem
                       className='flex items-center gap-2'
                       onClick={toggleEnableProduct}
