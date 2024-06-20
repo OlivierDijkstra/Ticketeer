@@ -66,7 +66,7 @@ class OrderController extends Controller
         $attachProductsToOrderAction->handle($order, $products, $show->id);
 
         try {
-            $order->update(['total' => $order->totalFromProducts()]);
+            $order->update(['total' => $order->totalFromProducts() + $order->service_fee]);
             $paymentUrl = $createPaymentAction->handle($order, $order->total, $request->input('redirect_url'));
         } catch (\Exception $e) {
             $restoreProductStockAction->handle($products, $show->id);
