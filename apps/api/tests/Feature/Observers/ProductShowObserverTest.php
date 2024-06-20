@@ -4,7 +4,6 @@ namespace Tests\Feature\Observers;
 
 use App\Actions\AttachProductsToOrderAction;
 use App\Models\Order;
-use App\Models\ProductShow;
 use App\Models\Product;
 use App\Models\Show;
 use Tests\TestCase;
@@ -27,7 +26,7 @@ class ProductShowObserverTest extends TestCase
 
         $product = Product::factory()->create();
         $show = Show::factory()->create();
-        
+
         $show->products()->attach($product->id, ['amount' => 10]);
 
         $show->products()->updateExistingPivot($product->id, ['amount' => 15]);
@@ -42,9 +41,8 @@ class ProductShowObserverTest extends TestCase
             [
                 'id' => $product->id,
                 'amount' => 2,
-            ]
+            ],
         ], $show->id);
-
 
         $this->assertEquals(13, $product->shows()->first()->pivot->stock);
     }
