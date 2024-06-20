@@ -1,4 +1,7 @@
+import { Plus } from 'lucide-react';
+
 import CreateEventDialog from '@/components/dialogs/create-event-dialog';
+import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { DataTable } from '@/components/ui/data-table';
 import { getEventsAction } from '@/server/actions/events';
@@ -18,7 +21,12 @@ export default async function EventsTable({ page }: { page?: string }) {
       <CardHeader className='flex-row items-center justify-between'>
         <CardTitle>Events</CardTitle>
 
-        <CreateEventDialog />
+        <CreateEventDialog>
+          <Button>
+            <Plus className='mr-2' />
+            <span>Add Event</span>
+          </Button>
+        </CreateEventDialog>
       </CardHeader>
       <CardContent>
         <DataTable

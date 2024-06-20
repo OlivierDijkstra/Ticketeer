@@ -1,6 +1,5 @@
 'use client';
 
-import { Plus } from 'lucide-react';
 import { useState } from 'react';
 
 import CreateOrderForm from '@/components/forms/create-order-form';
@@ -24,7 +23,11 @@ import {
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { revalidate } from '@/server/helpers';
 
-export default function CreateOrderDialog() {
+export default function CreateOrderDialog({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [confirmationOpen, setConfirmationOpen] = useState(false);
 
@@ -49,12 +52,7 @@ export default function CreateOrderDialog() {
   return (
     <>
       <Dialog open={dialogOpen} onOpenChange={handleDialogOpenChange}>
-        <DialogTrigger asChild>
-          <Button>
-            <Plus className='mr-2 size-3' />
-            <span>Add Order</span>
-          </Button>
-        </DialogTrigger>
+        <DialogTrigger asChild>{children}</DialogTrigger>
 
         <DialogContent>
           <DialogHeader>

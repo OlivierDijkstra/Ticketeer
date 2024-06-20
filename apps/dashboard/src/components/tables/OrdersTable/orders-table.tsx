@@ -1,6 +1,8 @@
 import type { Show } from '@repo/lib';
+import { Plus } from 'lucide-react';
 
 import CreateOrderDialog from '@/components/dialogs/create-order-dialog';
+import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { DataTable } from '@/components/ui/data-table';
 import { getOrdersAction } from '@/server/actions/orders';
@@ -26,7 +28,12 @@ export default async function OrdersTable({
       <CardHeader className='flex-row items-center justify-between'>
         <CardTitle>Orders</CardTitle>
 
-        <CreateOrderDialog />
+        <CreateOrderDialog>
+          <Button>
+            <Plus className='mr-2 size-3' />
+            <span>Add Order</span>
+          </Button>
+        </CreateOrderDialog>
       </CardHeader>
 
       <CardContent>

@@ -1,10 +1,8 @@
 'use client';
 
-import { Plus } from 'lucide-react';
 import { useState } from 'react';
 
 import CreateEventForm from '@/components/forms/create-event-form';
-import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -15,17 +13,16 @@ import {
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { revalidate } from '@/server/helpers';
 
-export default function CreateEventDialog() {
+export default function CreateEventDialog({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const [dialogOpen, setDialogOpen] = useState(false);
 
   return (
     <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-      <DialogTrigger asChild>
-        <Button>
-          <Plus className='mr-2' />
-          <span>Add Event</span>
-        </Button>
-      </DialogTrigger>
+      <DialogTrigger asChild>{children}</DialogTrigger>
 
       <DialogContent>
         <DialogHeader>
