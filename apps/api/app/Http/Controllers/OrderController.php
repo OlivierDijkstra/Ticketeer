@@ -7,7 +7,6 @@ use App\Http\Requests\StoreOrderRequest;
 use App\Jobs\CreatePaymentJob;
 use App\Models\Customer;
 use App\Models\Order;
-use App\Models\Product;
 use App\Models\ProductShow;
 use App\Models\Show;
 use App\Traits\HandlesPaginationAndFiltering;
@@ -87,7 +86,7 @@ class OrderController extends Controller
                 ->lockForUpdate()
                 ->first();
 
-            if (!$productShow) {
+            if (! $productShow) {
                 throw new \Exception('Product not found');
             }
 

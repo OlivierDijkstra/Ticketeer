@@ -106,7 +106,7 @@ export interface ProductShowPivot {
   adjusted_price?: string | null;
   price?: string;
   amount: number;
-  stock: number;
+  stock?: number;
   enabled?: boolean;
 }
 

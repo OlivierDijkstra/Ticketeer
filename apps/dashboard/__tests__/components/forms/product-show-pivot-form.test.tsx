@@ -22,6 +22,7 @@ describe('ProductShowPivotForm', () => {
     pivot: {
       amount: 1,
       product_id: 1,
+      stock: 1,
       adjusted_price: '10.00',
       show_id: 1,
     },

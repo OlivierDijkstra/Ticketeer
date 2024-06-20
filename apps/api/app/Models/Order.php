@@ -6,7 +6,6 @@ use App\Stats\OrderStats;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Mollie\Laravel\Facades\Mollie;
 use Spatie\Stats\StatsWriter;
 
 class Order extends Model
@@ -67,7 +66,7 @@ class Order extends Model
         // TODO: Implement discounts
         return $this->subTotalFromProducts();
     }
-    
+
     public static function GenerateOrderNumber()
     {
         return 'ORD-'.now()->format('YmdHis').'-'.rand(1000, 9999);
