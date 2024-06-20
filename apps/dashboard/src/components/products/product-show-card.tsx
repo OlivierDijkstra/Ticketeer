@@ -2,7 +2,7 @@ import type { Product, Show } from '@repo/lib';
 import { format } from 'date-fns';
 import { Calendar } from 'lucide-react';
 
-import ProductShowPriceForm from '@/components/forms/product-show-price-form';
+import ProductShowForm from '@/components/forms/product-show-form';
 import ResourceAvailabilitySwitch from '@/components/forms/resource-availability-switch';
 import {
   Card,
@@ -48,7 +48,7 @@ export default function ProductShowCard({
       </CardHeader>
 
       <CardContent>
-        <ProductShowPriceForm product={product} />
+        <ProductShowForm product={product} />
       </CardContent>
     </Card>
   );

@@ -3,7 +3,7 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { toast } from 'sonner';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 
-import ProductShowPriceForm from '@/components/forms/product-show-price-form';
+import ProductShowForm from '@/components/forms/product-show-form';
 import { updateProductShowPivotAction } from '@/server/actions/shows';
 
 vi.mock('@/server/actions/shows', () => ({
@@ -16,7 +16,7 @@ vi.mock('sonner', () => ({
   },
 }));
 
-describe('ProductShowPriceForm', () => {
+describe('ProductShowForm', () => {
   const product = generateProduct({
     id: 1,
     pivot: {
@@ -32,13 +32,14 @@ describe('ProductShowPriceForm', () => {
   });
 
   test('renders with initial values', () => {
-    render(<ProductShowPriceForm product={product} />);
+    render(<ProductShowForm product={product} />);
 
     expect(screen.getByLabelText(/adjusted price/i)).toHaveValue(formatMoney('10'));
+    expect(screen.getByLabelText(/amount/i)).toHaveValue(1);
   });
 
   test('updates input values correctly', () => {
-    render(<ProductShowPriceForm product={product} />);
+    render(<ProductShowForm product={product} />);
 
     fireEvent.change(screen.getByLabelText(/adjusted price/i), {
       target: { value: '12.34' },
@@ -48,7 +49,7 @@ describe('ProductShowPriceForm', () => {
   });
 
   test('submits the form with correct data', async () => {
-    render(<ProductShowPriceForm product={product} />);
+    render(<ProductShowForm product={product} />);
 
     fireEvent.change(screen.getByLabelText(/adjusted price/i), {
       target: { value: '12.34' },
@@ -61,7 +62,7 @@ describe('ProductShowPriceForm', () => {
         updateProductShowPivotAction({
           show_id: 1,
           product_id: 1,
-          data: { adjusted_price: '12.34' },
+          data: { adjusted_price: '12.34', amount: 1 },
         }),
         expect.objectContaining({
           loading: 'Updating product...',

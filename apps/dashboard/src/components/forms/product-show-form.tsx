@@ -21,15 +21,17 @@ import { Input } from '@/components/ui/input';
 import { useCurrencyInput } from '@/lib/hooks';
 import { updateProductShowPivotAction } from '@/server/actions/shows';
 
-export default function ProductShowPriceForm({ product }: { product: Product }) {
+export default function ProductShowForm({ product }: { product: Product }) {
   const schema = z.object({
     adjusted_price: z.number().min(0),
+    amount: z.number().min(0),
   });
 
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     defaultValues: {
       adjusted_price: parseFloat(product.pivot?.adjusted_price || '0'),
+      amount: product.pivot?.amount || 0,
     },
   });
 
@@ -59,6 +61,7 @@ export default function ProductShowPriceForm({ product }: { product: Product }) 
   const resetForm = () => {
     form.reset({
       adjusted_price: parseFloat(product.pivot?.adjusted_price || '0'),
+      amount: product.pivot?.amount || 0,
     });
     setAdjustedPrice(`${product.pivot?.adjusted_price}`);
   };
@@ -70,6 +73,7 @@ export default function ProductShowPriceForm({ product }: { product: Product }) 
         product_id: product.id,
         data: {
           adjusted_price: `${data.adjusted_price}`,
+          amount: data.amount,
         },
       }),
       {
@@ -77,6 +81,7 @@ export default function ProductShowPriceForm({ product }: { product: Product }) 
         success: () => {
           form.reset({
             adjusted_price: data.adjusted_price,
+            amount: data.amount,
           });
           return 'Product updated successfully';
         },
@@ -88,7 +93,7 @@ export default function ProductShowPriceForm({ product }: { product: Product }) 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
-        <div className='grid grid-cols-1 gap-2'>
+        <div className='grid grid-cols-2 gap-2'>
           <FormField
             control={form.control}
             name='adjusted_price'
@@ -101,6 +106,28 @@ export default function ProductShowPriceForm({ product }: { product: Product }) 
                     inputMode='numeric'
                     value={adjustedPrice}
                     onChange={(e) => setAdjustedPrice(e.target.value)}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name='amount'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Amount</FormLabel>
+                <FormControl>
+                  <Input
+                    type='number'
+                    {...field}
+                    inputMode='numeric'
+                    value={field.value}
+                    onChange={(e) => {
+                      field.onChange(Number(e.target.value));
+                    }}
                   />
                 </FormControl>
                 <FormMessage />
@@ -136,3 +163,4 @@ export default function ProductShowPriceForm({ product }: { product: Product }) 
     </Form>
   );
 }
+
