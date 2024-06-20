@@ -21,7 +21,7 @@ import { Input } from '@/components/ui/input';
 import { useCurrencyInput } from '@/lib/hooks';
 import { updateProductShowPivotAction } from '@/server/actions/shows';
 
-export default function ProductShowForm({ product }: { product: Product }) {
+export default function ProductShowPivotForm({ product }: { product: Product }) {
   const schema = z.object({
     adjusted_price: z.number().min(0),
     amount: z.number().min(0),
