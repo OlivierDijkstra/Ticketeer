@@ -14,7 +14,7 @@ export async function fetchJson<T>(
 
   const response = await fetch(fullUrl, {
     ...options,
-    cache: 'no-cache'
+    cache: 'no-cache',
   });
   if (!response.ok) {
     throw new Error(`HTTP error! status: ${response.status}`);
