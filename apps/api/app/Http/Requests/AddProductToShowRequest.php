@@ -22,7 +22,7 @@ class AddProductToShowRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'amount' => ['nullable', 'integer', 'min:1'],
+            'amount' => ['nullable', 'integer', 'min:0'],
             'adjusted_price' => ['numeric', 'nullable'],
             'enabled' => ['nullable', 'boolean'],
         ];
