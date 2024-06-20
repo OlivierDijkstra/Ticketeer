@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CreatePaymentLinkRequest;
 use App\Http\Requests\StoreOrderRequest;
+use App\Jobs\CreatePaymentJob;
 use App\Models\Customer;
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\ProductShow;
 use App\Models\Show;
 use App\Traits\HandlesPaginationAndFiltering;
 use Illuminate\Http\Request;
@@ -41,7 +43,6 @@ class OrderController extends Controller
     public function store(StoreOrderRequest $request)
     {
         $show = Show::findOrFail($request->input('show_id'));
-
         $customer = $request->input('customer');
 
         if ($customer) {
@@ -54,8 +55,6 @@ class OrderController extends Controller
 
             $customer->phone = $customerData['phone'] ?? null;
             $customer->save();
-
-            $address = $customer->address;
 
             $addressData = [
                 'street' => $customerData['street'],
@@ -82,32 +81,48 @@ class OrderController extends Controller
 
         $products = $request->input('products');
 
-        foreach ($products as $product) {
-            $order->products()->attach(
-                $product['id'],
-                [
-                    'amount' => $product['amount'],
-                    'price' => $product['price'] ?? Product::find($product['id'])->price,
-                ]
-            );
+        foreach ($products as $productData) {
+            $productShow = ProductShow::where('product_id', $productData['id'])
+                ->where('show_id', $show->id)
+                ->lockForUpdate()
+                ->first();
+
+            if (!$productShow) {
+                throw new \Exception('Product not found');
+            }
+
+            if ($productShow->stock < $productData['amount']) {
+                throw new \Exception('Not enough stock');
+            }
+
+            $productShow->decrement('stock', $productData['amount']);
+            $order->products()->attach($productShow->product_id, [
+                'amount' => $productData['amount'],
+                'price' => $productData['price'] ?? $productShow->product->price,
+            ]);
         }
 
         try {
             $total = $order->totalFromProducts();
-
-            $payment_url = $order->createPayment($total, $request->input('redirect_url'));
-
-            $order->update([
-                'total' => $total,
-            ]);
+            $order->update(['total' => $total]);
+            $job = new CreatePaymentJob($order, $total, $request->input('redirect_url'));
+            $job->handle();
         } catch (\Exception $e) {
+            foreach ($products as $productData) {
+                $productShow = ProductShow::where('product_id', $productData['id'])
+                    ->where('show_id', $show->id)
+                    ->first();
+                if ($productShow) {
+                    $productShow->increment('stock', $productData['amount']);
+                }
+            }
             $order->delete();
             throw $e;
         }
 
         return response()->json([
             'order' => $order,
-            'payment_url' => $payment_url,
+            'payment_url' => $job->getResponse(),
         ]);
     }
 
@@ -144,10 +159,11 @@ class OrderController extends Controller
      */
     public function createPaymentLink(CreatePaymentLinkRequest $request, Order $order)
     {
-        $payment_url = $order->createPayment($order->totalFromProducts(), $request->redirect_url);
+        $job = new CreatePaymentJob($order, $order->totalFromProducts(), $request->redirect_url);
+        $job->handle();
 
         return response()->json([
-            'payment_url' => $payment_url,
+            'payment_url' => $job->getResponse(),
         ]);
     }
 

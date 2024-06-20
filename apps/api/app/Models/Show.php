@@ -11,20 +11,6 @@ class Show extends Model
 {
     use HasFactory, Searchable, SoftDeletes;
 
-    // /**
-    //  * Get the indexable data array for the model.
-    //  *
-    //  * @return array<string, mixed>
-    //  */
-    // public function toSearchableArray()
-    // {
-    //     return array_merge($this->toArray(), [
-    //         'id' => (string) $this->id,
-    //         'guests' => collect($this->guests)->implode(', '),
-    //         'created_at' => $this->created_at->timestamp,
-    //     ]);
-    // }
-
     protected $with = ['address', 'products', 'event'];
 
     protected $fillable = [
@@ -59,7 +45,8 @@ class Show extends Model
     public function products()
     {
         return $this->belongsToMany(Product::class)
-            ->withPivot(['amount', 'adjusted_price', 'enabled']);
+            ->using(ProductShow::class)
+            ->withPivot(['amount', 'adjusted_price', 'enabled', 'stock']);
     }
 
     public function orders()

@@ -25,12 +25,14 @@ class Product extends Model
 
     public function orders()
     {
-        return $this->belongsToMany(Order::class);
+        return $this->belongsToMany(Order::class)
+            ->withPivot(['amount', 'price']);
     }
 
     public function shows()
     {
         return $this->belongsToMany(Show::class)
-            ->withPivot(['amount', 'adjusted_price', 'enabled']);
+            ->using(ProductShow::class)
+            ->withPivot(['amount', 'adjusted_price', 'enabled', 'stock']);
     }
 }
