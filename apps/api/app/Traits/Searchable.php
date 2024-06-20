@@ -10,6 +10,9 @@ trait Searchable
 
     public function toSearchableArray(): array
     {
+
+        ray('🔥', config('scout.driver'));
+
         if (config('scout.driver') === 'database') {
             return $this->toArray();
         }
