@@ -12,7 +12,10 @@ export async function fetchJson<T>(
 
   fullUrl = `${fullUrl}${url}`;
 
-  const response = await fetch(fullUrl, options);
+  const response = await fetch(fullUrl, {
+    ...options,
+    cache: 'no-cache'
+  });
   if (!response.ok) {
     throw new Error(`HTTP error! status: ${response.status}`);
   }

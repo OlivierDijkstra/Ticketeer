@@ -23,7 +23,7 @@ import { updateProductShowPivotAction } from '@/server/actions/shows';
 
 export default function ProductShowPivotForm({ product, callback }: { product: Product, callback?: () => void }) {
   const schema = z.object({
-    adjusted_price: z.number().min(0),
+    adjusted_price: z.number().min(0).nullable(),
     amount: z.number().min(0),
   });
 
@@ -41,19 +41,25 @@ export default function ProductShowPivotForm({ product, callback }: { product: P
   useEffect(() => {
     const formValue = form.getValues('adjusted_price');
     const formValueAsNumber =
-      typeof formValue === 'number' ? formValue : parseFloat(formValue);
+      typeof formValue === 'number' ? formValue : parseFloat(`${formValue}`);
 
     if (
       !isNaN(formValueAsNumber) &&
       normalizedAdjustedPrice !== formValueAsNumber.toFixed(2).toString()
     ) {
-      form.setValue(
-        'adjusted_price',
-        parseFloat(adjustedPrice.replace(/[^\d]/g, '')) / 100 || 0,
-        {
+      if (formValueAsNumber === 0) {
+        form.setValue('adjusted_price', null, {
           shouldDirty: true,
-        }
-      );
+        });
+      } else {
+        form.setValue(
+          'adjusted_price',
+          parseFloat(adjustedPrice.replace(/[^\d]/g, '')) / 100 || 0,
+          {
+            shouldDirty: true,
+          }
+        );
+      }
     }
   }, [form, adjustedPrice, normalizedAdjustedPrice]);
 
@@ -71,7 +77,7 @@ export default function ProductShowPivotForm({ product, callback }: { product: P
         show_id: product.pivot?.show_id as number,
         product_id: product.id,
         data: {
-          adjusted_price: `${data.adjusted_price}`,
+          adjusted_price: data.adjusted_price ? `${data.adjusted_price}` : null,
           amount: data.amount,
         },
       }),

@@ -8,6 +8,7 @@ import { toast } from 'sonner';
 import Spinner from '@/components/spinner';
 import { Button } from '@/components/ui/button';
 import { createPaymentAction } from '@/server/actions/orders';
+import { revalidate } from '@/server/helpers';
 
 interface Props extends React.HTMLAttributes<HTMLButtonElement> {
   order: Order;
@@ -35,6 +36,8 @@ export default function CreatePayment(props: Props) {
           setTimeout(() => {
             setDisabled(false);
           }, 2000);
+
+          revalidate('payments');
 
           return (
             <p className='font-medium'>

@@ -87,6 +87,17 @@ export function columns(data: ColumnData): ColumnDef<Product>[] {
         header: 'Amount',
       },
       {
+        accessorKey: 'pivot.stock',
+        header: 'Stock',
+        cell: ({ row }) => {
+          if (!row.original.pivot?.stock || row.original.pivot?.stock === 0) {
+            return '-';
+          }
+
+          return row.original.pivot?.stock;
+        },
+      },
+      {
         accessorKey: 'pivot.adjusted_price',
         header: 'Adjusted price',
         cell: ({ row }) => {

@@ -67,52 +67,7 @@ class Order extends Model
         // TODO: Implement discounts
         return $this->subTotalFromProducts();
     }
-
-    public function total()
-    {
-        return $this->total + $this->show->event->service_fee;
-    }
-
-    public function createPayment(float $total, string $redirectUrl)
-    {
-        if ($this->payments) {
-            $paymentTotal = $this->payments()
-                ->where('status', 'paid')
-                ->sum('amount');
-
-            if ($paymentTotal >= $total) {
-                throw new \Exception('Order is already paid');
-            }
-        }
-
-        if (! env('MOLLIE_KEY')) {
-            return config('app.url');
-        }
-
-        $payment = Mollie::api()
-            ->payments
-            ->create([
-                'amount' => [
-                    'currency' => config('app.currency'),
-                    'value' => number_format($total, 2, '.', ''), // You must send the correct number of decimals, thus we format it to 2 decimals
-                ],
-                'description' => $this->description ?? 'Order '.$this->order_number,
-                'redirectUrl' => $redirectUrl.'?order_id='.$this->order_number.'&show_id='.$this->show_id,
-                'webhookUrl' => 'https://b3b9-143-178-232-105.ngrok-free.app/webhooks/mollie',
-                'metadata' => [
-                    'order_id' => $this->id,
-                ],
-            ]);
-
-        $this->payments()->create([
-            'transaction_id' => $payment->id,
-            'status' => $payment->status,
-            'amount' => $total,
-        ]);
-
-        return $payment->getCheckoutUrl();
-    }
-
+    
     public static function GenerateOrderNumber()
     {
         return 'ORD-'.now()->format('YmdHis').'-'.rand(1000, 9999);
