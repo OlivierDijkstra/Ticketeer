@@ -2,9 +2,9 @@
 
 namespace App\Jobs;
 
+use App\Actions\CreateOrUpdateCustomerAction;
 use App\Models\Customer;
 use App\Models\Order;
-use App\Actions\CreateOrUpdateCustomerAction;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -16,6 +16,7 @@ class HandleCustomerJob implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     protected $customerData;
+
     protected $order;
 
     private $customer;

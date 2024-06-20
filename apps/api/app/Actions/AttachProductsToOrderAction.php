@@ -2,8 +2,8 @@
 
 namespace App\Actions;
 
-use App\Models\ProductShow;
 use App\Models\Order;
+use App\Models\ProductShow;
 use Exception;
 
 class AttachProductsToOrderAction
@@ -16,7 +16,7 @@ class AttachProductsToOrderAction
                 ->lockForUpdate()
                 ->first();
 
-            if (!$productShow) {
+            if (! $productShow) {
                 throw new Exception('Product not found');
             }
 

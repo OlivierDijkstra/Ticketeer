@@ -24,7 +24,7 @@ class OrderFactory extends Factory
             'description' => fake()->paragraph,
             'service_fee' => '0.00',
             'total' => '0.00',
-            'discount' => '0.00'
+            'discount' => '0.00',
         ];
     }
 }

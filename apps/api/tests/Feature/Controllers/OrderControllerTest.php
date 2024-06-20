@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Controllers;
 
 use App\Actions\CreatePaymentAction;
 use App\Jobs\HandleCustomerJob;
@@ -14,6 +14,7 @@ use Tests\TestCase;
 class OrderControllerTest extends TestCase
 {
     protected $show;
+
     protected $products;
 
     public function setUp(): void
@@ -29,7 +30,7 @@ class OrderControllerTest extends TestCase
     }
 
     public function testStoreOrderSuccessfully()
-    {   
+    {
         $requestData = [
             'show_id' => $this->show->id,
             'products' => $this->products->map(fn ($product) => ['id' => $product->id, 'amount' => 1])->toArray(),
@@ -185,4 +186,3 @@ class OrderControllerTest extends TestCase
         $this->assertDatabaseMissing('orders', ['id' => $order->id]);
     }
 }
-
