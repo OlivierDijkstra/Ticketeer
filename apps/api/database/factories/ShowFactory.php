@@ -17,6 +17,7 @@ class ShowFactory extends Factory
     public function definition(): array
     {
         return [
+            'event_id' => \App\Models\Event::factory(),
             'start' => fake()->dateTimeBetween('now', '+1 year'),
             'end' => fake()->dateTimeBetween('+1 year', '+2 years'),
             'enabled' => true,

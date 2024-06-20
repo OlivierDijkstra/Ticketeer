@@ -11,7 +11,8 @@ class ProductShowObserver
      */
     public function created(ProductShow $productShow): void
     {
-        //
+        $productShow->stock = $productShow->amount;
+        $productShow->saveQuietly();
     }
 
     /**
