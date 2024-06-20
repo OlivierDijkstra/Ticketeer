@@ -8,7 +8,7 @@ use Tests\TestCase;
 
 class CreatePaymentActionTest extends TestCase
 {
-    public function testCreatePayment()
+    public function test_create_payment()
     {
         $order = Order::factory()->create(['total' => 100.00]);
         $action = new CreatePaymentAction();

@@ -29,7 +29,7 @@ class OrderControllerTest extends TestCase
         ]);
     }
 
-    public function testStoreOrderSuccessfully()
+    public function test_store_order_successfully()
     {
         $requestData = [
             'show_id' => $this->show->id,
@@ -44,7 +44,7 @@ class OrderControllerTest extends TestCase
         $this->assertDatabaseHas('orders', ['show_id' => $this->show->id]);
     }
 
-    public function testStoreOrderWithCustomerData()
+    public function test_store_order_with_customer_data()
     {
         Queue::fake();
 
@@ -72,7 +72,7 @@ class OrderControllerTest extends TestCase
         Queue::assertPushed(HandleCustomerJob::class);
     }
 
-    public function testStoreOrderHandlesPaymentException()
+    public function test_store_order_handles_payment_exception()
     {
         $requestData = [
             'show_id' => $this->show->id,
@@ -97,7 +97,7 @@ class OrderControllerTest extends TestCase
         $this->assertDatabaseMissing('orders', ['show_id' => $this->show->id]);
     }
 
-    public function testCreatePaymentLinkSuccessfully()
+    public function test_create_payment_link_successfully()
     {
         $order = Order::factory()->create([
             'total' => '10.00',
@@ -111,7 +111,7 @@ class OrderControllerTest extends TestCase
         $response->assertJsonStructure(['payment_url']);
     }
 
-    public function testCreatePaymentLinkHandlesException()
+    public function test_create_payment_link_handles_exception()
     {
         $order = Order::factory()->create();
         $requestData = ['redirect_url' => 'http://example.com'];
@@ -125,7 +125,7 @@ class OrderControllerTest extends TestCase
         $response->assertStatus(500);
     }
 
-    public function testIsPaidReturnsTrueForPaidOrder()
+    public function test_is_paid_returns_true_for_paid_order()
     {
         $order = Order::factory()->create(['status' => 'paid']);
 
@@ -135,7 +135,7 @@ class OrderControllerTest extends TestCase
         $response->assertJson(['is_paid' => true]);
     }
 
-    public function testIsPaidReturnsFalseForUnpaidOrder()
+    public function test_is_paid_returns_false_for_unpaid_order()
     {
         $order = Order::factory()->create(['status' => 'pending']);
 
@@ -145,7 +145,7 @@ class OrderControllerTest extends TestCase
         $response->assertJson(['is_paid' => false]);
     }
 
-    public function testIndexReturnsOrders()
+    public function test_index_returns_orders()
     {
         Order::factory()->count(3)->create();
 
@@ -155,7 +155,7 @@ class OrderControllerTest extends TestCase
         $response->assertJsonCount(3);
     }
 
-    public function testShowReturnsOrder()
+    public function test_show_returns_order()
     {
         $order = Order::factory()->create();
 
@@ -165,7 +165,7 @@ class OrderControllerTest extends TestCase
         $response->assertJson(['id' => $order->id]);
     }
 
-    public function testUpdateOrder()
+    public function test_update_order()
     {
         $order = Order::factory()->create();
         $updateData = ['status' => 'paid'];
@@ -176,7 +176,7 @@ class OrderControllerTest extends TestCase
         $this->assertDatabaseHas('orders', ['id' => $order->id, 'status' => 'paid']);
     }
 
-    public function testDestroyOrder()
+    public function test_destroy_order()
     {
         $order = Order::factory()->create();
 

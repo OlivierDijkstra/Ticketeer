@@ -10,7 +10,7 @@ use Tests\TestCase;
 
 class AttachProductsToOrderActionTest extends TestCase
 {
-    public function testAttachProducts()
+    public function test_attach_products()
     {
         $show = Show::factory()->create();
         $order = Order::factory()->create(['show_id' => $show->id]);

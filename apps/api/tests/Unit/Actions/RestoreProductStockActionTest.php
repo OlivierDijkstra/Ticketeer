@@ -9,7 +9,7 @@ use Tests\TestCase;
 
 class RestoreProductStockActionTest extends TestCase
 {
-    public function testRestoreStock()
+    public function test_restore_stock()
     {
         $show = Show::factory()->create();
         $products = Product::factory()->count(2)->create();

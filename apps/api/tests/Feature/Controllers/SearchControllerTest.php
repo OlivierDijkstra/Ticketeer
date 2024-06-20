@@ -20,7 +20,7 @@ class SearchControllerTest extends TestCase
 
     public function test_search()
     {
-        $response = $this->json('GET', route('search', [
+        $response = $this->getJson(route('search', [
             'query' => 'test',
 
         ]));
@@ -32,7 +32,7 @@ class SearchControllerTest extends TestCase
 
     public function test_search_no_query()
     {
-        $response = $this->json('GET', route('search'));
+        $response = $this->getJson(route('search'));
 
         $response->assertStatus(200);
         $response->assertJsonCount(0);

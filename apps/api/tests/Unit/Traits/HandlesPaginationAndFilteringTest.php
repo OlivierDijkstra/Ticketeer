@@ -45,7 +45,7 @@ class HandlesPaginationAndFilteringTest extends TestCase
         parent::tearDown();
     }
 
-    public function testSearchOrPaginateWithoutSearch()
+    public function test_search_or_paginate_without_search()
     {
         $request = new Request([
             'per_page' => 5,
@@ -60,7 +60,7 @@ class HandlesPaginationAndFilteringTest extends TestCase
         $this->assertCount(5, $result->items());
     }
 
-    public function testSearchOrPaginateWithSearch()
+    public function test_search_or_paginate_with_search()
     {
         $request = new Request([
             'search' => 'test',
@@ -75,7 +75,7 @@ class HandlesPaginationAndFilteringTest extends TestCase
         $this->assertInstanceOf(\Illuminate\Support\Collection::class, $result);
     }
 
-    public function testSearchOrPaginateWithoutFilters()
+    public function test_search_or_paginate_without_filters()
     {
         $request = new Request([
             'page' => 1,
@@ -89,7 +89,7 @@ class HandlesPaginationAndFilteringTest extends TestCase
         $this->assertInstanceOf(LengthAwarePaginator::class, $result);
     }
 
-    public function testSearchOrPaginateWithInvalidShowId()
+    public function test_search_or_paginate_with_invalid_show_id()
     {
         $request = new Request([
             'show_id' => 999999, // Assume this ID does not exist
@@ -105,7 +105,7 @@ class HandlesPaginationAndFilteringTest extends TestCase
         $this->assertCount(0, $result->items());
     }
 
-    public function testPaginate()
+    public function test_paginate()
     {
         $request = new Request([
             'per_page' => 3,
@@ -119,7 +119,7 @@ class HandlesPaginationAndFilteringTest extends TestCase
         $this->assertCount(3, $result->items());
     }
 
-    public function testApplyFilters()
+    public function test_apply_filters()
     {
         $request = new Request([
             'enabled' => 1,
@@ -133,7 +133,7 @@ class HandlesPaginationAndFilteringTest extends TestCase
         $this->assertInstanceOf(Builder::class, $result);
     }
 
-    public function testApplyFiltersWithShowId()
+    public function test_apply_filters_with_show_id()
     {
         $request = new Request([
             'show_id' => Show::first()->id,
@@ -147,7 +147,7 @@ class HandlesPaginationAndFilteringTest extends TestCase
         $this->assertTrue($result->getQuery()->wheres != []);
     }
 
-    public function testApplyFiltersWithBelongsToRelationship()
+    public function test_apply_filters_with_belongs_to_relationship()
     {
         $request = new Request([
             'show_id' => Show::first()->id,
@@ -161,7 +161,7 @@ class HandlesPaginationAndFilteringTest extends TestCase
         $this->assertTrue($result->getQuery()->wheres != []);
     }
 
-    public function testFlattenPivotFields()
+    public function test_flatten_pivot_fields()
     {
         $request = new Request([
             'show_id' => Show::first()->id,
@@ -182,7 +182,7 @@ class HandlesPaginationAndFilteringTest extends TestCase
         }
     }
 
-    public function testFlattenPivotFieldsWithEmptyResults()
+    public function test_flatten_pivot_fields_with_empty_results()
     {
         $request = new Request([
             'show_id' => 999999, // Assume this ID does not exist
@@ -198,7 +198,7 @@ class HandlesPaginationAndFilteringTest extends TestCase
         $this->assertCount(0, $flattenedResults->items());
     }
 
-    public function testGetPivotFields()
+    public function test_get_pivot_fields()
     {
         $pivotFields = $this->getPivotFields('product_show');
 
@@ -210,7 +210,7 @@ class HandlesPaginationAndFilteringTest extends TestCase
         $this->assertContains('enabled', $pivotFields);
     }
 
-    public function testGetShowRelation()
+    public function test_get_show_relation()
     {
         $product = new Product();
 
@@ -220,7 +220,7 @@ class HandlesPaginationAndFilteringTest extends TestCase
         $this->assertEquals('shows', $relation->getRelationName());
     }
 
-    public function testSearch()
+    public function test_search()
     {
         $request = new Request([
             'search' => 'test',
@@ -240,7 +240,7 @@ class HandlesPaginationAndFilteringTest extends TestCase
         $this->assertInstanceOf(\Illuminate\Support\Collection::class, $result);
     }
 
-    public function testInvalidShowIdThrowsException()
+    public function test_invalid_show_id_throws_exception()
     {
         $request = new Request([
             'show_id' => 'invalid', // Invalid show_id
@@ -254,7 +254,7 @@ class HandlesPaginationAndFilteringTest extends TestCase
         $this->applyFilters($request, $query);
     }
 
-    public function testPaginateWithDefaultPerPage()
+    public function test_paginate_with_default_per_page()
     {
         $request = new Request();
 
@@ -266,7 +266,7 @@ class HandlesPaginationAndFilteringTest extends TestCase
         $this->assertEquals($this->defaultPerPage, $result->perPage());
     }
 
-    public function testBelongsToRelationshipWithoutPivot()
+    public function test_belongs_to_relationship_without_pivot()
     {
         $request = new Request([
             'show_id' => Show::first()->id,
@@ -280,7 +280,7 @@ class HandlesPaginationAndFilteringTest extends TestCase
         $this->assertTrue($result->getQuery()->wheres != []);
     }
 
-    public function testFlattenPivotFieldsWithoutShowId()
+    public function test_flatten_pivot_fields_without_show_id()
     {
         $request = new Request();
 
@@ -294,7 +294,7 @@ class HandlesPaginationAndFilteringTest extends TestCase
         $this->assertEquals($results, $flattenedResults);
     }
 
-    public function testHandlingLargeDatasets()
+    public function test_handling_large_datasets()
     {
         // Simulate a large number of products and shows
         $shows = Show::factory()->count(50)->create([
@@ -326,7 +326,7 @@ class HandlesPaginationAndFilteringTest extends TestCase
         $this->assertCount(50, $flattenedResults->items());
     }
 
-    public function testGetShowRelationReturnsNullForInvalidRelation()
+    public function test_get_show_relation_returns_null_for_invalid_relation()
     {
         $model = new class
         {
@@ -341,7 +341,7 @@ class HandlesPaginationAndFilteringTest extends TestCase
         $this->assertNull($relation);
     }
 
-    public function testSearchOrPaginateWithoutPageParameter()
+    public function test_search_or_paginate_without_page_parameter()
     {
         $request = new Request([
             'enabled' => 1,

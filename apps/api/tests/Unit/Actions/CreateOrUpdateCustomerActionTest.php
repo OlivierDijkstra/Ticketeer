@@ -8,7 +8,7 @@ use Tests\TestCase;
 
 class CreateOrUpdateCustomerActionTest extends TestCase
 {
-    public function testCreateOrUpdateCustomer()
+    public function test_create_or_update_customer()
     {
         $customerData = [
             'first_name' => 'John',

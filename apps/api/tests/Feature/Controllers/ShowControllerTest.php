@@ -11,9 +11,7 @@ use Tests\TestCase;
 class ShowControllerTest extends TestCase
 {
     protected $event;
-
     protected $show;
-
     protected $product;
 
     public function setUp(): void
@@ -27,7 +25,7 @@ class ShowControllerTest extends TestCase
 
     public function test_index()
     {
-        $response = $this->json('GET', route('shows.index', $this->event));
+        $response = $this->getJson(route('shows.index', $this->event));
 
         $response->assertStatus(200);
         $response->assertJsonCount(1);
@@ -40,7 +38,7 @@ class ShowControllerTest extends TestCase
         $start = now()->toDateTimeString();
         $end = now()->addHour()->toDateTimeString();
 
-        $response = $this->json('POST', route('shows.store', $this->event), [
+        $response = $this->postJson(route('shows.store', $this->event), [
             'start' => $start,
             'end' => $end,
             'enabled' => true,
@@ -61,7 +59,7 @@ class ShowControllerTest extends TestCase
 
     public function test_show()
     {
-        $response = $this->json('GET', route('shows.show', [$this->show]));
+        $response = $this->getJson(route('shows.show', [$this->show]));
 
         $response->assertStatus(200);
     }
@@ -74,7 +72,7 @@ class ShowControllerTest extends TestCase
         $start = now()->toDateTimeString();
         $end = now()->addHour()->toDateTimeString();
 
-        $response = $this->json('PATCH', route('shows.update', [$this->show]), [
+        $response = $this->patchJson(route('shows.update', [$this->show]), [
             'start' => $start,
             'end' => $end,
             'description' => $newDescription,
@@ -94,36 +92,36 @@ class ShowControllerTest extends TestCase
     {
         Sanctum::actingAs($this->user);
 
-        $response = $this->json('DELETE', route('shows.destroy', [$this->show]));
+        $response = $this->deleteJson(route('shows.destroy', [$this->show]));
 
         $response->assertStatus(200);
 
         $this->assertSoftDeleted('shows', ['id' => $this->show->id]);
     }
 
-    // public function test_addProduct()
-    // {
-    //     Sanctum::actingAs($this->user);
+    public function test_add_product()
+    {
+        Sanctum::actingAs($this->user);
 
-    //     $response = $this->json('POST', route('shows.products.add', [$this->show, $this->product]), [
-    //         'product_id' => $this->product->id,
-    //         'amount' => 10,
-    //         'adjusted_price' => 10.5,
-    //         'enabled' => true,
-    //     ]);
+        $response = $this->postJson(route('shows.products.add', [$this->show, $this->product]), [
+            'product_id' => $this->product->id,
+            'amount' => 10,
+            'adjusted_price' => 10.5,
+            'enabled' => true,
+        ]);
 
-    //     $response->assertStatus(201);
+        $response->assertStatus(201);
 
-    //     $this->assertDatabaseHas('product_show', [
-    //         'product_id' => $this->product->id,
-    //         'show_id' => $this->show->id,
-    //         'amount' => 10,
-    //         'adjusted_price' => 10.5,
-    //         'enabled' => true,
-    //     ]);
-    // }
+        $this->assertDatabaseHas('product_show', [
+            'product_id' => $this->product->id,
+            'show_id' => $this->show->id,
+            'amount' => 10,
+            'adjusted_price' => 10.5,
+            'enabled' => true,
+        ]);
+    }
 
-    public function test_removeProduct()
+    public function test_remove_product()
     {
         Sanctum::actingAs($this->user);
 
@@ -133,7 +131,7 @@ class ShowControllerTest extends TestCase
             'enabled' => true,
         ]);
 
-        $response = $this->json('DELETE', route('shows.products.remove', [$this->show, $this->product]));
+        $response = $this->deleteJson(route('shows.products.remove', [$this->show, $this->product]));
 
         $response->assertStatus(200);
 
@@ -143,7 +141,7 @@ class ShowControllerTest extends TestCase
         ]);
     }
 
-    public function test_updateProduct()
+    public function test_update_product()
     {
         Sanctum::actingAs($this->user);
 
@@ -156,7 +154,7 @@ class ShowControllerTest extends TestCase
         $newAmount = 20;
         $newPrice = 200;
 
-        $response = $this->json('PUT', route('shows.products.update', [$this->show, $this->product]), [
+        $response = $this->putJson(route('shows.products.update', [$this->show, $this->product]), [
             'amount' => $newAmount,
             'adjusted_price' => $newPrice,
             'enabled' => true,
@@ -179,7 +177,7 @@ class ShowControllerTest extends TestCase
 
         $search = $this->show->start;
 
-        $response = $this->json('GET', route('shows.index', ['search' => $search]));
+        $response = $this->getJson(route('shows.index', ['search' => $search]));
 
         $response->assertStatus(200);
         $response->assertJsonFragment(['start' => $search->format('Y-m-d H:i:s')]);
@@ -189,7 +187,7 @@ class ShowControllerTest extends TestCase
     {
         Show::factory()->count(4)->create(['event_id' => $this->event->id]);
 
-        $response = $this->json('GET', route('shows.index', ['page' => 1, 'per_page' => 5]));
+        $response = $this->getJson(route('shows.index', ['page' => 1, 'per_page' => 5]));
 
         $response->assertStatus(200);
         $response->assertJsonCount(5, 'data');

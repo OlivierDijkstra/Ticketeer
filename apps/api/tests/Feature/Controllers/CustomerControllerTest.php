@@ -20,7 +20,7 @@ class CustomerControllerTest extends TestCase
     {
         Sanctum::actingAs($this->user);
 
-        $response = $this->json('GET', route('customers.index'));
+        $response = $this->getJson(route('customers.index'));
 
         $response->assertStatus(200);
     }
@@ -29,7 +29,7 @@ class CustomerControllerTest extends TestCase
     {
         Sanctum::actingAs($this->user);
 
-        $response = $this->json('POST', route('customers.store'), [
+        $response = $this->postJson(route('customers.store'), [
             'first_name' => 'John',
             'last_name' => 'Doe',
             'email' => 'johndoe@example.com',
@@ -66,9 +66,10 @@ class CustomerControllerTest extends TestCase
 
         $customer = Customer::first();
 
-        $response = $this->json('GET', route('customers.show', $customer));
+        $response = $this->getJson(route('customers.show', $customer));
 
         $response->assertStatus(200);
+        $response->assertJson(['id' => $customer->id]);
     }
 
     public function test_update()
@@ -83,7 +84,7 @@ class CustomerControllerTest extends TestCase
 
         $customer = Customer::first();
 
-        $response = $this->json('PUT', route('customers.update', $customer), [
+        $response = $this->putJson(route('customers.update', $customer), [
             ...$customer->toArray(),
             'first_name' => $needle,
             'address' => $address->toArray(),
@@ -118,7 +119,7 @@ class CustomerControllerTest extends TestCase
 
         $customer = Customer::first();
 
-        $response = $this->json('DELETE', route('customers.destroy', $customer));
+        $response = $this->deleteJson(route('customers.destroy', $customer));
 
         $response->assertStatus(200);
 
@@ -136,7 +137,7 @@ class CustomerControllerTest extends TestCase
 
         $search = Customer::first()->first_name;
 
-        $response = $this->json('GET', route('customers.index', ['search' => $search]));
+        $response = $this->getJson(route('customers.index', ['search' => $search]));
 
         $response->assertStatus(200);
 
@@ -147,7 +148,7 @@ class CustomerControllerTest extends TestCase
     {
         Sanctum::actingAs($this->user);
 
-        $response = $this->json('GET', route('customers.index', ['page' => 1, 'per_page' => 5]));
+        $response = $this->getJson(route('customers.index', ['page' => 1, 'per_page' => 5]));
 
         $response->assertStatus(200);
         $response->assertJsonCount(5, 'data');

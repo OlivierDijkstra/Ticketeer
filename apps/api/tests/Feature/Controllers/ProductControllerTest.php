@@ -19,7 +19,7 @@ class ProductControllerTest extends TestCase
     {
         Sanctum::actingAs($this->user);
 
-        $response = $this->json('GET', route('products.index'));
+        $response = $this->getJson(route('products.index'));
 
         $response->assertStatus(200);
     }
@@ -28,7 +28,7 @@ class ProductControllerTest extends TestCase
     {
         Sanctum::actingAs($this->user);
 
-        $response = $this->json('POST', route('products.store'), [
+        $response = $this->postJson(route('products.store'), [
             'name' => 'Test',
             'description' => 'Test',
             'price' => 10.00,
@@ -48,9 +48,9 @@ class ProductControllerTest extends TestCase
     {
         Sanctum::actingAs($this->user);
 
-        $product = product::first();
+        $product = Product::first();
 
-        $response = $this->json('GET', route('products.show', $product));
+        $response = $this->getJson(route('products.show', $product));
 
         $response->assertStatus(200);
     }
@@ -61,9 +61,9 @@ class ProductControllerTest extends TestCase
 
         $needle = 'Test';
 
-        $product = product::first();
+        $product = Product::first();
 
-        $response = $this->json('PUT', route('products.update', $product), [
+        $response = $this->putJson(route('products.update', $product), [
             ...$product->toArray(),
             'description' => $needle,
         ]);
@@ -85,9 +85,9 @@ class ProductControllerTest extends TestCase
     {
         Sanctum::actingAs($this->user);
 
-        $product = product::first();
+        $product = Product::first();
 
-        $response = $this->json('DELETE', route('products.destroy', $product));
+        $response = $this->deleteJson(route('products.destroy', $product));
 
         $response->assertStatus(200);
 
@@ -96,5 +96,26 @@ class ProductControllerTest extends TestCase
             'description' => $product->description,
             'deleted_at' => null,
         ]);
+    }
+
+    public function test_update_product()
+    {
+        $product = Product::factory()->create();
+        $updateData = ['name' => 'Updated Product'];
+
+        $response = $this->putJson(route('products.update', $product), $updateData);
+
+        $response->assertStatus(200);
+        $this->assertDatabaseHas('products', ['id' => $product->id, 'name' => 'Updated Product']);
+    }
+
+    public function test_destroy_product()
+    {
+        $product = Product::factory()->create();
+
+        $response = $this->deleteJson(route('products.destroy', $product));
+
+        $response->assertStatus(200);
+        $this->assertSoftDeleted('products', ['id' => $product->id]);
     }
 }

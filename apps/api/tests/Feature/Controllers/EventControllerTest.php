@@ -9,7 +9,7 @@ use Tests\TestCase;
 
 class EventControllerTest extends TestCase
 {
-    public $event;
+    protected $event;
 
     public function setUp(): void
     {
@@ -22,7 +22,7 @@ class EventControllerTest extends TestCase
 
     public function test_index()
     {
-        $response = $this->json('GET', route('events.index'));
+        $response = $this->getJson(route('events.index'));
 
         $response->assertStatus(200);
         $response->assertJsonCount(5);
@@ -32,7 +32,7 @@ class EventControllerTest extends TestCase
     {
         $this->event->update(['featured' => true]);
 
-        $response = $this->json('GET', route('events.index', ['featured' => true]));
+        $response = $this->getJson(route('events.index', ['featured' => true]));
 
         $response->assertStatus(200);
         $response->assertJsonFragment([
@@ -44,7 +44,7 @@ class EventControllerTest extends TestCase
     {
         Sanctum::actingAs($this->user);
 
-        $response = $this->json('POST', route('events.store'), [
+        $response = $this->postJson(route('events.store'), [
             'name' => 'Test Event',
             'slug' => 'test-event',
             'service_fee' => 100.00,
@@ -65,7 +65,7 @@ class EventControllerTest extends TestCase
 
     public function test_show()
     {
-        $response = $this->json('GET', route('events.show', $this->event->slug));
+        $response = $this->getJson(route('events.show', $this->event->slug));
 
         $response->assertStatus(200);
         $response->assertJsonFragment([
@@ -79,7 +79,7 @@ class EventControllerTest extends TestCase
 
         $needle = 'Test';
 
-        $response = $this->json('PUT', route('events.update', $this->event->slug), [
+        $response = $this->putJson(route('events.update', $this->event->slug), [
             ...$this->event->toArray(),
             'description' => $needle,
         ]);
@@ -94,7 +94,7 @@ class EventControllerTest extends TestCase
     {
         Sanctum::actingAs($this->user);
 
-        $response = $this->json('DELETE', route('events.destroy', $this->event->slug));
+        $response = $this->deleteJson(route('events.destroy', $this->event->slug));
 
         $response->assertStatus(200);
         $response->assertJsonFragment([
@@ -108,7 +108,7 @@ class EventControllerTest extends TestCase
 
         $file = UploadedFile::fake()->image('test.jpg');
 
-        $response = $this->json('POST', route('events.media.add', $this->event->slug), [
+        $response = $this->postJson(route('events.media.add', $this->event->slug), [
             'media' => [
                 $file,
             ],
@@ -134,7 +134,7 @@ class EventControllerTest extends TestCase
 
         $media = $this->event->addMediaAndGenerateBase64($file);
 
-        $response = $this->json('DELETE', route('events.media.delete', [$this->event->slug, $media->id]));
+        $response = $this->deleteJson(route('events.media.delete', [$this->event->slug, $media->id]));
 
         $response->assertStatus(200);
         $response->assertJsonFragment([
@@ -155,7 +155,7 @@ class EventControllerTest extends TestCase
 
         $media = $this->event->addMediaAndGenerateBase64($file);
 
-        $response = $this->json('PUT', route('events.media.cover', [$this->event->slug, $media->id]));
+        $response = $this->putJson(route('events.media.cover', [$this->event->slug, $media->id]));
 
         $response->assertStatus(200);
         $response->assertJsonFragment([
