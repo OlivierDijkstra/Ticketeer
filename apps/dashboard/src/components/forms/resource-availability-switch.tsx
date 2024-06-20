@@ -13,7 +13,10 @@ import {
 } from '@/components/ui/tooltip';
 import { handleFieldUpdate } from '@/lib/utils';
 import { updateEventAction } from '@/server/actions/events';
-import { updateProductShowPivotAction, updateShowAction } from '@/server/actions/shows';
+import {
+  updateProductShowPivotAction,
+  updateShowAction,
+} from '@/server/actions/shows';
 
 type Data = Event | Show | Product;
 
@@ -69,7 +72,7 @@ export default function ResourceAvailabilitySwitch({
           toast.error('Failed to update product', {
             description: 'Please try again later',
           });
-          
+
           throw new Error('Product pivot is required');
         }
 

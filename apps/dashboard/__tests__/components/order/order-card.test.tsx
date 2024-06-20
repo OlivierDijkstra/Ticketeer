@@ -29,6 +29,8 @@ const mockOrder: Order = generateOrder({
     generateProduct({
       name: 'Product 1',
       pivot: {
+        product_id: 1,
+        show_id: 1,
         amount: 2,
         price: '10',
         adjusted_price: '9',

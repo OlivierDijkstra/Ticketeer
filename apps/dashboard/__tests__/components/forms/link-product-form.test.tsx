@@ -52,7 +52,9 @@ describe('LinkProductForm', () => {
     );
 
     expect(screen.getByRole('combobox')).toBeInTheDocument();
-    expect(screen.getByLabelText(/adjusted price/i)).toHaveValue(formatMoney(0));
+    expect(screen.getByLabelText(/adjusted price/i)).toHaveValue(
+      formatMoney(0)
+    );
     expect(screen.getByLabelText(/total available/i)).toHaveValue(1);
     expect(screen.getByLabelText(/enabled/i)).not.toBeChecked();
   });

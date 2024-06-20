@@ -113,7 +113,7 @@ export function generateEvent(event: Partial<Event> = {}): Event {
     enabled: true,
     featured: false,
     media: [],
-    service_fee: '2.5',
+    service_fee: "2.5",
     created_at: "2021-06-01T00:00:00",
     updated_at: "2021-06-01T00:00:00",
     deleted_at: null,
@@ -137,6 +137,7 @@ export function generateShow(show: Partial<Show> = {}): Show {
     deleted_at: null,
     event_id: 1,
     event: generateEvent(show.event),
+    products: [],
     ...show,
   };
 }

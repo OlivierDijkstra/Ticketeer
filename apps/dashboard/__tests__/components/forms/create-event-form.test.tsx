@@ -55,7 +55,9 @@ describe('CreateEventForm', () => {
     expect(screen.getByLabelText('Description')).toHaveValue(
       'Test Description'
     );
-    expect(screen.getByLabelText(/service fee/i)).toHaveValue(formatMoney(12.34));
+    expect(screen.getByLabelText(/service fee/i)).toHaveValue(
+      formatMoney(12.34)
+    );
   });
 
   test('toggles checkbox value correctly', async () => {

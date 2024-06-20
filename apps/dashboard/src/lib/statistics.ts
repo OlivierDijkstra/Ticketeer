@@ -17,19 +17,21 @@ export class Statistics {
     this.dataPoints = dataPoints;
   }
 
-  static async fetchStatistics({
-    model = 'customer',
-    start_date = '',
-    end_date = '',
-    group_by = 'week',
-    filters = {},
-  }: StatsRequest = {
-    model: 'customer',
-    start_date: '',
-    end_date: '',
-    group_by: 'week',
-    filters: {}
-  }): Promise<Statistics> {
+  static async fetchStatistics(
+    {
+      model = 'customer',
+      start_date = '',
+      end_date = '',
+      group_by = 'week',
+      filters = {},
+    }: StatsRequest = {
+      model: 'customer',
+      start_date: '',
+      end_date: '',
+      group_by: 'week',
+      filters: {},
+    }
+  ): Promise<Statistics> {
     let data;
 
     try {
@@ -68,7 +70,9 @@ export class Statistics {
 
   getPercentageIncrease(): number {
     if (this.dataPoints.length < 2) {
-      throw new Error('At least two data points are required to calculate a percentage increase.');
+      throw new Error(
+        'At least two data points are required to calculate a percentage increase.'
+      );
     }
 
     const newValue = this.dataPoints[this.dataPoints.length - 1]?.value || 0;

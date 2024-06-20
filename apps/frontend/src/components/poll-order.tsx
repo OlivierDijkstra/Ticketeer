@@ -6,7 +6,13 @@ import { useEffect, useState } from 'react';
 
 import { fetchJson } from '@/lib/fetch';
 
-export default function PollOrder({ order_id, show_id }: { order_id: string, show_id: string }) {
+export default function PollOrder({
+  order_id,
+  show_id,
+}: {
+  order_id: string;
+  show_id: string;
+}) {
   const router = useRouter();
 
   const [isPaid, setIsPaid] = useState(false);

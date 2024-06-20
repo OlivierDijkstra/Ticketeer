@@ -46,7 +46,9 @@ export default function EditableField({
   placeholder?: string;
   required?: boolean;
 }) {
-  const [confirmedValue, setConfirmedValue] = useState<string | null>(value || null);
+  const [confirmedValue, setConfirmedValue] = useState<string | null>(
+    value || null
+  );
   const [stateValue, setStateValue] = useState(value);
   const [error, setError] = useState<string | null>(null);
   const [isEditing, setIsEditing] = useState(false);

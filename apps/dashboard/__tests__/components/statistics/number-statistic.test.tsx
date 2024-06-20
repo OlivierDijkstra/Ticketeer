@@ -6,11 +6,7 @@ import NumberStatistic from '@/components/statistics/number-statistic';
 describe('NumberStatistic', () => {
   test('renders with default values', () => {
     render(
-      <NumberStatistic
-        name='Test Statistic'
-        value={100}
-        percentage={10}
-      />
+      <NumberStatistic name='Test Statistic' value={100} percentage={10} />
     );
 
     expect(screen.getByText('Test Statistic')).toBeInTheDocument();
@@ -19,11 +15,7 @@ describe('NumberStatistic', () => {
 
   test('displays percentage and up text correctly', () => {
     render(
-      <NumberStatistic
-        name='Test Statistic'
-        value={100}
-        percentage={10}
-      />
+      <NumberStatistic name='Test Statistic' value={100} percentage={10} />
     );
 
     expect(screen.getByText('+10% from last week')).toBeInTheDocument();
@@ -31,11 +23,7 @@ describe('NumberStatistic', () => {
 
   test('displays percentage and down text correctly', () => {
     render(
-      <NumberStatistic
-        name='Test Statistic'
-        value={100}
-        percentage={-10}
-      />
+      <NumberStatistic name='Test Statistic' value={100} percentage={-10} />
     );
 
     expect(screen.getByText('-10% from last week')).toBeInTheDocument();
@@ -43,11 +31,7 @@ describe('NumberStatistic', () => {
 
   test('displays value as a string', () => {
     render(
-      <NumberStatistic
-        name='Test Statistic'
-        value='100k'
-        percentage={10}
-      />
+      <NumberStatistic name='Test Statistic' value='100k' percentage={10} />
     );
 
     expect(screen.getByText('100k')).toBeInTheDocument();

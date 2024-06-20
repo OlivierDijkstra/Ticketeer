@@ -34,7 +34,9 @@ describe('ProductShowForm', () => {
   test('renders with initial values', () => {
     render(<ProductShowForm product={product} />);
 
-    expect(screen.getByLabelText(/adjusted price/i)).toHaveValue(formatMoney('10'));
+    expect(screen.getByLabelText(/adjusted price/i)).toHaveValue(
+      formatMoney('10')
+    );
     expect(screen.getByLabelText(/amount/i)).toHaveValue(1);
   });
 
@@ -45,7 +47,9 @@ describe('ProductShowForm', () => {
       target: { value: '12.34' },
     });
 
-    expect(screen.getByLabelText(/adjusted price/i)).toHaveValue(formatMoney('12.34'));
+    expect(screen.getByLabelText(/adjusted price/i)).toHaveValue(
+      formatMoney('12.34')
+    );
   });
 
   test('submits the form with correct data', async () => {

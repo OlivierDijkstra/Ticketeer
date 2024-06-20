@@ -137,5 +137,5 @@ export default function formatMoney(amount: number | string | undefined) {
     style: "currency",
     // eslint-disable-next-line no-undef
     currency: process.env.NEXT_PUBLIC_CURRENCY || "USD",
-  }).format(parseFloat((amount as string) || '0'));
+  }).format(parseFloat((amount as string) || "0"));
 }

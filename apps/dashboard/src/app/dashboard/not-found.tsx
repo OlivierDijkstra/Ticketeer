@@ -11,7 +11,7 @@ export default async function Page() {
         Oops, the page you are looking for does not exist.
       </p>
 
-      <div className='flex justify-center mt-4'>
+      <div className='mt-4 flex justify-center'>
         <Link href='/dashboard'>
           <Button>Go to Dashboard</Button>
         </Link>

@@ -45,7 +45,7 @@ export default async function Page({
             <span>Event:</span>
             <span className='font-medium'>{event.name}</span>
           </div>
-          
+
           <div className='flex items-center justify-between'>
             <span>Show:</span>
             <span className='text-right font-medium'>{show.description}</span>
@@ -60,7 +60,7 @@ export default async function Page({
             </div>
           </div>
         </div>
-        
+
         <div className='flex flex-col gap-2 sm:flex-row'>
           <Link href='/'>
             <Button className='w-full sm:w-auto'>

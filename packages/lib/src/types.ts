@@ -64,7 +64,12 @@ export interface Event {
 
 export type CreateEvent = Omit<
   Event,
-  "id" | "created_at" | "updated_at" | "deleted_at" | "media" | "statistics_slug"
+  | "id"
+  | "created_at"
+  | "updated_at"
+  | "deleted_at"
+  | "media"
+  | "statistics_slug"
 >;
 
 export interface Show {
@@ -85,7 +90,14 @@ export interface Show {
 
 export type CreateShow = Omit<
   Show,
-  "id" | "event_id" | "created_at" | "updated_at" | "deleted_at" | "address" | "event"
+  | "id"
+  | "event_id"
+  | "created_at"
+  | "updated_at"
+  | "deleted_at"
+  | "address"
+  | "event"
+  | "products"
 >;
 
 export interface ProductShowPivot {
@@ -121,7 +133,7 @@ export type LinkProduct = {
   is_upsell: boolean;
   amount: number;
   enabled: boolean;
-}
+};
 
 export interface PaginatedResponse<T> {
   current_page: number;

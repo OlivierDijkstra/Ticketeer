@@ -35,9 +35,8 @@ export default function ProductShowForm({ product }: { product: Product }) {
     },
   });
 
-  const [adjustedPrice, setAdjustedPrice, normalizedAdjustedPrice] = useCurrencyInput(
-    `${product.pivot?.adjusted_price}`
-  );
+  const [adjustedPrice, setAdjustedPrice, normalizedAdjustedPrice] =
+    useCurrencyInput(`${product.pivot?.adjusted_price}`);
 
   useEffect(() => {
     const formValue = form.getValues('adjusted_price');
@@ -163,4 +162,3 @@ export default function ProductShowForm({ product }: { product: Product }) {
     </Form>
   );
 }
-
