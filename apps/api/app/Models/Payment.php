@@ -16,11 +16,10 @@ class Payment extends Model
         'amount',
         'payment_method',
         'refunded_amount',
+        'payment_url',
         'paid_at',
         'refunded_at',
     ];
-
-    // protected $with = ['order'];
 
     public function order()
     {

@@ -4,8 +4,10 @@ import type { ColumnData, Payment } from '@repo/lib';
 import formatMoney from '@repo/lib';
 import type { ColumnDef } from '@tanstack/react-table';
 import { format } from 'date-fns';
+import { ExternalLinkIcon } from 'lucide-react';
 
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { DEFAULT_DATE_FORMAT } from '@/lib/constants';
 
 export function columns(_data: ColumnData): ColumnDef<Payment>[] {
@@ -79,6 +81,24 @@ export function columns(_data: ColumnData): ColumnDef<Payment>[] {
             {format(new Date(row.original.created_at), DEFAULT_DATE_FORMAT)}
           </span>
         );
+      },
+    },
+    {
+      accessorKey: 'payment_url',
+      header: '',
+      cell: ({ row }) => {
+        return row.original.payment_url && row.original.status === 'open' ? (
+          <Button
+            variant='outline'
+            size='sm'
+            onClick={() => {
+              window.open(row.original.payment_url as string, '_blank');
+            }}
+          >
+            <ExternalLinkIcon className='mr-2 !size-3' />
+            Pay
+          </Button>
+        ) : null;
       },
     },
   ];

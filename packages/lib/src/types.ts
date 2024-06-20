@@ -103,9 +103,10 @@ export type CreateShow = Omit<
 export interface ProductShowPivot {
   show_id: number;
   product_id: number;
-  adjusted_price?: string;
+  adjusted_price?: string | null;
   price?: string;
   amount: number;
+  stock: number;
   enabled?: boolean;
 }
 
@@ -244,6 +245,7 @@ export interface Payment {
   refunded_amount: number;
   paid_at?: string | null; // Optional field
   refunded_at?: string | null; // Optional field
+  payment_url?: string | null; // Optional field
   created_at: string; // Dates as strings
   updated_at: string; // Dates as strings
 }
