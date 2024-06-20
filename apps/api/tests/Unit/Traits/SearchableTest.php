@@ -37,8 +37,6 @@ class SearchableTest extends TestCase
 
         $searchableArray = $model->toSearchableArray();
 
-        ray($searchableArray);
-
         $this->assertIsArray($searchableArray);
         $this->assertArrayHasKey('id', $searchableArray);
         $this->assertArrayHasKey('created_at', $searchableArray);

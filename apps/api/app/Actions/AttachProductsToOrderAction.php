@@ -25,6 +25,7 @@ class AttachProductsToOrderAction
             }
 
             $productShow->decrement('stock', $productData['amount']);
+
             $order->products()->attach($productShow->product_id, [
                 'amount' => $productData['amount'],
                 'price' => $productData['price'] ?? $productShow->product->price,
