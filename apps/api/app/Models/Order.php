@@ -72,7 +72,6 @@ class Order extends Model
         return 'ORD-'.now()->format('YmdHis').'-'.rand(1000, 9999);
     }
 
-    // on created
     public static function boot()
     {
         parent::boot();

@@ -41,26 +41,6 @@ class Event extends Model implements HasMedia
         'featured' => 'boolean',
     ];
 
-    // protected $appends = ['images'];
-
-    // public function getImagesAttribute()
-    // {
-    //     $media = $this->media->map(function ($media) {
-    //         return [
-    //             'id' => $media->id,
-    //             'name' => $media->name,
-    //             'file_name' => $media->file_name,
-    //             'mime_type' => $media->mime_type,
-    //             'url' => $media->getFullUrl(),
-    //             'base64' => $media->getCustomProperty('base64'),
-    //         ];
-    //     });
-
-    //     // $this->makeHidden('media');
-
-    //     return $media;
-    // }
-
     public function getRouteKeyName(): string
     {
         return 'slug';
@@ -81,12 +61,6 @@ class Event extends Model implements HasMedia
         return $this->hasMany(Show::class);
     }
 
-    // public function orders()
-    // {
-    //     return $this->hasManyThrough(Order::class, Show::class);
-    // }
-
-    // When created, generate a slug
     protected static function boot(): void
     {
         parent::boot();
