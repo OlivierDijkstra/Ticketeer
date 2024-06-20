@@ -2,8 +2,8 @@
 
 namespace Tests\Unit\Models;
 
-use App\Models\Customer;
 use App\Models\Address;
+use App\Models\Customer;
 use Tests\TestCase;
 
 class CustomerTest extends TestCase

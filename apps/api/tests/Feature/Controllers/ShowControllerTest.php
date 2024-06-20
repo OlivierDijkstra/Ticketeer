@@ -11,7 +11,9 @@ use Tests\TestCase;
 class ShowControllerTest extends TestCase
 {
     protected $event;
+
     protected $show;
+
     protected $product;
 
     public function setUp(): void

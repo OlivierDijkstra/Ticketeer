@@ -2,11 +2,11 @@
 
 namespace Tests\Unit\Models;
 
+use App\Models\Customer;
+use App\Models\Event;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\Show;
-use App\Models\Customer;
-use App\Models\Event;
 use Tests\TestCase;
 
 class OrderTest extends TestCase
