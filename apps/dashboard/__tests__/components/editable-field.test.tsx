@@ -205,4 +205,25 @@ describe('EditableField', () => {
     expect(screen.getByText('Test')).toBeInTheDocument();
     expect(onChange).not.toHaveBeenCalled();
   });
+
+  test('it exits edit mode silently if value has not changed', async () => {
+    render(
+      <TooltipProvider>
+        <EditableField onChange={onChange} value='Test' minLength={2} />
+      </TooltipProvider>
+    );
+
+    const editButton = screen.getByRole('button');
+    await userEvent.click(editButton);
+
+    const inputField = screen.getByRole('textbox')
+    await userEvent.clear(inputField);
+    await userEvent.type(inputField, 'Test');
+
+    const saveButton = screen.getByText('Save');
+    await userEvent.click(saveButton);
+
+    expect(screen.getByText('Test')).toBeInTheDocument();
+    expect(onChange).not.toHaveBeenCalled();
+  });
 });

@@ -69,6 +69,11 @@ export default function EditableField({
   async function confirmChange() {
     if (error) return;
 
+    if (stateValue === value) {
+      setIsEditing(false);
+      return;
+    }
+
     if (confirmation && !dialogOpen) {
       setDialogOpen(true);
       return;
