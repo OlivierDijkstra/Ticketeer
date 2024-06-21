@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import type { Mock } from 'vitest';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 
-import EventTitleCard from '@/components/event/event-title-card';
+import EventSettingsCard from '@/components/event/event-settings-card';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { updateEventAction } from '@/server/actions/events';
 
@@ -41,17 +41,17 @@ const mockRouter = {
   push: vi.fn(),
 };
 
-describe('EventTitleCard', () => {
+describe('EventSettingsCard', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     (useRouter as Mock).mockReturnValue(mockRouter);
   });
 
-  test('renders EventTitleCard component correctly', () => {
+  test('renders EventSettingsCard component correctly', () => {
     render(
       <TooltipProvider>
         <TooltipProvider>
-          <EventTitleCard event={mockEvent} />
+          <EventSettingsCard event={mockEvent} />
         </TooltipProvider>
       </TooltipProvider>
     );
@@ -69,7 +69,7 @@ describe('EventTitleCard', () => {
 
     render(
       <TooltipProvider>
-        <EventTitleCard event={mockEvent} />
+        <EventSettingsCard event={mockEvent} />
       </TooltipProvider>
     );
 
@@ -104,7 +104,7 @@ describe('EventTitleCard', () => {
 
     render(
       <TooltipProvider>
-        <EventTitleCard event={mockEvent} />
+        <EventSettingsCard event={mockEvent} />
       </TooltipProvider>
     );
 
@@ -133,7 +133,7 @@ describe('EventTitleCard', () => {
 
     render(
       <TooltipProvider>
-        <EventTitleCard event={mockEvent} />
+        <EventSettingsCard event={mockEvent} />
       </TooltipProvider>
     );
 

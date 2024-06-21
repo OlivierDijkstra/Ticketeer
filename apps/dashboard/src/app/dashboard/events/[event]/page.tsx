@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
 
 import EventMediaZone from '@/components/event/event-media-zone';
-import EventTitleCard from '@/components/event/event-title-card';
+import EventSettingsCard from '@/components/event/event-settings-card';
 import SkeletonGraph from '@/components/skeletons/skeleton-graph';
 import SkeletonStatistic from '@/components/skeletons/skeleton-statistic';
 import NewOrdersStatistic from '@/components/statistics/new-orders-statistic';
@@ -39,7 +39,7 @@ export default async function Page({
         </Suspense>
       </div>
 
-      <EventTitleCard event={event} />
+      <EventSettingsCard event={event} />
 
       <div className='grid gap-4 lg:grid-cols-2 '>
         <EventMediaZone event={event} />

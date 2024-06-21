@@ -17,7 +17,7 @@ import {
 import { handleFieldUpdate } from '@/lib/utils';
 import { updateEventAction } from '@/server/actions/events';
 
-export default function EventTitleCard({ event }: { event: Event }) {
+export default function EventSettingsCard({ event }: { event: Event }) {
   const [eventData, setEventData] = useState<Event>(event);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -102,6 +102,10 @@ export default function EventTitleCard({ event }: { event: Event }) {
           required
         />
 
+        <h3 className='mt-4 text-sm font-medium'>Short description</h3>
+        <p className='text-xs text-muted-foreground'>
+          This description will be shown on the event page. Give your customers some useful information about the event.
+        </p>
         <EditableField
           type='textarea'
           value={eventData.description}
@@ -112,7 +116,7 @@ export default function EventTitleCard({ event }: { event: Event }) {
         />
 
         <h3 className='mt-4 text-sm font-medium'>Short description</h3>
-        <p className='text-sm text-muted-foreground'>
+        <p className='text-xs text-muted-foreground'>
           This description will be shown on the event card on the home page
         </p>
 
