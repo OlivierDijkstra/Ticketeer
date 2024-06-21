@@ -4,6 +4,7 @@ import { Trash } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type { FieldArrayWithId, UseFormReturn } from 'react-hook-form';
 
+import { CurrencyInput } from '@/components/currency-input';
 import { Button } from '@/components/ui/button';
 import Combobox from '@/components/ui/combobox';
 import {
@@ -14,7 +15,6 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { useCurrencyInput } from '@/lib/hooks';
 
 type OrderProductFieldProps = {
   index: number;
@@ -93,52 +93,6 @@ const ProductCombobox = ({
   );
 };
 
-const AmountInput = ({
-  value,
-  onChange,
-}: {
-  value: string;
-  onChange: (value: number) => void;
-}) => (
-  <FormItem>
-    <FormLabel className='text-xs text-muted-foreground'>Amount</FormLabel>
-    <FormControl>
-      <Input
-        type='number'
-        placeholder='Amount'
-        className='w-16'
-        value={value}
-        onChange={(e) => onChange(parseInt(e.target.value, 10))}
-      />
-    </FormControl>
-    <FormMessage />
-  </FormItem>
-);
-
-const PriceInput = ({
-  price,
-  setPrice,
-  field,
-}: {
-  price: string;
-  setPrice: (value: string) => void;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  field: any;
-}) => (
-  <FormItem>
-    <FormLabel className='text-xs text-muted-foreground'>Price</FormLabel>
-    <FormControl>
-      <Input
-        {...field}
-        inputMode='numeric'
-        value={price}
-        onChange={(e) => setPrice(e.target.value)}
-      />
-    </FormControl>
-    <FormMessage />
-  </FormItem>
-);
-
 export default function OrderProductField({
   index,
   form,
@@ -150,7 +104,6 @@ export default function OrderProductField({
   onSearch,
 }: OrderProductFieldProps) {
   const [selectOpen, setSelectOpen] = useState(false);
-  const [price, setPrice] = useCurrencyInput('0');
   const previousProductId = useRef(null);
 
   const watcher = form.watch(`products.${index}.id`);
@@ -161,22 +114,13 @@ export default function OrderProductField({
 
   useEffect(() => {
     if (watcher && memoizedProduct && previousProductId.current !== watcher) {
-      setPrice(memoizedProduct.price.toString());
+      form.setValue(
+        `products.${index}.price`,
+        memoizedProduct.price.toString()
+      );
       previousProductId.current = watcher;
     }
-  }, [watcher, memoizedProduct, setPrice]);
-
-  const formattedPrice = useMemo(() => {
-    return parseFloat(price.replace(/[^\d]/g, '')) / 100;
-  }, [price]);
-
-  useEffect(() => {
-    if (formattedPrice) {
-      form.setValue(`products.${index}.price`, `${formattedPrice}`, {
-        shouldDirty: true,
-      });
-    }
-  }, [form, formattedPrice, index]);
+  }, [form, index, memoizedProduct, watcher]);
 
   return (
     <div className={cn('flex justify-between gap-2', className)} key={field.id}>
@@ -203,10 +147,21 @@ export default function OrderProductField({
             control={form.control}
             name={`products.${index}.amount`}
             render={({ field: { onChange, value } }) => (
-              <AmountInput
-                value={value?.toString() || '1'}
-                onChange={onChange}
-              />
+              <FormItem>
+                <FormLabel className='text-xs text-muted-foreground'>
+                  Amount
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    type='number'
+                    placeholder='Amount'
+                    className='w-16'
+                    value={value?.toString() || '1'}
+                    onChange={(e) => onChange(parseInt(e.target.value, 10))}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
             )}
           />
 
@@ -214,7 +169,15 @@ export default function OrderProductField({
             control={form.control}
             name={`products.${index}.price`}
             render={({ field }) => (
-              <PriceInput price={price} setPrice={setPrice} field={field} />
+              <FormItem>
+                <FormLabel className='text-xs text-muted-foreground'>
+                  Price
+                </FormLabel>
+                <FormControl>
+                  <CurrencyInput {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
             )}
           />
         </div>

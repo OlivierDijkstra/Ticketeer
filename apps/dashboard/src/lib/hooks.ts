@@ -1,4 +1,3 @@
-import formatMoney from '@repo/lib';
 import { useTheme } from 'next-themes';
 import { useEffect, useMemo, useState } from 'react';
 
@@ -21,42 +20,6 @@ export function useGraphColors() {
   }, [theme, systemTheme]);
 
   return colors;
-}
-
-function formatCurrency(value: string): string {
-  const numericValue = value.replace(/[^\d]/g, '');
-
-  if (!numericValue) return formatMoney(0);
-
-  // Convert to a number and format as currency
-  return formatMoney(parseFloat(numericValue) / 100);
-}
-
-export function useCurrencyInput(
-  initialValue: string = ''
-): [string, (value: string) => void, string, () => void] {
-  const [value, setValue] = useState<string>(formatCurrency(initialValue));
-
-  const handleChange = (inputValue: string) => {
-    const cleanedValue = inputValue.replace(/[^\d]/g, '');
-    const numericValue = (parseFloat(cleanedValue) / 100).toFixed(2);
-    setValue(formatCurrency(numericValue));
-  };
-
-  const reset = () => {
-    setValue(formatCurrency(initialValue));
-  };
-
-  useEffect(() => {
-    setValue(formatCurrency(initialValue));
-  }, [initialValue]);
-
-  // also return a float value
-  const normalizedValue = (
-    parseFloat(value.replace(/[^\d]/g, '')) / 100
-  ).toFixed(2);
-
-  return [value, handleChange, normalizedValue, reset];
 }
 
 type TimeType = 'hour' | 'minute';

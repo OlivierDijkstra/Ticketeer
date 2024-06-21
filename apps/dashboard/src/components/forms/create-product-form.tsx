@@ -2,11 +2,11 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useParams } from 'next/navigation';
-import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
+import { CurrencyInput } from '@/components/currency-input';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
@@ -20,7 +20,6 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { useCurrencyInput } from '@/lib/hooks';
 import { createProductAction } from '@/server/actions/products';
 
 export default function CreateProductForm({
@@ -83,12 +82,6 @@ export default function CreateProductForm({
       }
     );
   }
-
-  const [price, setPrice] = useCurrencyInput('0');
-
-  useEffect(() => {
-    form.setValue('price', parseFloat(price.replace(/[^\d]/g, '')) / 100 || 0);
-  }, [form, price]);
 
   return (
     <Form {...form}>
@@ -153,12 +146,7 @@ export default function CreateProductForm({
               <FormItem>
                 <FormLabel>Price</FormLabel>
                 <FormControl>
-                  <Input
-                    {...field}
-                    inputMode='numeric'
-                    value={price}
-                    onChange={(e) => setPrice(e.target.value)}
-                  />
+                  <CurrencyInput {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

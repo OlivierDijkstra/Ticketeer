@@ -10,6 +10,7 @@ import { toast } from 'sonner';
 import { useDebounceCallback } from 'usehooks-ts';
 import { z } from 'zod';
 
+import { CurrencyInput } from '@/components/currency-input';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import Combobox from '@/components/ui/combobox';
@@ -22,7 +23,6 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { useCurrencyInput } from '@/lib/hooks';
 import { getProductsAction } from '@/server/actions/products';
 import { linkProductToShowAction } from '@/server/actions/shows';
 
@@ -83,15 +83,6 @@ export default function LinkProductForm({
     );
   }
 
-  const [price, setPrice, floatPrice] = useCurrencyInput('0');
-
-  useEffect(() => {
-    form.setValue(
-      'adjusted_price',
-      parseFloat(price.replace(/[^\d]/g, '')) / 100 || 0
-    );
-  }, [form, price]);
-
   const [products, setProducts] = useState<Product[] | null>(null);
   const [productsSelectOpen, setProductsSelectOpen] = useState(false);
   const [productsSearch, setProductsSearch] = useState('');
@@ -122,7 +113,7 @@ export default function LinkProductForm({
   const adjustedPriceLabel = useMemo(() => {
     let label = 'Adjusted Price';
 
-    if (floatPrice === '0.00') {
+    if (form.watch('adjusted_price') === 0) {
       label += ' (Free)';
     }
 
@@ -133,7 +124,7 @@ export default function LinkProductForm({
     }
 
     return label;
-  }, [selectedProduct, floatPrice]);
+  }, [form, selectedProduct]);
 
   return (
     <Form {...form}>
@@ -174,12 +165,7 @@ export default function LinkProductForm({
               <FormItem>
                 <FormLabel>{adjustedPriceLabel}</FormLabel>
                 <FormControl>
-                  <Input
-                    {...field}
-                    inputMode='numeric'
-                    value={price}
-                    onChange={(e) => setPrice(e.target.value)}
-                  />
+                  <CurrencyInput {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

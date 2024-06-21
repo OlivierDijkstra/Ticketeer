@@ -2,11 +2,11 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import type { Product } from '@repo/lib';
-import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
+import { CurrencyInput } from '@/components/currency-input';
 import Spinner from '@/components/spinner';
 import { Button } from '@/components/ui/button';
 import {
@@ -18,7 +18,6 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { useCurrencyInput } from '@/lib/hooks';
 import { updateProductShowPivotAction } from '@/server/actions/shows';
 
 export default function ProductShowPivotForm({
@@ -41,40 +40,11 @@ export default function ProductShowPivotForm({
     },
   });
 
-  const [adjustedPrice, setAdjustedPrice, normalizedAdjustedPrice] =
-    useCurrencyInput(`${product.pivot?.adjusted_price}`);
-
-  useEffect(() => {
-    const formValue = form.getValues('adjusted_price');
-    const formValueAsNumber =
-      typeof formValue === 'number' ? formValue : parseFloat(`${formValue}`);
-
-    if (
-      !isNaN(formValueAsNumber) &&
-      normalizedAdjustedPrice !== formValueAsNumber.toFixed(2).toString()
-    ) {
-      if (formValueAsNumber === 0) {
-        form.setValue('adjusted_price', null, {
-          shouldDirty: true,
-        });
-      } else {
-        form.setValue(
-          'adjusted_price',
-          parseFloat(adjustedPrice.replace(/[^\d]/g, '')) / 100 || 0,
-          {
-            shouldDirty: true,
-          }
-        );
-      }
-    }
-  }, [form, adjustedPrice, normalizedAdjustedPrice]);
-
   const resetForm = () => {
     form.reset({
       adjusted_price: parseFloat(product.pivot?.adjusted_price || '0'),
       amount: product.pivot?.amount || 0,
     });
-    setAdjustedPrice(`${product.pivot?.adjusted_price}`);
   };
 
   const onSubmit = async (data: z.infer<typeof schema>) => {
@@ -113,12 +83,7 @@ export default function ProductShowPivotForm({
               <FormItem>
                 <FormLabel>Adjusted Price</FormLabel>
                 <FormControl>
-                  <Input
-                    {...field}
-                    inputMode='numeric'
-                    value={adjustedPrice}
-                    onChange={(e) => setAdjustedPrice(e.target.value)}
-                  />
+                  <CurrencyInput {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

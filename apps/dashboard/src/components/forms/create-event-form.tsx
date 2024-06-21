@@ -1,11 +1,11 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
+import { CurrencyInput } from '@/components/currency-input';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
@@ -19,7 +19,6 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { useCurrencyInput } from '@/lib/hooks';
 import { createEventAction } from '@/server/actions/events';
 
 export default function CreateEventForm({
@@ -91,15 +90,6 @@ export default function CreateEventForm({
     );
   }
 
-  const [servicePrice, setServicePrice] = useCurrencyInput('0');
-
-  useEffect(() => {
-    form.setValue(
-      'service_fee',
-      parseFloat(servicePrice.replace(/[^\d]/g, '')) / 100 || 0
-    );
-  }, [form, servicePrice]);
-
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-2'>
@@ -163,12 +153,7 @@ export default function CreateEventForm({
             <FormItem>
               <FormLabel>Service Fee</FormLabel>
               <FormControl>
-                <Input
-                  {...field}
-                  inputMode='numeric'
-                  value={servicePrice}
-                  onChange={(e) => setServicePrice(e.target.value)}
-                />
+                <CurrencyInput {...field} />
               </FormControl>
               <FormDescription>
                 Service fee is what the customers will pay additonally to the

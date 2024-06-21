@@ -20,7 +20,7 @@ const products: Product[] = [
   {
     id: 1,
     name: 'Product 1',
-    price: '1000',
+    price: '10.00',
     description: 'Product 1',
     vat: 9,
     is_upsell: true,
@@ -31,7 +31,7 @@ const products: Product[] = [
   {
     id: 2,
     name: 'Product 2',
-    price: '2000',
+    price: '20.00',
     description: 'Product 2',
     vat: 21,
     is_upsell: false,

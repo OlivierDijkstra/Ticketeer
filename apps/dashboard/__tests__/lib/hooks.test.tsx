@@ -1,4 +1,3 @@
-import formatMoney from '@repo/lib';
 import { act, renderHook } from '@testing-library/react';
 import { afterEach, describe, expect, test, vi } from 'vitest';
 
@@ -55,50 +54,6 @@ describe('hooks', () => {
         primary: '#fff',
         secondary: '#2563eb',
       });
-    });
-  });
-
-  describe('useCurrencyInput', () => {
-    const formatCurrency = (value: string) => {
-      return value.replace(/\u00A0/, ' ');
-    };
-
-    test('initializes with formatted currency', () => {
-      const { result } = renderHook(() => hooks.useCurrencyInput('12345'));
-
-      expect(formatCurrency(result.current[0])).toBe(formatMoney(123.45));
-    });
-
-    test('handles input change and formats value', () => {
-      const { result } = renderHook(() => hooks.useCurrencyInput(''));
-
-      act(() => {
-        result.current[1]('67890');
-      });
-
-      expect(formatCurrency(result.current[0])).toBe(formatMoney(678.9));
-    });
-
-    test('returns normalized value', () => {
-      const { result } = renderHook(() => hooks.useCurrencyInput('12345'));
-
-      expect(result.current[2]).toBe('123.45');
-    });
-
-    test('resets to initial value', () => {
-      const { result } = renderHook(() => hooks.useCurrencyInput('12345'));
-
-      act(() => {
-        result.current[1]('67890');
-      });
-
-      expect(formatCurrency(result.current[0])).toBe(formatMoney(678.9));
-
-      act(() => {
-        result.current[3]();
-      });
-
-      expect(formatCurrency(result.current[0])).toBe(formatMoney(123.45));
     });
   });
 
