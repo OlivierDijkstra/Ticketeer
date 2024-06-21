@@ -1,5 +1,5 @@
 import formatMoney from '@repo/lib';
-import { fireEvent,render } from '@testing-library/react';
+import { fireEvent, render } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
 import { CurrencyInput } from '@/components/currency-input';

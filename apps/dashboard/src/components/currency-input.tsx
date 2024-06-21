@@ -4,7 +4,10 @@ import * as React from 'react';
 import { Input } from '@/components/ui/input';
 
 export interface CurrencyInputProps
-  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange' | 'value'> {
+  extends Omit<
+    React.InputHTMLAttributes<HTMLInputElement>,
+    'onChange' | 'value'
+  > {
   defaultValue?: string;
   value?: string | number | null;
   onChange?: (value: number) => void;
