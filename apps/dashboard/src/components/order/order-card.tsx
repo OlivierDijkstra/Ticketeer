@@ -22,13 +22,13 @@ export default function OrderCard({ order }: { order: Order }) {
   const [description, setDescription] = useState(order.description);
   const [loading, setLoading] = useState(false);
 
-  async function handleDescriptionChange(value: string | null) {
+  async function handleDescriptionChange(value: string | number | null) {
     await handleFieldUpdate<Order, typeof updateOrderAction>({
       updateAction: updateOrderAction,
       data: {
         order_id: order.id,
         data: {
-          description: value || '',
+          description: value ? `${value}` : null,
         },
       },
       setLoading,

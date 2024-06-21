@@ -57,7 +57,10 @@ describe('GuestField', () => {
     const user = userEvent.setup();
     const input = screen.getByRole('textbox');
 
-    await user.type(input, 'Jane Doe{enter}');
+    await user.type(input, 'Jane Doe');
+
+    const addGuestButton = screen.getByText('Add guest');
+    await userEvent.click(addGuestButton);
 
     expect(screen.getByText('Jane Doe')).toBeInTheDocument();
     expect(mockOnChange).toHaveBeenCalledWith(['Jane Doe']);

@@ -58,7 +58,10 @@ describe('ProductTitleCard', () => {
 
     const inputField = screen.getByRole('textbox');
     await userEvent.clear(inputField);
-    await userEvent.type(inputField, 'Updated Product{enter}');
+    await userEvent.type(inputField, 'Updated Product');
+
+    const saveButton = screen.getByText('Save');
+    await userEvent.click(saveButton);
 
     await waitFor(() => {
       expect(toast.promise).toHaveBeenCalled();
@@ -83,7 +86,10 @@ describe('ProductTitleCard', () => {
 
     const textareaField = screen.getByRole('textbox');
     await userEvent.clear(textareaField);
-    await userEvent.type(textareaField, 'Updated Description{enter}');
+    await userEvent.type(textareaField, 'Updated Description');
+
+    const saveButton = screen.getByText('Save');
+    await userEvent.click(saveButton);
 
     await waitFor(() => {
       expect(toast.success).toHaveBeenCalled();

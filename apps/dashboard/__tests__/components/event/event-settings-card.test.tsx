@@ -79,7 +79,9 @@ describe('EventSettingsCard', () => {
     const inputField = screen.getByRole('textbox');
     await userEvent.clear(inputField);
     await userEvent.type(inputField, 'Updated Event');
-    await userEvent.type(inputField, '{enter}');
+    
+    const saveButton = screen.getByText('Save');
+    await userEvent.click(saveButton);
 
     const continueButton = screen.getByText('Continue');
     await userEvent.click(continueButton);
@@ -113,7 +115,10 @@ describe('EventSettingsCard', () => {
 
     const textareaField = screen.getByRole('textbox');
     await userEvent.clear(textareaField);
-    await userEvent.type(textareaField, 'Updated Description{enter}');
+    await userEvent.type(textareaField, 'Updated Description');
+
+    const saveButton = screen.getByText('Save');
+    await userEvent.click(saveButton);
 
     expect(updateEventAction).toHaveBeenCalledWith(
       expect.objectContaining({

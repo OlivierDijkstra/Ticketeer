@@ -22,13 +22,13 @@ export default function EventSettingsCard({ event }: { event: Event }) {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  async function handleNameChange(value: string | null) {
+  async function handleNameChange(value: string | null | number) {
     await handleFieldUpdate<Event, typeof updateEventAction>({
       updateAction: updateEventAction,
       data: {
         event_slug: event.slug,
         data: {
-          name: value ?? undefined,
+          name: value ? `${value}` : undefined,
         },
       },
       setLoading,
@@ -41,13 +41,13 @@ export default function EventSettingsCard({ event }: { event: Event }) {
     });
   }
 
-  async function handleDescriptionChange(value: string | null) {
+  async function handleDescriptionChange(value: string | null | number) {
     await handleFieldUpdate<Event, typeof updateEventAction>({
       updateAction: updateEventAction,
       data: {
         event_slug: event.slug,
         data: {
-          description: value,
+          description: `${value}`,
         },
       },
       setLoading,
@@ -57,13 +57,29 @@ export default function EventSettingsCard({ event }: { event: Event }) {
     });
   }
 
-  async function handleDescriptionShortChange(value: string | null) {
+  async function handleDescriptionShortChange(value: string | null | number) {
     await handleFieldUpdate<Event, typeof updateEventAction>({
       updateAction: updateEventAction,
       data: {
         event_slug: event.slug,
         data: {
-          description_short: value,
+          description_short: `${value}`,
+        },
+      },
+      setLoading,
+      setData: setEventData,
+      successMessage: 'Event updated successfully',
+      errorMessage: 'Failed to update event',
+    });
+  }
+
+  async function handleServiceFeeChange(value: string | number | null) {
+    await handleFieldUpdate<Event, typeof updateEventAction>({
+      updateAction: updateEventAction,
+      data: {
+        event_slug: event.slug,
+        data: {
+          service_fee: value ? `${value}` : undefined,
         },
       },
       setLoading,
@@ -80,7 +96,7 @@ export default function EventSettingsCard({ event }: { event: Event }) {
           <div className='space-y-1.5'>
             <CardTitle>Event</CardTitle>
             <CardDescription>
-              Edit the event name and description
+              Edit the event settings
             </CardDescription>
           </div>
 
@@ -103,9 +119,11 @@ export default function EventSettingsCard({ event }: { event: Event }) {
         />
 
         <h3 className='mt-4 text-sm font-medium'>Short description</h3>
-        <p className='text-xs text-muted-foreground'>
-          This description will be shown on the event page. Give your customers some useful information about the event.
+        <p className='text-xs text-muted-foreground mb-2'>
+          This description will be shown on the event page. Give your customers
+          some useful information about the event.
         </p>
+
         <EditableField
           type='textarea'
           value={eventData.description}
@@ -113,21 +131,45 @@ export default function EventSettingsCard({ event }: { event: Event }) {
           className='text-sm text-muted-foreground'
           tooltipText='Edit event description'
           placeholder='No description set'
+          minLength={0}
         />
 
-        <h3 className='mt-4 text-sm font-medium'>Short description</h3>
-        <p className='text-xs text-muted-foreground'>
-          This description will be shown on the event card on the home page
-        </p>
+        <hr className='my-4' />
 
-        <EditableField
-          type='textarea'
-          value={eventData.description_short}
-          onChange={handleDescriptionShortChange}
-          className='text-sm text-muted-foreground'
-          tooltipText='Edit event short description, shown on the event card on the home page'
-          placeholder='No short description set'
-        />
+        <div className='flex flex-row justify-between gap-4'>
+          <div>
+            <h3 className='mt-4 text-sm font-medium'>Short description</h3>
+            <p className='text-xs text-muted-foreground mb-2'>
+              This description will be shown on the event card on the home page
+            </p>
+
+            <EditableField
+              type='textarea'
+              value={eventData.description_short}
+              onChange={handleDescriptionShortChange}
+              className='text-sm text-muted-foreground'
+              tooltipText='Edit event short description, shown on the event card on the home page'
+              placeholder='No short description set'
+              minLength={0}
+            />
+          </div>
+
+          <div>
+            <h3 className='mt-4 text-sm font-medium'>Service fee</h3>
+            <p className='text-xs text-muted-foreground mb-2'>
+              This fee will be added to the total price of the event.
+            </p>
+
+            <EditableField
+              type='currency'
+              value={eventData.service_fee}
+              onChange={handleServiceFeeChange}
+              className='text-sm text-muted-foreground'
+              tooltipText='Edit event short description, shown on the event card on the home page'
+              placeholder='No short description set'
+            />
+          </div>
+        </div>
       </CardContent>
     </Card>
   );

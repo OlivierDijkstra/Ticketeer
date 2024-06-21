@@ -1,10 +1,11 @@
 'use client';
 
-import { cn } from '@repo/lib';
-import { Pencil } from 'lucide-react';
-import type { ChangeEvent, KeyboardEvent } from 'react';
+import formatMoney, { cn } from '@repo/lib';
+import { Check, Pencil, X } from 'lucide-react';
+import type { KeyboardEvent } from 'react';
 import { useState } from 'react';
 
+import { CurrencyInput } from '@/components/currency-input';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -38,81 +39,56 @@ export default function EditableField({
   value?: string | null;
   tooltipText?: string;
   className?: string;
-  onChange: (value: string | null) => void;
+  onChange: (value: string | null | number) => void;
   disabled?: boolean;
   minLength?: number;
-  type?: 'input' | 'textarea';
+  type?: 'input' | 'textarea' | 'currency';
   confirmation?: boolean;
   placeholder?: string;
   required?: boolean;
 }) {
-  const [confirmedValue, setConfirmedValue] = useState<string | null>(
-    value || null
-  );
-  const [stateValue, setStateValue] = useState(value);
+  const [stateValue, setStateValue] = useState<string | number | null | undefined>(value);
   const [error, setError] = useState<string | null>(null);
   const [isEditing, setIsEditing] = useState(false);
-
   const [dialogOpen, setDialogOpen] = useState(false);
 
-  function onChangeHandler(
-    event: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLTextAreaElement>
-  ) {
-    setStateValue(event.currentTarget.value);
+  function onChangeHandler(value: string | number) {
+    setStateValue(value);
 
-    if (!event.target.value && required) {
+    if (!value && required) {
       setError('Value cannot be empty');
-    } else if (!(event.target.value.length > minLength)) {
-      setError(`Value must be at least ${minLength} characters long`);
+    } else if (typeof value === 'string' && value.length < minLength) {
+      if (minLength !== 0) {
+        setError(`Value must be at least ${minLength} characters long`);
+      }
     } else {
       setError(null);
     }
   }
 
-  function onBlurHandler() {
-    if (dialogOpen) return;
-    setError(null);
-    setDialogOpen(false);
-    setIsEditing(false);
-    setStateValue(value);
-  }
-
   async function confirmChange() {
+    if (error) return;
+
+    if (confirmation && !dialogOpen) {
+      setDialogOpen(true);
+      return;
+    }
+
     setDialogOpen(false);
     setIsEditing(false);
 
     try {
       await onChange(stateValue || null);
-      setConfirmedValue(stateValue || null);
     } catch (error) {
       setStateValue(value);
     }
   }
 
-  async function onKeyDownHandler(
+  function onKeyDownHandler(
     event: KeyboardEvent<HTMLInputElement> | KeyboardEvent<HTMLTextAreaElement>
   ) {
     if (event.key === 'Escape') {
-      onBlurHandler();
-      return;
-    }
-
-    if (event.key === 'Enter' && !error) {
-      if (!stateValue) {
-        return;
-      }
-
-      if (stateValue === confirmedValue) {
-        setIsEditing(false);
-        return;
-      }
-
-      if (confirmation) {
-        setDialogOpen(true);
-        return;
-      }
-
-      await confirmChange();
+      handleCloseDialog();
     }
   }
 
@@ -124,26 +100,38 @@ export default function EditableField({
   }
 
   function returnComponent() {
-    return type === 'input' ? (
-      <Input
-        autoFocus
-        defaultValue={stateValue || undefined}
-        onChange={onChangeHandler}
-        onBlur={onBlurHandler}
-        onKeyDown={onKeyDownHandler}
-        placeholder={placeholder}
-      />
-    ) : (
-      <Textarea
-        autoFocus
-        className='w-full'
-        value={stateValue || undefined}
-        onChange={onChangeHandler}
-        onBlur={onBlurHandler}
-        onKeyDown={onKeyDownHandler}
-        placeholder={placeholder}
-      />
-    );
+    if (type === 'input') {
+      return (
+        <Input
+          autoFocus
+          defaultValue={stateValue || undefined}
+          onChange={(e) => onChangeHandler(e.target.value)}
+          onKeyDown={onKeyDownHandler}
+          placeholder={placeholder}
+        />
+      );
+    } else if (type === 'textarea') {
+      return (
+        <Textarea
+          autoFocus
+          className='w-full'
+          value={stateValue || undefined}
+          onChange={(e) => onChangeHandler(e.target.value)}
+          onKeyDown={onKeyDownHandler}
+          placeholder={placeholder}
+        />
+      );
+    } else if (type === 'currency') {
+      return (
+        <CurrencyInput
+          autoFocus
+          value={stateValue || undefined}
+          onChange={(value) => onChangeHandler(value.toString())}
+          onKeyDown={onKeyDownHandler}
+          placeholder={placeholder}
+        />
+      );
+    }
   }
 
   return (
@@ -153,19 +141,23 @@ export default function EditableField({
           {isEditing ? (
             returnComponent()
           ) : (
-            <span>{stateValue || placeholder}</span>
+            <span>
+              {type === 'currency'
+                ? formatMoney(stateValue)
+                : stateValue || placeholder}
+            </span>
           )}
         </div>
 
-        {!isEditing && (
+        {!isEditing ? (
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
                 disabled={disabled}
-                onClick={() => setIsEditing(!isEditing)}
+                onClick={() => setIsEditing(true)}
                 size='icon'
                 variant='outline'
-                className='rounded-full text-primary'
+                className='aspect-square !size-8 rounded-full text-primary'
                 aria-label='edit value'
               >
                 <span className='sr-only'>{tooltipText}</span>
@@ -176,14 +168,38 @@ export default function EditableField({
               <p className='text-xs font-normal'>{tooltipText}</p>
             </TooltipContent>
           </Tooltip>
+        ) : (
+          <>
+            <Button
+              variant='outline'
+              size='icon'
+              className='aspect-square !size-8 rounded-full text-primary'
+              onClick={confirmChange}
+              disabled={!!error}
+            >
+              <span className='sr-only'>Save</span>
+              <Check />
+            </Button>
+            <Button
+              variant='outline'
+              size='icon'
+              className='aspect-square !size-8 rounded-full text-primary'
+              onClick={handleCloseDialog}
+            >
+              <span className='sr-only'>Cancel</span>
+              <X />
+            </Button>
+          </>
         )}
       </div>
 
-      {/* // TODO: Fix styling */}
-      {error && isEditing && <p>{error}</p>}
+      {error && isEditing && (
+        <p className='text-xs font-medium text-red-500'>{error}</p>
+      )}
       {!error && isEditing && (
         <p className='mb-1 !text-xs !font-medium !text-muted-foreground'>
-          Press ENTER to confirm, click anywhere to cancel
+          Click the save button to confirm, click the cancel button or press
+          Escape to cancel
         </p>
       )}
 

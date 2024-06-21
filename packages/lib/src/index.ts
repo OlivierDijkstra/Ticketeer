@@ -131,7 +131,9 @@ export function createUrl(
   return `${base}?${queryString}`;
 }
 
-export default function formatMoney(amount: number | string | undefined) {
+export default function formatMoney(amount?: number | string | null) {
+  if (amount === null || amount === undefined) return "0";
+
   // eslint-disable-next-line no-undef
   return new Intl.NumberFormat(process.env.NEXT_PUBLIC_LOCALE || "en-US", {
     style: "currency",

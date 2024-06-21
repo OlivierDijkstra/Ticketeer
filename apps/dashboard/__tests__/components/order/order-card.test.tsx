@@ -82,7 +82,10 @@ describe('OrderCard', () => {
 
     const inputField = screen.getByRole('textbox');
     await userEvent.clear(inputField);
-    await userEvent.type(inputField, 'Updated description{enter}');
+    await userEvent.type(inputField, 'Updated description');
+
+    const saveButton = screen.getByText('Save');
+    await userEvent.click(saveButton);
 
     await waitFor(() => {
       expect(toast.success).toHaveBeenCalled();

@@ -51,7 +51,13 @@ describe('ShowDateAvailablity', () => {
 
     const textareaField = screen.getByText('Test Show Description');
     await userEvent.clear(textareaField);
-    await userEvent.type(textareaField, 'Updated Description{enter}');
+    await userEvent.type(textareaField, 'Updated Description');
+
+    const saveButtons = screen.getAllByText('Save');
+    expect(saveButtons).toHaveLength(2);
+
+    const saveButton = saveButtons[saveButtons.length - 1] as HTMLElement;
+    await userEvent.click(saveButton);
 
     await waitFor(() => {
       expect(toast.success).toHaveBeenCalled();

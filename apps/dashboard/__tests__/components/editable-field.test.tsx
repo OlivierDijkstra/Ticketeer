@@ -38,7 +38,10 @@ describe('EditableField', () => {
 
     const inputField = screen.getByRole('textbox');
     await userEvent.clear(inputField);
-    await userEvent.type(inputField, 'Updated Value{enter}');
+    await userEvent.type(inputField, 'Updated Value');
+
+    const saveButton = screen.getByText('Save');
+    await userEvent.click(saveButton);
 
     expect(onChange).toHaveBeenCalledWith('Updated Value');
   });
@@ -55,7 +58,10 @@ describe('EditableField', () => {
 
     const inputField = screen.getByRole('textbox');
     await userEvent.clear(inputField);
-    await userEvent.type(inputField, 'abc{enter}');
+    await userEvent.type(inputField, 'abc');
+
+    const saveButton = screen.getByText('Save');
+    await userEvent.click(saveButton);
 
     expect(
       screen.getByText('Value must be at least 5 characters long')
@@ -74,7 +80,10 @@ describe('EditableField', () => {
 
     const inputField = screen.getByRole('textbox');
     await userEvent.clear(inputField);
-    await userEvent.type(inputField, 'New Value{enter}');
+    await userEvent.type(inputField, 'New Value');
+
+    const saveButton = screen.getByText('Save');
+    await userEvent.click(saveButton);
 
     expect(screen.getByText('Are you absolutely sure?')).toBeInTheDocument();
   });
@@ -91,36 +100,15 @@ describe('EditableField', () => {
 
     const inputField = screen.getByRole('textbox');
     await userEvent.clear(inputField);
-    await userEvent.type(inputField, 'New Value{enter}');
+    await userEvent.type(inputField, 'New Value');
+
+    const saveButton = screen.getByText('Save');
+    await userEvent.click(saveButton);
 
     const continueButton = screen.getByText('Continue');
     await userEvent.click(continueButton);
 
     expect(onChange).toHaveBeenCalledWith('New Value');
-  });
-
-  test('it cancels edit mode on blur', async () => {
-    render(
-      <TooltipProvider>
-        <EditableField onChange={onChange} value='Test' />
-      </TooltipProvider>
-    );
-
-    const editButton = screen.getByRole('button');
-
-    await userEvent.click(editButton);
-
-    const inputField = screen.getByRole('textbox');
-
-    await userEvent.clear(inputField);
-    await userEvent.type(inputField, 'New Value');
-
-    await act(async () => {
-      await inputField.blur();
-    });
-
-    expect(screen.getByText('Test')).toBeInTheDocument();
-    expect(onChange).not.toHaveBeenCalled();
   });
 
   test('it cancels edit mode on Escape key press', async () => {
@@ -157,7 +145,10 @@ describe('EditableField', () => {
 
     const textareaField = screen.getByRole('textbox');
     await userEvent.clear(textareaField);
-    await userEvent.type(textareaField, 'Updated Text{enter}');
+    await userEvent.type(textareaField, 'Updated Text');
+
+    const saveButton = screen.getByText('Save');
+    await userEvent.click(saveButton);
 
     expect(onChange).toHaveBeenCalledWith('Updated Text');
   });
@@ -179,7 +170,9 @@ describe('EditableField', () => {
 
     const inputField = screen.getByRole('textbox');
     await userEvent.clear(inputField);
-    await userEvent.type(inputField, '{enter}');
+
+    const saveButton = screen.getByText('Save');
+    await userEvent.click(saveButton);
 
     expect(screen.getByText('Value cannot be empty')).toBeInTheDocument();
   });
@@ -196,9 +189,17 @@ describe('EditableField', () => {
 
     const inputField = screen.getByRole('textbox');
     await userEvent.clear(inputField);
-    await userEvent.type(inputField, 'New Value{enter}');
+    await userEvent.type(inputField, 'New Value');
 
-    const cancelButton = screen.getByText('Cancel');
+    const saveButton = screen.getByText('Save');
+    await userEvent.click(saveButton);
+
+    const cancelButtons = screen.getAllByText('Cancel');
+
+    expect(cancelButtons).toHaveLength(2);
+
+    const cancelButton = cancelButtons[cancelButtons.length - 1] as HTMLElement;
+
     await userEvent.click(cancelButton);
 
     expect(screen.getByText('Test')).toBeInTheDocument();

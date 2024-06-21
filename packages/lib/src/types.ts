@@ -79,7 +79,7 @@ export interface Show {
   end: string; // Dates as strings
   enabled: boolean;
   guests: string[];
-  description: string;
+  description: string | null;
   address: Address;
   products: Product[];
   deleted_at?: string | null; // Optional field

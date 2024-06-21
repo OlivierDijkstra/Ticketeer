@@ -14,13 +14,13 @@ export default function ShowTitleCard({ show }: { show: Show }) {
   const [loading, setLoading] = useState(false);
   const [showData, setShowData] = useState(show);
 
-  async function handleDescriptionChange(value: string | null) {
+  async function handleDescriptionChange(value: string | number | null) {
     await handleFieldUpdate<Show, typeof updateShowAction>({
       updateAction: updateShowAction,
       data: {
         show_id: show.id,
         data: {
-          description: value || '',
+          description: value ? `${value}` : null,
         },
       },
       setLoading,

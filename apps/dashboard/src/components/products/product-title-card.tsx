@@ -28,7 +28,7 @@ export default function ProductTitleCard({ product }: { product: Product }) {
   const [loading, setLoading] = useState(false);
   const [upsell, setUpsell] = useState(product.is_upsell);
 
-  async function handleNameChange(value: string | null) {
+  async function handleNameChange(value: string | number | null) {
     setLoading(true);
 
     if (!value) return;
@@ -37,7 +37,7 @@ export default function ProductTitleCard({ product }: { product: Product }) {
       updateProductAction({
         product_id: `${product.id}`,
         data: {
-          name: value,
+          name: `${value}`,
         },
       }),
       {
@@ -53,14 +53,14 @@ export default function ProductTitleCard({ product }: { product: Product }) {
     setLoading(false);
   }
 
-  async function handleDescriptionChange(value: string | null) {
+  async function handleDescriptionChange(value: string | number | null) {
     setLoading(true);
 
     try {
       const data = await updateProductAction({
         product_id: `${product.id}`,
         data: {
-          description: value,
+          description: value ? `${value}` : null,
         },
       });
 
