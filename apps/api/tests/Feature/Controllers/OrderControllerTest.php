@@ -58,6 +58,7 @@ class OrderControllerTest extends TestCase
                 'city' => 'Springfield',
                 'postal_code' => '62701',
                 'state' => 'IL',
+                'country' => 'United States',
             ],
             'products' => $this->products->map(fn ($product) => ['id' => $product->id, 'amount' => 1])->toArray(),
             'redirect_url' => 'http://example.com',
