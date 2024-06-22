@@ -1,6 +1,6 @@
 import { cn } from '@repo/lib';
 import { cva, type VariantProps } from 'class-variance-authority';
-import { LoaderCircle } from 'lucide-react';
+import { Loader } from 'lucide-react';
 import * as React from 'react';
 
 export const variants = {
@@ -37,7 +37,7 @@ export default function Spinner({
 }: SpinnerProps) {
   return (
     <>
-      <LoaderCircle
+      <Loader
         aria-label='loading'
         aria-busy='true'
         className={cn(spinnerVariants({ className, variant, size }), className)}
