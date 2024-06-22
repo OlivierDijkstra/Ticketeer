@@ -25,6 +25,7 @@ class StoreOrderRequest extends FormRequest
             'customer.city' => 'required_with:customer|string',
             'customer.postal_code' => 'required_with:customer|string',
             'customer.state' => 'required_with:customer|string',
+            'customer.country' => 'required_with:customer|string',
             'customer.phone' => 'nullable|string',
 
             'products' => 'required|array|min:1',
