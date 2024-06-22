@@ -22,7 +22,7 @@ class AddressFactory extends Factory
             'city' => fake()->city(),
             'state' => fake()->city(),
             'postal_code' => fake()->postcode(),
-            'country' => fake()->country(),
+            'country' => fake()->countryCode(),
         ];
     }
 }
