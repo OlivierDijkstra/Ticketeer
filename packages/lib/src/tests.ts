@@ -144,6 +144,9 @@ export function generateShow(show: Partial<Show> = {}): Show {
 
 export function generateAddress(address: Partial<Address> = {}): Address {
   return {
+    id: generateString(10),
+    addressable_id: generateString(10),
+    addressable_type: generateString(10),
     city: generateString(10),
     country: generateString(10),
     postal_code: generateString(6),

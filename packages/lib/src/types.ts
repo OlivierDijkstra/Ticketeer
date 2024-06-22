@@ -176,6 +176,9 @@ export interface ColumnData {
 }
 
 export interface Address {
+  id: string;
+  addressable_id: number | string;
+  addressable_type: string;
   street: string;
   street2?: string | null; // Optional field
   city: string;
