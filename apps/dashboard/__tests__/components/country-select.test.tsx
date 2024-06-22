@@ -1,10 +1,9 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { FormProvider,useForm } from 'react-hook-form';
+import { FormProvider, useForm } from 'react-hook-form';
 import { describe, expect, test, vi } from 'vitest';
 
 import CountrySelect from '@/components/country-select';
-import { TooltipProvider } from '@/components/ui/tooltip';
 
 vi.mock('i18n-iso-countries', () => ({
   __esModule: true,
@@ -27,11 +26,9 @@ vi.mock('i18n-iso-countries', () => ({
 const Wrapper = () => {
   const methods = useForm();
   return (
-    <TooltipProvider>
-      <FormProvider {...methods}>
-        <CountrySelect name="country" />
-      </FormProvider>
-    </TooltipProvider>
+    <FormProvider {...methods}>
+      <CountrySelect name='country' />
+    </FormProvider>
   );
 };
 
@@ -43,11 +40,9 @@ describe('CountrySelect', () => {
     expect(screen.getByText('Loading countries')).toBeInTheDocument();
 
     await waitFor(() => {
-        expect(screen.getByRole('combobox')).toBeInTheDocument();
-        expect(screen.getByRole('combobox')).toHaveTextContent(
-          'Select country'
-        );
-    })
+      expect(screen.getByRole('combobox')).toBeInTheDocument();
+      expect(screen.getByRole('combobox')).toHaveTextContent('Select country');
+    });
   });
 
   test('loads and displays country options', async () => {

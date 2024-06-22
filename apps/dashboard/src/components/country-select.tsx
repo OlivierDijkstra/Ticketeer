@@ -13,7 +13,9 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 
-type SelectProps = React.ComponentPropsWithoutRef<typeof Select>;
+type SelectProps = {
+  onChange?: (value: string) => void;
+} & React.ComponentPropsWithoutRef<typeof Select>;
 
 export default function CountrySelect(props: SelectProps) {
   const [localesLoaded, setLocalesLoaded] = useState(false);
@@ -49,14 +51,14 @@ export default function CountrySelect(props: SelectProps) {
       localesLoaded
         ? Object.entries(countries.getAlpha2Codes()).map(([key]) => ({
             key,
-            name: countries.getName(key, 'en', { select: 'official' }),
+            name: countries.getName(key, 'en', { select: 'official' }) || '',
           }))
         : [],
     [localesLoaded]
   );
 
   return (
-    <Select {...props}>
+    <Select defaultValue={props.value} onValueChange={props.onChange}>
       <FormControl>
         <SelectTrigger>
           {localesLoaded ? (
@@ -71,7 +73,7 @@ export default function CountrySelect(props: SelectProps) {
       </FormControl>
       <SelectContent>
         {countryList.map(({ key, name }) => (
-          <SelectItem key={key} value={key}>
+          <SelectItem key={key} value={name}>
             {name}
           </SelectItem>
         ))}
