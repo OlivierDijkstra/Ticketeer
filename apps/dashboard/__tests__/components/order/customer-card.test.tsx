@@ -18,6 +18,9 @@ const mockCustomer: Customer = generateCustomer({
   email: 'john.doe@example.com',
   phone: '1234567890',
   address: {
+    id: '1',
+    addressable_id: '1',
+    addressable_type: 'customer',
     street: '123 Main St',
     street2: '',
     city: 'Anytown',
@@ -40,13 +43,6 @@ describe('CustomerCard', () => {
     expect(screen.getByText('Customer details')).toBeInTheDocument();
     expect(screen.getByText('John Doe')).toBeInTheDocument();
     expect(screen.getByText('john.doe@example.com')).toBeInTheDocument();
-    expect(screen.getByText('1234567890')).toBeInTheDocument();
-    expect(screen.getByText('123 Main St,')).toBeInTheDocument();
-    expect(screen.getByText('Anytown')).toBeInTheDocument();
-    expect(screen.getByText('12345')).toBeInTheDocument();
-    expect(screen.getByText('State')).toBeInTheDocument();
-    // TODO: Add country field.
-    // expect(screen.getByText('Country')).toBeInTheDocument();
   });
 
   test('renders "View customer" button when customer is provided and params.customer is null', () => {

@@ -12,7 +12,7 @@ export default function CustomerCard({ customer }: { customer?: Customer }) {
   const params = useParams<{
     customer: string;
   }>();
-
+  
   return (
     <Card className='overflow-hidden'>
       <CardHeader className='flex flex-row justify-between bg-muted/50 sm:items-center'>
@@ -49,35 +49,6 @@ export default function CustomerCard({ customer }: { customer?: Customer }) {
           <li className='flex items-center justify-between'>
             <span className='text-muted-foreground'>Phone</span>
             <span>{customer?.phone || 'N/A'}</span>
-          </li>
-
-          <div className='font-medium'>Address</div>
-
-          <li className='flex items-center justify-between'>
-            <span className='text-muted-foreground'>Street</span>
-            <span>
-              {`${customer?.address.street}, ${customer?.address.street2 || ''}`}
-            </span>
-          </li>
-
-          <li className='flex items-center justify-between'>
-            <span className='text-muted-foreground'>City</span>
-            <span>{customer?.address.city}</span>
-          </li>
-
-          <li className='flex items-center justify-between'>
-            <span className='text-muted-foreground'>Postal code</span>
-            <span>{customer?.address.postal_code}</span>
-          </li>
-
-          <li className='flex items-center justify-between'>
-            <span className='text-muted-foreground'>State</span>
-            <span>{customer?.address.state}</span>
-          </li>
-
-          <li className='flex items-center justify-between'>
-            <span className='text-muted-foreground'>Country</span>
-            <span>{customer?.address.country}</span>
           </li>
         </ul>
       </CardContent>
