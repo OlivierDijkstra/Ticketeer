@@ -1,3 +1,4 @@
+import AddressCard from '@/components/address-card';
 import CustomerCard from '@/components/order/customer-card';
 import { getCustomerAction } from '@/server/actions/customers';
 
@@ -18,6 +19,8 @@ export default async function Page({
     <div className='space-y-4'>
       <div className='grid gap-4 lg:grid-cols-2'>
         <CustomerCard customer={customer} />
+
+        <AddressCard address={customer?.address} />
       </div>
     </div>
   );
