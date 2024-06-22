@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
+import CountrySelect from '@/components/country-select';
 import ProductSelection from '@/components/product-selection';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -32,6 +33,7 @@ const formSchema = z.object({
       city: z.string(),
       postal_code: z.string(),
       state: z.string(),
+      country: z.string(),
       phone: z.string().optional(),
     })
     .optional(),
@@ -82,6 +84,7 @@ export default function CreateOrderForm({
         city: 'Amsterdam',
         postal_code: '1234AB',
         state: 'North Holland',
+        country: 'NL',
         phone: '+31612345678',
       },
     },
@@ -264,10 +267,24 @@ export default function CreateOrderForm({
           name='customer.state'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>state</FormLabel>
+              <FormLabel>State / Province</FormLabel>
               <FormControl>
                 <Input placeholder='state' {...field} />
               </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name='customer.country'
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Country</FormLabel>
+
+              <CountrySelect {...field} />
+
               <FormMessage />
             </FormItem>
           )}
