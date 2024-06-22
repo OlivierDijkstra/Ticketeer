@@ -16,7 +16,6 @@
     "test:watch": "vitest --watch"
   },
   "dependencies": {
-    "@repo/lib": "*",
     "@hookform/resolvers": "^3.4.2",
     "@radix-ui/react-alert-dialog": "^1.0.5",
     "@radix-ui/react-checkbox": "^1.0.4",
@@ -30,11 +29,13 @@
     "@radix-ui/react-slot": "^1.0.2",
     "@radix-ui/react-switch": "^1.0.3",
     "@radix-ui/react-tooltip": "^1.0.7",
+    "@repo/lib": "*",
     "@tanstack/react-table": "^8.17.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "cmdk": "^1.0.0",
     "date-fns": "^3.6.0",
+    "i18n-iso-countries": "^7.11.2",
     "lucide-react": "^0.378.0",
     "next": "14.2.3",
     "next-auth": "^4.24.7",
