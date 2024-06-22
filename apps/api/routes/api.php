@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AddressController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\OrderController;
@@ -23,6 +24,11 @@ Route::get('/', function () {
 // Customers
 //
 Route::apiResource('customers', CustomerController::class);
+
+//
+// Addresses
+//
+Route::apiResource('addresses', AddressController::class)->only(['show', 'update']);
 
 //
 // Products
