@@ -146,7 +146,7 @@ export default function CreateShowForm({
           <hr className='my-4' />
         </div>
 
-        <FormLabel>Guests</FormLabel> 
+        <FormLabel>Guests</FormLabel>
         <div className='mb-1 flex w-full flex-wrap gap-2'>
           {fields.map((guest, i) => (
             <span

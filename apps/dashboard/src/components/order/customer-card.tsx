@@ -12,7 +12,7 @@ export default function CustomerCard({ customer }: { customer?: Customer }) {
   const params = useParams<{
     customer: string;
   }>();
-  
+
   return (
     <Card className='overflow-hidden'>
       <CardHeader className='flex flex-row justify-between bg-muted/50 sm:items-center'>

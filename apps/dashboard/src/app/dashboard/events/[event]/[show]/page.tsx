@@ -25,8 +25,8 @@ export default async function Page({
 
   return (
     <div className='space-y-4'>
-      <div className='mb-4 flex md:flex-row flex-col gap-2'>
-        <div className='md:w-2/3 flex'>
+      <div className='mb-4 flex flex-col gap-2 md:flex-row'>
+        <div className='flex md:w-2/3'>
           <ShowDateAvailablity show={show} />
         </div>
 

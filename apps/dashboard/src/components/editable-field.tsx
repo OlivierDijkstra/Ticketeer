@@ -47,7 +47,9 @@ export default function EditableField({
   placeholder?: string;
   required?: boolean;
 }) {
-  const [stateValue, setStateValue] = useState<string | number | null | undefined>(value);
+  const [stateValue, setStateValue] = useState<
+    string | number | null | undefined
+  >(value);
   const [error, setError] = useState<string | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);

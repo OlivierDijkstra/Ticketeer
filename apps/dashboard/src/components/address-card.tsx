@@ -10,13 +10,13 @@ export default function AddressCard({ address }: { address?: Address }) {
       <CardHeader className='flex flex-row justify-between bg-muted/50 sm:items-center'>
         <h1 className='font-semibold tracking-tight'>Address</h1>
 
-        {
-          address && (
-            <UpdateAddressDialog address={address}>
-              <Button size="sm" variant="outline">Update</Button>
-            </UpdateAddressDialog>
-          )
-        }
+        {address && (
+          <UpdateAddressDialog address={address}>
+            <Button size='sm' variant='outline'>
+              Update
+            </Button>
+          </UpdateAddressDialog>
+        )}
       </CardHeader>
 
       <CardContent className='mt-4 text-sm'>

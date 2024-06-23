@@ -79,7 +79,7 @@ describe('EventSettingsCard', () => {
     const inputField = screen.getByRole('textbox');
     await userEvent.clear(inputField);
     await userEvent.type(inputField, 'Updated Event');
-    
+
     const saveButton = screen.getByText('Save');
     await userEvent.click(saveButton);
 

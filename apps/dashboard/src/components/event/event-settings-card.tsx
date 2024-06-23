@@ -95,9 +95,7 @@ export default function EventSettingsCard({ event }: { event: Event }) {
         <div className='flex justify-between'>
           <div className='space-y-1.5'>
             <CardTitle>Event</CardTitle>
-            <CardDescription>
-              Edit the event settings
-            </CardDescription>
+            <CardDescription>Edit the event settings</CardDescription>
           </div>
 
           <ResourceAvailabilitySwitch
@@ -119,7 +117,7 @@ export default function EventSettingsCard({ event }: { event: Event }) {
         />
 
         <h3 className='mt-4 text-sm font-medium'>Short description</h3>
-        <p className='text-xs text-muted-foreground mb-2'>
+        <p className='mb-2 text-xs text-muted-foreground'>
           This description will be shown on the event page. Give your customers
           some useful information about the event.
         </p>
@@ -139,7 +137,7 @@ export default function EventSettingsCard({ event }: { event: Event }) {
         <div className='flex flex-row justify-between gap-4'>
           <div>
             <h3 className='mt-4 text-sm font-medium'>Short description</h3>
-            <p className='text-xs text-muted-foreground mb-2'>
+            <p className='mb-2 text-xs text-muted-foreground'>
               This description will be shown on the event card on the home page
             </p>
 
@@ -156,7 +154,7 @@ export default function EventSettingsCard({ event }: { event: Event }) {
 
           <div>
             <h3 className='mt-4 text-sm font-medium'>Service fee</h3>
-            <p className='text-xs text-muted-foreground mb-2'>
+            <p className='mb-2 text-xs text-muted-foreground'>
               This fee will be added to the total price of the event.
             </p>
 

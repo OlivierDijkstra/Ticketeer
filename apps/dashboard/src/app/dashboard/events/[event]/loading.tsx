@@ -10,7 +10,7 @@ export default function Loading() {
         <SkeletonStatistic />
       </div>
       <SkeletonTable />
-      
+
       <div className='grid gap-4 lg:grid-cols-2 '>
         <Skeleton className='h-[250px]' />
 

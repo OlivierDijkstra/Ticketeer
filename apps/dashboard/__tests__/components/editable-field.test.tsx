@@ -216,7 +216,7 @@ describe('EditableField', () => {
     const editButton = screen.getByRole('button');
     await userEvent.click(editButton);
 
-    const inputField = screen.getByRole('textbox')
+    const inputField = screen.getByRole('textbox');
     await userEvent.clear(inputField);
     await userEvent.type(inputField, 'Test');
 
