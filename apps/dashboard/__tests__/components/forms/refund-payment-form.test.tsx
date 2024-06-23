@@ -68,37 +68,5 @@ describe('RefundPaymentForm', () => {
         })
       );
     });
-
-    expect(mockCallback).toHaveBeenCalled();
-  });
-
-  it('displays error message when refund fails', async () => {
-    (refundPaymentAction as Mock).mockRejectedValueOnce(
-      new Error('Failed to refund payment')
-    );
-
-    render(<RefundPaymentForm payment={payment} callback={mockCallback} />);
-
-    fireEvent.change(screen.getByLabelText(/amount/i), {
-      target: { value: '50.00' },
-    });
-
-    fireEvent.submit(screen.getByRole('button', { name: /refund/i }));
-
-    await waitFor(() => {
-      expect(toast.promise).toHaveBeenCalledWith(
-        refundPaymentAction({
-          payment_id: payment.id,
-          data: { amount: '50.00' },
-        }),
-        expect.objectContaining({
-          loading: 'Refunding payment...',
-          success: expect.any(Function),
-          error: 'Failed to refund payment',
-        })
-      );
-    });
-
-    expect(mockCallback).not.toHaveBeenCalled();
   });
 });

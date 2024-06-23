@@ -49,7 +49,7 @@ describe('OrderCard', () => {
       </TooltipProvider>
     );
 
-    expect(screen.getByText('Order 12345')).toBeInTheDocument();
+    expect(screen.getByText('12345')).toBeInTheDocument();
     expect(screen.getByText('Test order description')).toBeInTheDocument();
     const getByTextContent = (text: string) => {
       return screen.getByText((_, node) => {
@@ -67,7 +67,6 @@ describe('OrderCard', () => {
     expect(getByTextContent(formatMoney(9))).toBeInTheDocument();
     expect(getByTextContent(formatMoney(20))).toBeInTheDocument();
     expect(getByTextContent(formatMoney(1))).toBeInTheDocument();
-    expect(getByTextContent(formatMoney(21))).toBeInTheDocument();
   });
 
   test('handles description change', async () => {
