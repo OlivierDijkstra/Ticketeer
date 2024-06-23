@@ -20,7 +20,7 @@ class CreatePaymentAction
                 'order_id' => $order->order_number,
                 'show_id' => $order->show_id,
             ]),
-            'webhookUrl' => 'https://1d6b-143-178-232-105.ngrok-free.app/webhooks/mollie',
+            'webhookUrl' => config('app.url') . '/webhooks/mollie',
             'metadata' => [
                 'order_id' => $order->id,
             ],
