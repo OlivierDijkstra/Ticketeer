@@ -10,3 +10,4 @@ node_modules
 .npmrc
 .yarn
 .yarnrc
+.DS_Store
