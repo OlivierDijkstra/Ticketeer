@@ -8,6 +8,7 @@ import type {
   Customer,
   User,
   Order,
+  Payment,
 } from "@repo/lib";
 
 function generateString(length: number): string {
@@ -188,6 +189,24 @@ export function generateProduct(product: Partial<Product> = {}): Product {
     updated_at: "2021-06-01T00:00:00",
     deleted_at: null,
     ...product,
+  };
+}
+
+export function generatePayment(payment: Partial<Payment> = {}): Payment {
+  return {
+    id: generateString(10),
+    transaction_id: generateString(10),
+    order_id: generateString(10),
+    status: "open",
+    amount: `${Math.random() * 100}`,
+    amount_refunded: null,
+    paid_at: null,
+    payment_method: null,
+    payment_url: null,
+    refunded_at: null,
+    created_at: "2021-06-01T00:00:00",
+    updated_at: "2021-06-01T00:00:00",
+    ...payment,
   };
 }
 

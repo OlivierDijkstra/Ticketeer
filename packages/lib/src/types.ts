@@ -229,7 +229,6 @@ export interface Order {
 
 export type PaymentStatus =
   | "open"
-  | "pending"
   | "processing"
   | "paid"
   | "cancelled"
@@ -244,9 +243,9 @@ export interface Payment {
   order_id: string;
   transaction_id: string;
   status: PaymentStatus;
-  payment_method: string;
+  payment_method: string | null; // Optional field
   amount: string;
-  amount_refunded: string;
+  amount_refunded: string | null; // Optional field
   paid_at?: string | null; // Optional field
   refunded_at?: string | null; // Optional field
   payment_url?: string | null; // Optional field
