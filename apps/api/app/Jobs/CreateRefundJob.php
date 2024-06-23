@@ -9,17 +9,18 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Mollie\Laravel\Facades\Mollie;
-use Mollie\Api\Resources\Refund;
 
 class CreateRefundJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     protected $payment;
+    protected $amount;
 
-    public function __construct(Payment $payment)
+    public function __construct(Payment $payment, $amount)
     {
         $this->payment = $payment;
+        $this->amount = $amount;
     }
 
     public function handle(): void
@@ -29,7 +30,7 @@ class CreateRefundJob implements ShouldQueue
         $config = [
             'amount' => [
                 'currency' => config('app.currency'),
-                'value' => $this->payment->amount,
+                'value' => number_format($this->amount, 2, '.', ''),
             ],
         ];
 
