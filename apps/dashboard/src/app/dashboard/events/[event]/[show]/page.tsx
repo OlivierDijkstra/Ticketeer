@@ -25,12 +25,12 @@ export default async function Page({
 
   return (
     <div className='space-y-4'>
-      <div className='mb-4 grid gap-4 lg:grid-cols-5'>
-        <div className='lg:col-span-3 flex'>
+      <div className='mb-4 flex md:flex-row flex-col gap-2'>
+        <div className='md:w-2/3 flex'>
           <ShowDateAvailablity show={show} />
         </div>
 
-        <div className='lg:col-span-2 space-y-4'>
+        <div className='space-y-4 md:w-1/3'>
           <AddressCard address={show.address} />
 
           <Card>

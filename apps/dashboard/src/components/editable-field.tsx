@@ -119,6 +119,7 @@ export default function EditableField({
       return (
         <Textarea
           autoFocus
+          rows={4}
           className='w-full'
           value={stateValue || undefined}
           onChange={(e) => onChangeHandler(e.target.value)}
@@ -142,7 +143,7 @@ export default function EditableField({
   return (
     <div>
       <div className={cn([className, 'mb-2 flex items-center gap-2'])}>
-        <div className='w-full overflow-hidden'>
+        <div className='w-full'>
           {isEditing ? (
             returnComponent()
           ) : (

@@ -1,6 +1,6 @@
 'use client';
 
-import type { Show } from '@repo/lib';
+import { cn, type Show } from '@repo/lib';
 import { useState } from 'react';
 
 import EditableField from '@/components/editable-field';
@@ -33,7 +33,12 @@ export default function ShowTitleCard({ show }: { show: Show }) {
   }
 
   return (
-    <Card className={loading ? 'pointer-events-none opacity-50' : ''}>
+    <Card
+      className={cn([
+        'w-full',
+        loading ? 'pointer-events-none opacity-50' : '',
+      ])}
+    >
       <CardHeader className='bg-muted/50'>
         <div className='flex justify-between'>
           <CardTitle>Show</CardTitle>
