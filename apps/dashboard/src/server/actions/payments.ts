@@ -19,7 +19,24 @@ export async function getPaymentsActions({
 
   return await fetchWithAuth<PaginatedResponse<Payment>>(url, {
     next: {
-      tags: ['orders'],
+      tags: ['payments'],
+    },
+  });
+}
+
+export async function refundPaymentAction({
+  payment_id,
+  data
+}: {
+  payment_id: string;
+  data: {
+    amount: string;
+  };
+}) {
+  return await fetchWithAuth(`api/payments/${payment_id}/refund`, {
+    method: 'POST',
+    body: {
+      amount: data.amount,
     },
   });
 }
