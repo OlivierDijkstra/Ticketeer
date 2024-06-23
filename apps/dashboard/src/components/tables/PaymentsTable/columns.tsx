@@ -4,11 +4,45 @@ import type { ColumnData, Payment } from '@repo/lib';
 import formatMoney from '@repo/lib';
 import type { ColumnDef } from '@tanstack/react-table';
 import { format } from 'date-fns';
-import { ExternalLinkIcon } from 'lucide-react';
+import {
+  CopyIcon,
+  ExternalLinkIcon,
+  MoreHorizontal,
+  TicketSlashIcon,
+  TimerIcon,
+} from 'lucide-react';
+import { toast } from 'sonner';
 
+import RefundPaymentDialog from '@/components/dialogs/refund-payment-dialog';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 import { DEFAULT_DATE_FORMAT } from '@/lib/constants';
+import { refundPaymentAction } from '@/server/actions/payments';
+import { revalidate } from '@/server/helpers';
 
 export function columns(_data: ColumnData): ColumnDef<Payment>[] {
   return [
@@ -16,6 +50,23 @@ export function columns(_data: ColumnData): ColumnDef<Payment>[] {
       accessorKey: 'status',
       header: 'Status',
       cell: ({ row }) => {
+        if (row.original.status === 'pending_refund') {
+          return (
+            <Tooltip>
+              <TooltipTrigger>
+                <Badge>
+                  <TimerIcon className='mr-2 !size-2.5' strokeWidth={3} />
+                  <span>{row.original.status}</span>
+                </Badge>
+              </TooltipTrigger>
+              <TooltipContent>
+                This payment is currently being refunded. It may take a few
+                minutes to complete.
+              </TooltipContent>
+            </Tooltip>
+          );
+        }
+
         return <Badge>{row.original.status}</Badge>;
       },
     },
@@ -34,13 +85,13 @@ export function columns(_data: ColumnData): ColumnDef<Payment>[] {
       },
     },
     {
-      accessorKey: 'refunded_amount',
-      header: 'Refunded Amount',
+      accessorKey: 'amount_refunded',
+      header: 'Amount Refunded',
       cell: ({ row }) => {
         return (
           <span>
-            {row.original.refunded_amount
-              ? formatMoney(row.original.refunded_amount)
+            {row.original.amount_refunded
+              ? formatMoney(row.original.amount_refunded)
               : 'N/A'}
           </span>
         );
@@ -84,21 +135,113 @@ export function columns(_data: ColumnData): ColumnDef<Payment>[] {
       },
     },
     {
-      accessorKey: 'payment_url',
-      header: '',
+      id: 'actions',
       cell: ({ row }) => {
-        return row.original.payment_url && row.original.status === 'open' ? (
-          <Button
-            variant='outline'
-            size='sm'
-            onClick={() => {
-              window.open(row.original.payment_url as string, '_blank');
-            }}
-          >
-            <ExternalLinkIcon className='mr-2 !size-3' />
-            Pay
-          </Button>
-        ) : null;
+        const payment = row.original;
+
+        function createFullRefund() {
+          toast.promise(
+            refundPaymentAction({
+              payment_id: payment.id,
+              data: {
+                amount: payment.amount,
+              },
+            }),
+            {
+              loading: 'Refunding payment...',
+              success: async () => {
+                await revalidate('payments');
+                return 'Payment refunded';
+              },
+              error: 'Failed to refund payment',
+            }
+          );
+        }
+
+        function handleCopyPaymentId() {
+          navigator.clipboard.writeText(payment.id);
+          toast.success('Payment ID copied to clipboard');
+        }
+
+        return (
+          <AlertDialog>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant='ghost' className='h-8 w-8 p-0'>
+                  <span className='sr-only'>Open menu</span>
+                  <MoreHorizontal />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align='end'>
+                <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                <DropdownMenuItem onClick={handleCopyPaymentId}>
+                  <CopyIcon className='mr-2' />
+                  Copy payment ID
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  onClick={() => {
+                    window.open(payment.payment_url as string, '_blank');
+                  }}
+                  disabled={payment.status !== 'open'}
+                >
+                  <ExternalLinkIcon className='mr-2' />
+                  Open payment
+                </DropdownMenuItem>
+                <RefundPaymentDialog payment={payment}>
+                  <DropdownMenuItem
+                    onSelect={(e) => e.preventDefault()}
+                    disabled={[
+                      'open',
+                      'cancelled',
+                      'pending_refund',
+                      'refunded',
+                      'failed',
+                      'chargeback',
+                    ].includes(payment.status)}
+                  >
+                    <TicketSlashIcon className='mr-2' />
+                    Partial refund
+                  </DropdownMenuItem>
+                </RefundPaymentDialog>
+
+                <DropdownMenuSeparator />
+
+                <AlertDialogTrigger asChild>
+                  <DropdownMenuItem
+                    disabled={[
+                      'open',
+                      'cancelled',
+                      'pending_refund',
+                      'partially_refunded',
+                      'failed',
+                      'chargeback',
+                    ].includes(payment.status)}
+                  >
+                    <TicketSlashIcon className='mr-2' />
+                    Full refund
+                  </DropdownMenuItem>
+                </AlertDialogTrigger>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This customer will be fully refunded for this order, tickets
+                  invalidated and stock will be increased.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction onClick={createFullRefund}>
+                  Continue
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        );
       },
     },
   ];
