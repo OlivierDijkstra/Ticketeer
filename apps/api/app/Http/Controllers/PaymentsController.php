@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\RefundPaymentRequest;
 use App\Jobs\CreateRefundJob;
 use App\Models\Order;
 use App\Models\Payment;
@@ -23,9 +24,9 @@ class PaymentsController extends Controller
             ->paginate(6);
     }
 
-    public function refund(Payment $payment)
+    public function refund(RefundPaymentRequest $request, Payment $payment)
     {
-        CreateRefundJob::dispatch($payment);
+        CreateRefundJob::dispatch($payment, $request->amount);
         return response()->json(['message' => 'Payment refunded']);
     }
 }
