@@ -9,8 +9,8 @@ import type { ReactNode } from 'react';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'TicketGate Frontend',
-  description: 'Powered by TicketGate',
+  title: 'Ticketeer Frontend',
+  description: 'Powered by Ticketeer',
 };
 
 export default function RootLayout({

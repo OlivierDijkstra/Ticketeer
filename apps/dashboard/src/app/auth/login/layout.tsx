@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 
 export const metadata: Metadata = {
-  title: 'TicketGate Dashboard - Login',
-  description: 'Powered by TicketGate',
+  title: 'Ticketeer Dashboard - Login',
+  description: 'Powered by Ticketeer',
 };
 
 export default function RootLayout({

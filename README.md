@@ -1,6 +1,6 @@
-# TicketGate Monorepo
+# Ticketeer Monorepo
 
-TicketGate is a monorepo solution designed for a simple ticketing application. It includes a Laravel API, a Next.js dashboard for administration, and a Next.js frontend for ticket purchasing. This setup allows for easy forking and deployment, making it a versatile choice for various ticketing needs.
+Ticketeer is a monorepo solution designed for a simple ticketing application. It includes a Laravel API, a Next.js dashboard for administration, and a Next.js frontend for ticket purchasing. This setup allows for easy forking and deployment, making it a versatile choice for various ticketing needs.
 
 ## Features
 
@@ -10,7 +10,7 @@ TicketGate is a monorepo solution designed for a simple ticketing application. I
 
 ## Architecture
 
-TicketGate is structured as a monorepo using Turborepo, which allows for efficient management of multiple projects within a single repository. The monorepo includes:
+Ticketeer is structured as a monorepo using Turborepo, which allows for efficient management of multiple projects within a single repository. The monorepo includes:
 
 - **Laravel API**: Backend operations and data management.
 - **Next.js Dashboard**: Admin interface for managing events, tickets, and users.
@@ -30,7 +30,7 @@ Users are free to configure the monorepo to suit their development needs. Enviro
 
 ## Getting Started
 
-To get started with TicketGate, follow these setup instructions for each component of the monorepo.
+To get started with Ticketeer, follow these setup instructions for each component of the monorepo.
 
 ### Prerequisites
 
@@ -44,8 +44,8 @@ To get started with TicketGate, follow these setup instructions for each compone
 1. **Clone the Repository:**
 
    ```sh
-   git clone https://github.com/your-repo/ticketgate-monorepo.git
-   cd ticketgate-monorepo
+   git clone https://github.com/your-repo/ticketeer-monorepo.git
+   cd ticketeer-monorepo
    ```
 
 2. **Install Dependencies:**

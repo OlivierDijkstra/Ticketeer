@@ -1,5 +1,5 @@
 {
-  "name": "ticketgate-monorepo",
+  "name": "ticketeer-monorepo",
   "private": true,
   "scripts": {
     "postinstall": "yarn workspace api run postinstall",

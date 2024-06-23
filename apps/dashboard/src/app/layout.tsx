@@ -9,8 +9,8 @@ import { ThemeProvider } from '@/components/theme-provider';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'TicketGate Dashboard',
-  description: 'Powered by TicketGate',
+  title: 'Ticketeer Dashboard',
+  description: 'Powered by Ticketeer',
 };
 
 export default function RootLayout({
