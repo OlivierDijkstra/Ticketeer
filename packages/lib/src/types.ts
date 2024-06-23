@@ -233,6 +233,7 @@ export type PaymentStatus =
   | "processing"
   | "paid"
   | "cancelled"
+  | "pending_refund"
   | "refunded"
   | "partially_refunded"
   | "failed"
@@ -244,8 +245,8 @@ export interface Payment {
   transaction_id: string;
   status: PaymentStatus;
   payment_method: string;
-  amount: number;
-  refunded_amount: number;
+  amount: string;
+  amount_refunded: string;
   paid_at?: string | null; // Optional field
   refunded_at?: string | null; // Optional field
   payment_url?: string | null; // Optional field
