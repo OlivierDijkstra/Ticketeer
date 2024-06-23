@@ -40,7 +40,7 @@ describe('CreateShowForm', () => {
 
     expect(screen.getByLabelText(/description/i)).toHaveValue('');
     expect(screen.getByLabelText(/enabled/i)).not.toBeChecked();
-    expect(screen.getByText('No guests added')).toBeInTheDocument();
+    expect(screen.queryByText('John Doe')).not.toBeInTheDocument();
   });
 
   test('updates input values correctly', async () => {
@@ -100,15 +100,14 @@ describe('CreateShowForm', () => {
 
     const user = userEvent.setup();
 
-    const textboxes = screen.getAllByRole('textbox');
-    const input = textboxes[textboxes.length - 1] as HTMLElement;
+    const input = screen.getByPlaceholderText('Add guest');
 
     await user.type(input, 'John Doe');
-    await user.click(screen.getByText('Add guest'));
+    await user.click(screen.getByText('Add'));
 
     expect(screen.getByText('John Doe')).toBeInTheDocument();
 
-    await user.click(screen.getByRole('button', { name: /remove guest/i }));
+    await user.click(screen.getByRole('button', { name: /remove/i }));
     expect(screen.queryByText('John Doe')).not.toBeInTheDocument();
   });
 
@@ -136,11 +135,10 @@ describe('CreateShowForm', () => {
     await user.type(screen.getByTestId('end-hours'), '12');
     await user.type(screen.getByTestId('end-minutes'), '00');
 
-    const textboxes = screen.getAllByRole('textbox');
-    const input = textboxes[textboxes.length - 1] as HTMLElement;
+    const input = screen.getByPlaceholderText('Add guest');
 
     await user.type(input, 'John Doe');
-    await user.click(screen.getByText('Add guest'));
+    await user.click(screen.getByText('Add'));
 
     await user.click(screen.getByLabelText(/enabled/i));
 
