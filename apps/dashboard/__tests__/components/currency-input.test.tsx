@@ -38,4 +38,14 @@ describe('CurrencyInput', () => {
     const input = container.querySelector('input');
     expect(input).toHaveClass('extra-class');
   });
+
+  it('should not exceed the max value', () => {
+    const { getByDisplayValue } = render(
+      <CurrencyInput defaultValue='0' max={50} />
+    );
+    const input = getByDisplayValue('$0.00');
+
+    fireEvent.change(input, { target: { value: '6000' } });
+    expect(getByDisplayValue(formatMoney(50.00))).toBeInTheDocument();
+  });
 });

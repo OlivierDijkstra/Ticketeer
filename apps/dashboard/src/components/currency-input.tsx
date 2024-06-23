@@ -11,10 +11,11 @@ export interface CurrencyInputProps
   defaultValue?: string;
   value?: string | number | null;
   onChange?: (value: number) => void;
+  max?: number;
 }
 
 const CurrencyInput = React.forwardRef<HTMLInputElement, CurrencyInputProps>(
-  ({ defaultValue = '', onChange, className, ...props }, ref) => {
+  ({ defaultValue = '', onChange, className, max, ...props }, ref) => {
     const [value, setValue] = React.useState<string>(
       formatMoney(defaultValue || props.value || '0')
     );
@@ -22,11 +23,14 @@ const CurrencyInput = React.forwardRef<HTMLInputElement, CurrencyInputProps>(
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       const inputValue = e.target.value;
       const cleanedValue = inputValue.replace(/[^\d]/g, '');
-      const numericValue = (parseFloat(cleanedValue) / 100).toFixed(2);
-      const formattedValue = formatMoney(numericValue);
+      let numericValue = parseFloat(cleanedValue) / 100;
+      if (max !== undefined && numericValue > max) {
+        numericValue = max;
+      }
+      const formattedValue = formatMoney(numericValue.toFixed(2));
       setValue(formattedValue);
       if (onChange) {
-        onChange(parseFloat(numericValue));
+        onChange(numericValue);
       }
     };
 
