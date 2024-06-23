@@ -33,7 +33,7 @@ describe('ShowGuestsForm', () => {
   test('handles guest addition and submission', async () => {
     render(<ShowGuestsForm show={mockShow} />);
 
-    const inputField = screen.getByRole('textbox');
+    const inputField = screen.getByPlaceholderText('Add guest');
     fireEvent.change(inputField, { target: { value: 'New Guest' } });
     fireEvent.keyDown(inputField, { key: 'Enter', code: 'Enter' });
 
@@ -50,7 +50,7 @@ describe('ShowGuestsForm', () => {
     render(<ShowGuestsForm show={mockShow} />);
 
     const removeButtons = screen.getAllByRole('button', {
-      name: /remove guest/i,
+      name: /remove/i,
     });
     expect(removeButtons).toHaveLength(2);
     fireEvent.click(removeButtons[0] as HTMLElement);
