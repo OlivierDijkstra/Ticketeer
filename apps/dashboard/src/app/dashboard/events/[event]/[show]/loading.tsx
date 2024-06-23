@@ -1,29 +1,22 @@
+import SkeletonCard from '@/components/skeletons/skeleton-card';
 import SkeletonTable from '@/components/skeletons/skeleton-table';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Skeleton } from '@/components/ui/skeleton';
 
 export default function Loading() {
   return (
-    <div>
-      <div className='mb-4 grid-cols-5 gap-2 space-y-4 md:grid md:space-y-0'>
-        <div className='col-span-3'>
-          <Card className='h-[275px]'>
-            <CardContent>
-              <CardHeader />
-              <Skeleton className='h-[200px]' />
-            </CardContent>
-          </Card>
+    <div className='space-y-4'>
+      <div className='mb-4 flex flex-col gap-2 md:flex-row'>
+        <div className='flex md:w-2/3'>
+          <SkeletonCard />
         </div>
 
-        <div className='col-span-2'>
-          <Card>
-            <CardHeader />
-            <CardContent>
-              <Skeleton className='h-[200px]' />
-            </CardContent>
-          </Card>
+        <div className='space-y-4 md:w-1/3'>
+          <SkeletonCard />
+
+          <SkeletonCard />
         </div>
       </div>
+
+      <SkeletonTable />
 
       <SkeletonTable />
     </div>
