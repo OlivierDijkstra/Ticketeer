@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Order;
+use App\Jobs\HandlePaymentPaidJob;
+use App\Jobs\HandlePaymentPartiallyRefundedJob;
+use App\Jobs\HandlePaymentRefundedJob;
 use App\Models\Payment;
-use App\Stats\RevenueStats;
 use Illuminate\Http\Request;
 use Mollie\Laravel\Facades\Mollie;
-use Spatie\Stats\StatsWriter;
 
 class MollieWebhookController extends Controller
 {
@@ -22,33 +22,33 @@ class MollieWebhookController extends Controller
         $mollie = Mollie::api()->payments->get($id);
         $payment = Payment::where('transaction_id', $id)->firstOrFail();
 
-        // Todo handle refunds
-
         switch ($mollie->status) {
             case 'paid':
                 if ($payment) {
-                    $payment->update([
-                        'status' => 'paid',
-                        'paid_at' => now(),
-                        'payment_method' => $mollie->method,
-                    ]);
+                    // Determine the payments amountRefunded
+                    $amountRefunded = $mollie->amountRefunded->value;
 
-                    // Update the order status if the total of the paid payments is equal to the order total
-                    $order = $payment->order;
-
-                    if ($order->payments->sum('amount') >= $order->total) {
-                        $order->update([
-                            'status' => 'paid',
-                            'paid_at' => now(),
-                        ]);
+                    // if the amount is higher than 0 but not equal to the amount of the payment, it's partially refunded
+                    if ($amountRefunded > 0 && $amountRefunded !== $mollie->amount->value) {
+                        ray('Partially refunded');
+                        HandlePaymentPartiallyRefundedJob::dispatch($payment, $mollie);
+                        break;
                     }
 
-                    $event = $order->event;
+                    // if the amountRefunded is equal to the amount of the payment, it's fully refunded
+                    if ($amountRefunded === $mollie->amount->value) {
+                        ray('Fully refunded');
+                        HandlePaymentRefundedJob::dispatch($payment, $mollie);
+                        break;
+                    }
 
-                    // parse amount to a number
-                    $amount = (int) $mollie->amount->value;
+                    if ($payment->status === 'paid') {
+                        ray('Already paid');
+                        break;
+                    }
 
-                    StatsWriter::for(RevenueStats::class, ['event' => $event->slug])->increase($amount);
+                    ray('Paid');
+                    HandlePaymentPaidJob::dispatch($payment, $mollie);
                 }
                 break;
             case 'failed':
