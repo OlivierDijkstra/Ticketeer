@@ -15,7 +15,7 @@ class Payment extends Model
         'status',
         'amount',
         'payment_method',
-        'refunded_amount',
+        'amount_refunded',
         'payment_url',
         'paid_at',
         'refunded_at',

@@ -22,15 +22,16 @@ return new class extends Migration
                 ->nullable()
                 ->unique();
 
-            $table->enum('status', ['open', 'paid', 'cancelled', 'refunded', 'partially_refunded', 'failed', 'chargeback'])
+            $table->enum('status', ['open', 'paid', 'cancelled', 'pending_refund', 'partially_refunded', 'refunded', 'failed', 'chargeback'])
                 ->default('open');
 
-            $table->integer('amount');
-
-            $table->string('payment_method')
+            $table->decimal('amount', 10, 2)
                 ->nullable();
 
-            $table->decimal('price', 10, 2)
+            $table->decimal('amount_refunded', 10, 2)
+                ->nullable();
+
+            $table->string('payment_method')
                 ->nullable();
 
             $table->timestamp('paid_at')
