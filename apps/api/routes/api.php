@@ -73,7 +73,7 @@ Route::get('orders/{order:order_number}/is-paid', [OrderController::class, 'isPa
 //
 // Payments
 //
-Route::get('orders/{order}/payments', [PaymentsController::class, 'index'])->name('orders.payments.index');
+Route::get('orders/{order}/payments', [PaymentsController::class, 'index'])->name('payments.index');
 Route::post('payments/{payment}/refund', [PaymentsController::class, 'refund'])->name('payments.refund');
 
 //
