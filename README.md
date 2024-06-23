@@ -1,3 +1,6 @@
+> [!WARNING]  
+> This repository is still under active development and should not be used for production purposes (yet). Feel free to fork it and use it as a template but some parts are still unfinished and undocumented.
+
 # Ticketeer Monorepo
 
 Ticketeer is a monorepo solution designed for a simple ticketing application. It includes a Laravel API, a Next.js dashboard for administration, and a Next.js frontend for ticket purchasing. This setup allows for easy forking and deployment, making it a versatile choice for various ticketing needs.
