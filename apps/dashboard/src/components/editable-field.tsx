@@ -142,15 +142,15 @@ export default function EditableField({
   return (
     <div>
       <div className={cn([className, 'mb-2 flex items-center gap-2'])}>
-        <div className='w-full'>
+        <div className='w-full overflow-hidden'>
           {isEditing ? (
             returnComponent()
           ) : (
-            <span>
+            <p className='line-clamp-6'>
               {type === 'currency'
                 ? formatMoney(stateValue)
                 : stateValue || placeholder}
-            </span>
+            </p>
           )}
         </div>
 

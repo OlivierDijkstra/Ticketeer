@@ -1,5 +1,6 @@
 import { Suspense } from 'react';
 
+import AddressCard from '@/components/address-card';
 import ShowGuestsForm from '@/components/forms/show-guests-form';
 import ShowDateAvailablity from '@/components/show/show-date-availability';
 import SkeletonGraph from '@/components/skeletons/skeleton-graph';
@@ -25,18 +26,22 @@ export default async function Page({
   return (
     <div className='space-y-4'>
       <div className='mb-4 grid gap-4 lg:grid-cols-5'>
-        <div className='lg:col-span-3'>
+        <div className='lg:col-span-3 flex'>
           <ShowDateAvailablity show={show} />
         </div>
 
-        <Card className='lg:col-span-2'>
-          <CardHeader className='bg-muted/50'>
-            <CardTitle>Guests</CardTitle>
-          </CardHeader>
-          <CardContent className='mt-4'>
-            <ShowGuestsForm show={show} />
-          </CardContent>
-        </Card>
+        <div className='lg:col-span-2 space-y-4'>
+          <AddressCard address={show.address} />
+
+          <Card>
+            <CardHeader className='bg-muted/50'>
+              <CardTitle>Guests</CardTitle>
+            </CardHeader>
+            <CardContent className='mt-4'>
+              <ShowGuestsForm show={show} />
+            </CardContent>
+          </Card>
+        </div>
       </div>
 
       <Suspense fallback={<SkeletonGraph />}>
