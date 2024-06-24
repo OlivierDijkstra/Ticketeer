@@ -42,8 +42,6 @@ class PaymentsControllerTest extends TestCase
 
         $response = $this->postJson(route('payments.refund', $this->payment), $requestData);
 
-        ray($response->getContent());
-
         $response->assertStatus(200);
         $response->assertJson(['message' => 'Payment refunded']);
 
