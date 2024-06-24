@@ -28,7 +28,7 @@ export default async function ProductsTable({
   }) {
     'use server';
     return (await getProductsAction({
-      page,
+      page: page || '1',
       show_id: show?.id,
       sorting,
     })) as PaginatedResponse<Product>;
