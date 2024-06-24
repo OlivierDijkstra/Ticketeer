@@ -479,4 +479,35 @@ class HandlesPaginationAndFilteringTest extends TestCase
         $result = $this->determineQueryBy($model);
         $this->assertEquals('name', $result);
     }
+
+    public function test_search_with_show_id_returns_pivot_fields()
+    {
+        $show = Show::factory()->create();
+        $product = Product::factory()->create();
+
+        $show->products()->attach($product->id, [
+            'amount' => 1,
+            'adjusted_price' => 10,
+            'enabled' => 1,
+        ]);
+
+        $request = new Request([
+            'search' => $product->name,
+            'show_id' => $show->id,
+        ]);
+
+        $query = Product::query();
+
+        $result = $this->searchOrPaginate($request, $query);
+
+        $this->assertInstanceOf(\Illuminate\Support\Collection::class, $result);
+        $this->assertNotEmpty($result);
+
+        $firstProduct = $result->first();
+
+        $this->assertArrayHasKey('pivot', $firstProduct->toArray());
+        $this->assertArrayHasKey('amount', $firstProduct->pivot);
+        $this->assertArrayHasKey('adjusted_price', $firstProduct->pivot);
+        $this->assertArrayHasKey('enabled', $firstProduct->pivot);
+    }
 }

@@ -184,6 +184,8 @@ trait HandlesPaginationAndFiltering
             $q->where("$pivotTable.show_id", $request->input('show_id'));
         });
 
+        $query->with($relation->getRelationName());
+
         $query->with([$relation->getRelationName() => function ($q) use ($request, $pivotFields, $pivotTable) {
             $q->where("$pivotTable.show_id", $request->input('show_id'));
             foreach ($pivotFields as $field) {
@@ -208,6 +210,22 @@ trait HandlesPaginationAndFiltering
             'query_by' => $query_by,
         ]);
 
+        if ($request->has('show_id')) {
+            $model = $query->getModel();
+            $relation = $this->getShowRelation($model);
+            $pivotTable = $relation->getTable();
+            $pivotFields = $this->getPivotFields($pivotTable);
+
+            $search->query(function ($q) use ($request, $relation, $pivotFields, $pivotTable) {
+                $q->with([$relation->getRelationName() => function ($q) use ($request, $pivotFields, $pivotTable) {
+                    $q->where("$pivotTable.show_id", $request->input('show_id'));
+                    foreach ($pivotFields as $field) {
+                        $q->addSelect("$pivotTable.$field as pivot_$field");
+                    }
+                }]);
+            });
+        }
+
         $search = $this->applyFilters($request, $search);
 
         if ($search instanceof \Illuminate\Support\Collection) {
@@ -215,6 +233,7 @@ trait HandlesPaginationAndFiltering
         }
 
         $results = $search->get();
+
         return $this->flattenPivotFields($results);
     }
 
@@ -269,4 +288,3 @@ trait HandlesPaginationAndFiltering
         return null;
     }
 }
-
