@@ -8,8 +8,10 @@ use Exception;
 
 class AttachProductsToOrderAction
 {
-    public function handle(Order $order, array $products, int $showId)
+    public function handle(Order $order, array $products, int $showId): array
     {
+        $decrementedProducts = [];
+
         foreach ($products as $productData) {
             $productShow = ProductShow::where('product_id', $productData['id'])
                 ->where('show_id', $showId)
@@ -25,11 +27,14 @@ class AttachProductsToOrderAction
             }
 
             $productShow->decrement('stock', $productData['amount']);
+            $decrementedProducts[] = $productData;
 
             $order->products()->attach($productShow->product_id, [
                 'amount' => $productData['amount'],
                 'price' => $productData['price'] ?? $productShow->product->price,
             ]);
         }
+
+        return $decrementedProducts;
     }
 }

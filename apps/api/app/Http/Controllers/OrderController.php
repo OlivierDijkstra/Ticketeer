@@ -49,7 +49,6 @@ class OrderController extends Controller
     public function store(StoreOrderRequest $request, AttachProductsToOrderAction $attachProductsToOrderAction, RestoreProductStockAction $restoreProductStockAction, CreatePaymentAction $createPaymentAction)
     {
         $show = Show::findOrFail($request->input('show_id'));
-        $customerData = $request->input('customer');
 
         $order = $show->orders()->create([
             'show_id' => $show->id,
@@ -58,18 +57,22 @@ class OrderController extends Controller
             'service_fee' => $show->event->service_fee,
         ]);
 
-        if ($customerData) {
-            HandleCustomerJob::dispatch($customerData, $order);
-        }
-
         $products = $request->input('products');
-        $attachProductsToOrderAction->handle($order, $products, $show->id);
 
         try {
+            $decrementedProducts = $attachProductsToOrderAction->handle($order, $products, $show->id);
             $order->update(['total' => $order->totalFromProducts() + $order->service_fee]);
             $paymentUrl = $createPaymentAction->handle($order, $order->total, $request->input('redirect_url'));
+
+            $customerData = $request->input('customer');
+
+            if ($customerData) {
+                HandleCustomerJob::dispatch($customerData, $order);
+            }
         } catch (\Exception $e) {
-            $restoreProductStockAction->handle($products, $show->id);
+            if (!empty($decrementedProducts)) {
+                $restoreProductStockAction->handle($decrementedProducts, $show->id);
+            }
             $order->delete();
             throw $e;
         }
