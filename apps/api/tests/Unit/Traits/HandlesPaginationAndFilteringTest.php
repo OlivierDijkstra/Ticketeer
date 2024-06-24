@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Traits;
 
+use App\Models\Customer;
 use App\Models\Event;
 use App\Models\Product;
 use App\Models\Show;
@@ -311,11 +312,14 @@ class HandlesPaginationAndFilteringTest extends TestCase
             ]);
         }
 
+        $show_id = $shows->random()->id;
+
         $request = new Request([
-            'show_id' => $shows->random()->id,
+            'show_id' => $show_id,
         ]);
 
         $query = Product::query();
+
         $query = $this->applyFilters($request, $query);
 
         $results = $query->paginate(50);
@@ -353,5 +357,126 @@ class HandlesPaginationAndFilteringTest extends TestCase
 
         $this->assertInstanceOf(\Illuminate\Support\Collection::class, $result);
         $this->assertCount(10, $result); // Assuming there are 10 shows created in the setup
+    }
+    public function test_search_with_customer_model()
+    {
+        $request = new Request([
+            'search' => 'John',
+        ]);
+
+        $query = m::mock(Builder::class);
+        $query->shouldReceive('getModel')->andReturn(new Customer());
+        $query->shouldReceive('get')->andReturn(collect());
+
+        $result = $this->search($request, $query, 'John');
+
+        $this->assertInstanceOf(\Illuminate\Support\Collection::class, $result);
+    }
+
+    public function test_paginate_with_sorting()
+    {
+        $request = new Request([
+            'per_page' => 3,
+            'sort' => json_encode(['id' => 'name', 'desc' => true]),
+        ]);
+
+        $query = Show::query();
+
+        $result = $this->paginate($request, $query);
+
+        $this->assertInstanceOf(LengthAwarePaginator::class, $result);
+        $this->assertCount(3, $result->items());
+    }
+
+    public function test_apply_filters_with_customer_id()
+    {
+        $request = new Request([
+            'customer_id' => 1,
+        ]);
+
+        $query = Show::query();
+
+        $result = $this->applyFilters($request, $query);
+
+        $this->assertInstanceOf(Builder::class, $result);
+    }
+
+    public function test_apply_show_id_filter_with_belongs_to()
+    {
+        $request = new Request([
+            'show_id' => Show::first()->id,
+        ]);
+
+        $query = Product::query();
+
+        $result = $this->applyShowIdFilter($request, $query);
+
+        $this->assertInstanceOf(Builder::class, $result);
+    }
+
+    public function test_apply_show_id_filter_with_many_to_many()
+    {
+        $request = new Request([
+            'show_id' => Show::first()->id,
+        ]);
+
+        $query = Product::query();
+
+        $result = $this->applyShowIdFilter($request, $query);
+
+        $this->assertInstanceOf(Builder::class, $result);
+    }
+
+    public function test_flatten_pivot_fields_with_many_to_many()
+    {
+        $request = new Request([
+            'show_id' => Show::first()->id,
+        ]);
+
+        $query = Product::query();
+        $query = $this->applyFilters($request, $query);
+
+        $results = $query->paginate(5);
+
+        $flattenedResults = $this->flattenPivotFields($results, $request);
+
+        foreach ($flattenedResults as $product) {
+            $this->assertArrayHasKey('pivot', $product->toArray());
+        }
+    }
+
+    public function test_apply_show_id_filter_with_invalid_relation()
+    {
+        $request = new Request([
+            'show_id' => 'invalid',
+        ]);
+
+        $query = Show::query();
+
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage("No valid 'shows' or 'show' relation found on the model.");
+
+        $this->applyShowIdFilter($request, $query);
+    }
+
+    public function test_determine_query_by_for_customer()
+    {
+        $model = new Customer();
+        $result = $this->determineQueryBy($model);
+        $this->assertEquals('first_name, last_name', $result);
+    }
+
+    public function test_determine_query_by_for_show()
+    {
+        $model = new Show();
+        $result = $this->determineQueryBy($model);
+        $this->assertEquals('start', $result);
+    }
+
+    public function test_determine_query_by_for_default()
+    {
+        $model = new Event();
+        $result = $this->determineQueryBy($model);
+        $this->assertEquals('name', $result);
     }
 }
