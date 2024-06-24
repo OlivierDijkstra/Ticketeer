@@ -194,6 +194,20 @@ trait HandlesPaginationAndFiltering
     }
 
     /**
+     * Apply the filter for show_id in BelongsTo relationships.
+     *
+     * @param  Request  $request  The HTTP request object.
+     * @param  Builder|ScoutBuilder  $query  The Eloquent query builder or Scout builder.
+     * @param  \Illuminate\Database\Eloquent\Relations\BelongsTo  $relation  The BelongsTo relationship instance.
+     * @return Builder|ScoutBuilder The query builder with applied show_id filter.
+     */
+    private function applyBelongsToShowIdFilter(Request $request, Builder|ScoutBuilder $query, \Illuminate\Database\Eloquent\Relations\BelongsTo $relation): Builder|ScoutBuilder
+    {
+        $foreignKey = $relation->getForeignKeyName();
+        return $query->where($foreignKey, $request->input('show_id'));
+    }
+
+    /**
      * Perform a search and apply filters to the search results.
      *
      * @param  Request  $request  The HTTP request object.
