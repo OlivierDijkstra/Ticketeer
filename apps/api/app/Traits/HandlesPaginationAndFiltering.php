@@ -33,11 +33,11 @@ trait HandlesPaginationAndFiltering
 
         if ($request->has('page') || $request->has('per_page')) {
             $results = $this->paginate($request, $query);
-            return $this->flattenPivotFields($results, $request);
+            return $this->flattenPivotFields($results);
         }
 
         $results = $query->get();
-        return $this->flattenPivotFields($results, $request);
+        return $this->flattenPivotFields($results);
     }
 
     /**
@@ -109,7 +109,7 @@ trait HandlesPaginationAndFiltering
      * @param  Request  $request  The HTTP request object.
      * @return LengthAwarePaginator|Collection The transformed results with flattened pivot fields.
      */
-    private function flattenPivotFields($results, Request $request): LengthAwarePaginator|Collection
+    private function flattenPivotFields($results): LengthAwarePaginator|Collection
     {
         $items = $results instanceof LengthAwarePaginator ? $results->items() : $results;
         collect($items)->transform(fn($item) => $this->hoistPivotFields($item));
@@ -215,7 +215,7 @@ trait HandlesPaginationAndFiltering
         }
 
         $results = $search->get();
-        return $this->flattenPivotFields($results, $request);
+        return $this->flattenPivotFields($results);
     }
 
     /**
