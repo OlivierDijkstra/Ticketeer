@@ -30,24 +30,20 @@ class MollieWebhookController extends Controller
 
                     // if the amount is higher than 0 but not equal to the amount of the payment, it's partially refunded
                     if ($amountRefunded > 0 && $amountRefunded !== $mollie->amount->value) {
-                        ray('Partially refunded');
                         HandlePaymentPartiallyRefundedJob::dispatch($payment, $mollie);
                         break;
                     }
 
                     // if the amountRefunded is equal to the amount of the payment, it's fully refunded
                     if ($amountRefunded === $mollie->amount->value) {
-                        ray('Fully refunded');
                         HandlePaymentRefundedJob::dispatch($payment, $mollie);
                         break;
                     }
 
                     if ($payment->status === 'paid') {
-                        ray('Already paid');
                         break;
                     }
 
-                    ray('Paid');
                     HandlePaymentPaidJob::dispatch($payment, $mollie);
                 }
                 break;

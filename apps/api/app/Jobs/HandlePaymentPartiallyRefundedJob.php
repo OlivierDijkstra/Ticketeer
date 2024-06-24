@@ -29,15 +29,11 @@ class HandlePaymentPartiallyRefundedJob implements ShouldQueue
     {
         $current_refunded_amount = $this->payment->amount_refunded;
 
-        ray('Current refunded amount', $current_refunded_amount);
-
         $this->payment->update([
             'status' => 'partially_refunded',
             'amount_refunded' => $this->mollie->amountRefunded->value,
             'refunded_at' => now(),
         ]);
-
-        ray('Updated payment');
 
         $order = $this->payment->order;
 
@@ -45,13 +41,9 @@ class HandlePaymentPartiallyRefundedJob implements ShouldQueue
             'status' => 'partially_refunded',
         ]);
 
-        ray('Updated order');
-
         $event_slug = $order->event()->select('slug')->first();
-        ray('Event slug', $event_slug);
 
         $stats = (float) $this->mollie->amountRefunded->value - $current_refunded_amount;
-        ray('Stats', $stats);
         StatsWriter::for(RevenueStats::class, ['event' => $event_slug])->decrease($stats);
     }
 }
