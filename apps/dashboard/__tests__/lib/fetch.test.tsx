@@ -130,6 +130,7 @@ describe('fetchWithAuth', () => {
     fetchMock.mockResolvedValueOnce({
       ok: false,
       status: 404,
+      json: () => Promise.resolve({ message: 'Not Found' }),
     });
 
     await expect(
@@ -139,7 +140,7 @@ describe('fetchWithAuth', () => {
           foo: 'bar',
         },
       })
-    ).rejects.toThrow('HTTP error! status: 404');
+    ).rejects.toThrow('Not Found');
 
     expect(notFound).toHaveBeenCalled();
   });
@@ -148,6 +149,7 @@ describe('fetchWithAuth', () => {
     fetchMock.mockResolvedValueOnce({
       ok: false,
       status: 401,
+      json: () => Promise.resolve({ message: 'Unauthorized' }),
     });
 
     await expect(
@@ -157,7 +159,7 @@ describe('fetchWithAuth', () => {
           foo: 'bar',
         },
       })
-    ).rejects.toThrow('HTTP error! status: 401');
+    ).rejects.toThrow('Unauthorized');
 
     expect(deleteCookieMock).toHaveBeenCalledWith('laravel_session');
     expect(deleteCookieMock).toHaveBeenCalledWith('XSRF-TOKEN');

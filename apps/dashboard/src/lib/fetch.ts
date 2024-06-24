@@ -77,7 +77,7 @@ export async function fetchWithAuth<T>(
     await handleCookies(response, options);
 
     if (!response.ok) {
-      handleHttpError(response);
+      await handleHttpError(response);
     }
 
     const shouldParseJson = options.parseJson ?? true;
@@ -157,14 +157,19 @@ async function handleCookies(response: Response, options: FetchOptions) {
  * @param response The fetch response.
  * @throws An error with a message indicating the HTTP status.
  */
-function handleHttpError(response: Response) {
+async function handleHttpError(response: Response) {
   if (response?.status === 401) {
     handleUnauthorizedError();
   }
   if (response?.status === 404) {
     notFound();
   }
-  throw new Error(`HTTP error! status: ${response?.status}`);
+
+  const text = await response.json();
+
+  throw new Error(text.message);
+
+  throw new Error(`HTTP error! status: ${response?.status} ${text}`);
 }
 
 /**
