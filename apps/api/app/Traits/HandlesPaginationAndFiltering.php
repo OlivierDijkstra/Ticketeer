@@ -76,7 +76,7 @@ trait HandlesPaginationAndFiltering
      * @param  Builder|ScoutBuilder  $query  The Eloquent query builder or Scout builder.
      * @return Builder|ScoutBuilder The query builder with applied filters.
      */
-    private function applyFilters(Request $request, Builder|ScoutBuilder $query)
+    private function applyFilters(Request $request, Builder|ScoutBuilder $query): Builder|ScoutBuilder
     {
         $this->applyBasicFilters($request, $query);
         if ($request->has('show_id')) {
@@ -97,7 +97,8 @@ trait HandlesPaginationAndFiltering
         $filters = ['enabled', 'event_id', 'customer_id'];
         foreach ($filters as $filter) {
             if ($request->has($filter)) {
-                $query->where($filter, $filter === 'enabled' ? (int) $request->input($filter) : $request->input($filter));
+                $value = $filter === 'enabled' ? (bool) $request->input($filter) : $request->input($filter);
+                $query->where($filter, $value);
             }
         }
     }
@@ -143,7 +144,7 @@ trait HandlesPaginationAndFiltering
      * @return Builder|ScoutBuilder The query builder with applied show_id filter.
      * @throws Exception If no valid relation is found.
      */
-    private function applyShowIdFilter(Request $request, Builder|ScoutBuilder $query)
+    private function applyShowIdFilter(Request $request, Builder|ScoutBuilder $query): Builder|ScoutBuilder
     {
         $model = $query instanceof ScoutBuilder ? $query->model : $query->getModel();
         $relation = $this->getShowRelation($model);
@@ -153,12 +154,10 @@ trait HandlesPaginationAndFiltering
         }
 
         if ($relation instanceof \Illuminate\Database\Eloquent\Relations\BelongsTo) {
-            $query->where($relation->getForeignKeyName(), $request->input('show_id'));
-        } else {
-            $this->applyManyToManyShowIdFilter($request, $query, $relation);
+            return $this->applyBelongsToShowIdFilter($request, $query, $relation);
         }
 
-        return $query;
+        return $this->applyManyToManyShowIdFilter($request, $query, $relation);
     }
 
     /**
@@ -169,7 +168,7 @@ trait HandlesPaginationAndFiltering
      * @param  Relation  $relation  The relationship instance.
      * @return void
      */
-    private function applyManyToManyShowIdFilter(Request $request, Builder|ScoutBuilder $query, Relation $relation): void
+    private function applyManyToManyShowIdFilter(Request $request, Builder|ScoutBuilder $query, Relation $relation): Builder|ScoutBuilder
     {
         $pivotTable = $relation->getTable();
         $pivotFields = $this->getPivotFields($pivotTable);
@@ -184,14 +183,14 @@ trait HandlesPaginationAndFiltering
             $q->where("$pivotTable.show_id", $request->input('show_id'));
         });
 
-        $query->with($relation->getRelationName());
-
         $query->with([$relation->getRelationName() => function ($q) use ($request, $pivotFields, $pivotTable) {
             $q->where("$pivotTable.show_id", $request->input('show_id'));
             foreach ($pivotFields as $field) {
                 $q->addSelect("$pivotTable.$field as pivot_$field");
             }
         }]);
+
+        return $query;
     }
 
     /**
@@ -202,39 +201,47 @@ trait HandlesPaginationAndFiltering
      * @param  string|null  $searchQuery  The search query string or null.
      * @return \Illuminate\Support\Collection The search results.
      */
-    private function search(Request $request, Builder $query, ?string $searchQuery): \Illuminate\Support\Collection
+    private function search(Request $request, Builder $query, ?string $searchQuery): Collection
     {
-        $query_by = $this->determineQueryBy($query->getModel());
+        $queryBy = $this->determineQueryBy($query->getModel());
 
         $search = $query->getModel()::search($searchQuery ?? '')->options([
-            'query_by' => $query_by,
+            'query_by' => $queryBy,
         ]);
 
         if ($request->has('show_id')) {
-            $model = $query->getModel();
-            $relation = $this->getShowRelation($model);
-            $pivotTable = $relation->getTable();
-            $pivotFields = $this->getPivotFields($pivotTable);
-
-            $search->query(function ($q) use ($request, $relation, $pivotFields, $pivotTable) {
-                $q->with([$relation->getRelationName() => function ($q) use ($request, $pivotFields, $pivotTable) {
-                    $q->where("$pivotTable.show_id", $request->input('show_id'));
-                    foreach ($pivotFields as $field) {
-                        $q->addSelect("$pivotTable.$field as pivot_$field");
-                    }
-                }]);
-            });
+            $search = $this->applyShowIdFilterToSearch($request, $search, $query->getModel());
         }
 
         $search = $this->applyFilters($request, $search);
 
-        if ($search instanceof \Illuminate\Support\Collection) {
-            return $search;
-        }
-
-        $results = $search->get();
+        $results = $search instanceof Collection ? $search : $search->get();
 
         return $this->flattenPivotFields($results);
+    }
+
+    /**
+     * Apply the show_id filter to the search results.
+     *
+     * @param  Request  $request  The HTTP request object.
+     * @param  ScoutBuilder  $search  The Scout builder.
+     * @param  mixed  $model  The model instance.
+     * @return ScoutBuilder The Scout builder with the show_id filter applied.
+     */
+    private function applyShowIdFilterToSearch(Request $request, ScoutBuilder $search, $model): ScoutBuilder
+    {
+        $relation = $this->getShowRelation($model);
+        $pivotTable = $relation->getTable();
+        $pivotFields = $this->getPivotFields($pivotTable);
+
+        return $search->query(function ($q) use ($request, $relation, $pivotFields, $pivotTable) {
+            $q->with([$relation->getRelationName() => function ($q) use ($request, $pivotFields, $pivotTable) {
+                $q->where("$pivotTable.show_id", $request->input('show_id'));
+                foreach ($pivotFields as $field) {
+                    $q->addSelect("$pivotTable.$field as pivot_$field");
+                }
+            }]);
+        });
     }
 
     /**
