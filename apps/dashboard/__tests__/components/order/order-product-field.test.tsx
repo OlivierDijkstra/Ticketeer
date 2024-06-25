@@ -1,14 +1,11 @@
-import type { Product } from '@repo/lib';
-import formatMoney from '@repo/lib';
+import formatMoney, { generateProduct } from '@repo/lib';
 import {
-  act,
   fireEvent,
   render,
   screen,
   waitFor,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { useEffect } from 'react';
 import type { UseFormReturn } from 'react-hook-form';
 import { useForm } from 'react-hook-form';
 import { describe, expect, test, vi } from 'vitest';
@@ -16,29 +13,31 @@ import { describe, expect, test, vi } from 'vitest';
 import OrderProductField from '@/components/order/order-product-field';
 import { TooltipProvider } from '@/components/ui/tooltip';
 
-const products: Product[] = [
-  {
+const products = [
+  generateProduct({
     id: 1,
     name: 'Product 1',
     price: '10.00',
-    description: 'Product 1',
     vat: 9,
-    is_upsell: true,
-    created_at: '2021-09-01T00:00:00Z',
-    deleted_at: null,
-    updated_at: '2021-09-01T00:00:00Z',
-  },
-  {
+    pivot: {
+      show_id: 1,
+      product_id: 1,
+      amount: 5,
+      stock: 5,
+    },
+  }),
+  generateProduct({
     id: 2,
     name: 'Product 2',
     price: '20.00',
-    description: 'Product 2',
     vat: 21,
-    is_upsell: false,
-    created_at: '2021-09-01T00:00:00Z',
-    deleted_at: null,
-    updated_at: '2021-09-01T00:00:00Z',
-  },
+    pivot: {
+      show_id: 1,
+      product_id: 2,
+      amount: 10,
+      stock: 10,
+    },
+  }),
 ];
 
 const mockFields = [
@@ -58,13 +57,15 @@ vi.mock('react-hook-form', async () => {
   };
 });
 
-const mockOnOpenChange = vi.fn();
-const mockOnSearch = vi.fn();
 const mockOnRemove = vi.fn();
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const Component = ({ form }: { form?: UseFormReturn<any, unknown> }) => {
-  const defaultForm = useForm();
+  const defaultForm = useForm({
+    defaultValues: {
+      products: [{ value: '', amount: 0, price: '' }],
+    },
+  });
 
   return (
     <TooltipProvider>
@@ -74,8 +75,6 @@ const Component = ({ form }: { form?: UseFormReturn<any, unknown> }) => {
         field={mockFields[0] as Record<string, string>}
         products={products}
         onRemove={mockOnRemove}
-        onOpenChange={mockOnOpenChange}
-        onSearch={mockOnSearch}
       />
     </TooltipProvider>
   );
@@ -85,229 +84,131 @@ describe('OrderProductField', () => {
   test('renders with initial values', () => {
     render(<Component />);
 
-    expect(
-      screen.getByRole('combobox', { name: /products.0.id/i })
-    ).toBeInTheDocument();
-
+    expect(screen.getByRole('combobox')).toBeInTheDocument();
     expect(screen.getByPlaceholderText(/amount/i)).toBeInTheDocument();
-    expect(
-      screen.getByRole('textbox', {
-        name: /price/i,
-      })
-    ).toBeInTheDocument();
+    expect(screen.getByRole('textbox', { name: /price/i })).toBeInTheDocument();
   });
 
-  test('updates input values correctly', async () => {
+  test('updates product selection correctly', async () => {
     render(<Component />);
 
     const user = userEvent.setup();
 
-    await act(async () => {
-      await user.click(
-        screen.getByRole('combobox', { name: /products.0.id/i })
-      );
-    });
+    await user.click(screen.getByRole('combobox'));
+    await user.click(screen.getByText('Product 1'));
 
-    await waitFor(() => screen.getByText('Product 1', { selector: 'span' }));
+    expect(screen.getByRole('combobox')).toHaveTextContent('Product 1');
+    expect(screen.getByText('Stock left:')).toBeInTheDocument();
+    expect(screen.getByText('5')).toBeInTheDocument();
+  });
 
-    await act(async () => {
-      await user.click(screen.getByText('Product 1', { selector: 'span' }));
-    });
+  test('updates amount and price correctly', async () => {
+    render(<Component />);
 
-    expect(
-      screen.getByRole('combobox', { name: /products.0.id/i })
-    ).toHaveTextContent('Product 1');
+    const user = userEvent.setup();
 
-    fireEvent.change(screen.getByPlaceholderText(/amount/i), {
-      target: { value: '5' },
-    });
+    await user.click(screen.getByRole('combobox'));
+    await user.click(screen.getByText('Product 1'));
 
-    expect(screen.getByPlaceholderText(/amount/i)).toHaveValue(5);
+    const amountInput = screen.getByPlaceholderText(/amount/i);
+    await user.clear(amountInput);
+    await user.type(amountInput, '3');
 
-    fireEvent.change(
-      screen.getByRole('textbox', {
-        name: /price/i,
-      }),
-      {
-        target: { value: '12.34' },
-      }
-    );
+    expect(amountInput).toHaveValue(3);
 
-    expect(
-      screen.getByRole('textbox', {
-        name: /price/i,
-      })
-    ).toHaveValue(formatMoney(12.34));
+    const priceInput = screen.getByRole('textbox', { name: /price/i });
+    expect(priceInput).toHaveValue(formatMoney(10));
+
+    await user.clear(priceInput);
+    await user.type(priceInput, '12.34');
+
+    expect(priceInput).toHaveValue(formatMoney(12.34));
+  });
+
+  test('limits amount to available stock', async () => {
+    render(<Component />);
+
+    const user = userEvent.setup();
+
+    await user.click(screen.getByRole('combobox'));
+    await user.click(screen.getByText('Product 1'));
+
+    const amountInput = screen.getByPlaceholderText(/amount/i);
+    await user.clear(amountInput);
+    await user.type(amountInput, '10');
+
+    expect(amountInput).toHaveValue(5); // Max stock for Product 1
   });
 
   test('removes product correctly', async () => {
     render(<Component />);
 
-    await act(async () => {
-      fireEvent.click(screen.getByRole('button', { name: /remove/i }));
-    });
+    const removeButton = screen.getByRole('button', { name: /remove/i });
+    fireEvent.click(removeButton);
 
     expect(mockOnRemove).toHaveBeenCalledWith(0);
   });
 
-  test('calls onOpenChange and onSearch correctly', async () => {
+  test('displays stock information after product selection', async () => {
     render(<Component />);
 
     const user = userEvent.setup();
 
-    await act(async () => {
-      await user.click(
-        screen.getByRole('combobox', { name: /products.0.id/i })
-      );
-    });
-
-    expect(mockOnOpenChange).toHaveBeenCalledWith(true);
-
-    const productSearch = screen.getByRole('textbox', {
-      name: /products.0.id search/i,
-    });
-
-    expect(productSearch).toBeInTheDocument();
-
-    await act(async () => {
-      await user.type(productSearch, 'Product');
-    });
+    await user.click(screen.getByRole('combobox'));
+    await user.click(screen.getByText('Product 2'));
 
     await waitFor(() => {
-      expect(mockOnSearch).toHaveBeenCalledWith('Product');
+      expect(screen.getByText('Stock left:')).toBeInTheDocument();
+      expect(screen.getByText('10')).toBeInTheDocument();
     });
-
-    await act(async () => {
-      await user.click(document.body);
-    });
-
-    expect(mockOnOpenChange).toHaveBeenCalledWith(false);
   });
 
-  test('does not switch from uncontrolled to controlled inputs', async () => {
+  test('sets price automatically when selecting a new product', async () => {
     render(<Component />);
-
-    expect(screen.getByRole('textbox', { name: /price/i })).toHaveValue(
-      formatMoney(0)
-    );
-
-    fireEvent.change(screen.getByRole('textbox', { name: /price/i }), {
-      target: { value: '12.34' },
-    });
-
-    expect(screen.getByRole('textbox', { name: /price/i })).toHaveValue(
-      formatMoney(12.34)
-    );
-  });
-
-  test('handles default values correctly', () => {
-    const watcher = vi.fn();
-    const amount = 5;
-    const price = 10;
-
-    const Wrapper = ({
-      watcher,
-      amount,
-      price,
-    }: {
-      watcher: (value: unknown) => void;
-      amount: number;
-      price: number;
-    }) => {
-      const form = useForm({
-        defaultValues: {
-          products: [{ id: 1, amount, price }],
-        },
-      });
-
-      useEffect(() => {
-        watcher(form.watch('products.0.amount'));
-      }, [form, watcher]);
-
-      return <Component form={form} />;
-    };
-
-    render(<Wrapper watcher={watcher} amount={amount} price={price} />);
-
-    expect(
-      screen.getByRole('combobox', { name: /products.0.id/i })
-    ).toHaveTextContent(mockFields[0]?.name || '');
-
-    expect(screen.getByPlaceholderText(/amount/i)).toHaveValue(amount);
-
-    expect(screen.getByRole('textbox', { name: /price/i })).toHaveValue(
-      formatMoney(price)
-    );
-  });
-
-  test('sets product price automatically on product selection', async () => {
-    render(<Component />);
-
     const user = userEvent.setup();
 
-    await act(async () => {
-      await user.click(
-        screen.getByRole('combobox', { name: /products.0.id/i })
-      );
-    });
-
-    await waitFor(() => screen.getByText('Product 1', { selector: 'span' }));
-
-    await act(async () => {
-      await user.click(screen.getByText('Product 1', { selector: 'span' }));
-    });
-
-    expect(screen.getByRole('textbox', { name: /price/i })).toHaveValue(
-      formatMoney(10)
-    );
-  });
-
-  test('sets product price automatically on product selection', async () => {
-    render(<Component />);
-
-    const user = userEvent.setup();
-
-    await act(async () => {
-      await user.click(
-        screen.getByRole('combobox', { name: /products.0.id/i })
-      );
-    });
-
-    await waitFor(() => screen.getByText('Product 1', { selector: 'span' }));
-
-    await act(async () => {
-      await user.click(screen.getByText('Product 1', { selector: 'span' }));
-    });
-
-    expect(screen.getByRole('textbox', { name: /price/i })).toHaveValue(
-      formatMoney(10)
-    );
-  });
-
-  test('allows manual price input after product selection', async () => {
-    render(<Component />);
-
-    const user = userEvent.setup();
-
-    await act(async () => {
-      await user.click(
-        screen.getByRole('combobox', { name: /products.0.id/i })
-      );
-    });
-
-    await waitFor(() => screen.getByText('Product 1', { selector: 'span' }));
-
-    await act(async () => {
-      await user.click(screen.getByText('Product 1', { selector: 'span' }));
-    });
+    await user.click(screen.getByRole('combobox'));
+    await user.click(screen.getByText('Product 2'));
 
     const priceInput = screen.getByRole('textbox', { name: /price/i });
-    expect(priceInput).toHaveValue(formatMoney(10));
+    expect(priceInput).toHaveValue(formatMoney(20));
+  });
 
-    await act(async () => {
-      fireEvent.change(priceInput, { target: { value: '12.34' } });
-    });
+  test('resets amount to 0 when switching products', async () => {
+    render(<Component />);
+    const user = userEvent.setup();
 
-    expect(priceInput).toHaveValue(formatMoney(12.34));
+    await user.click(screen.getByRole('combobox'));
+    await user.click(screen.getByText('Product 1'));
+
+    const amountInput = screen.getByPlaceholderText(/amount/i);
+    await user.clear(amountInput);
+    await user.type(amountInput, '3');
+
+    await user.click(screen.getByRole('combobox'));
+    await user.click(screen.getByText('Product 2'));
+
+    expect(amountInput).toHaveValue(0);
+  });
+
+  test('handles non-numeric input in amount field', async () => {
+    render(<Component />);
+    const user = userEvent.setup();
+
+    await user.click(screen.getByRole('combobox'));
+    await user.click(screen.getByText('Product 1'));
+
+    const amountInput = screen.getByPlaceholderText(/amount/i);
+    await user.clear(amountInput);
+    await user.type(amountInput, 'abc');
+
+    expect(amountInput).toHaveValue(null);
+  });
+
+  test('disables amount input when no product is selected', () => {
+    render(<Component />);
+
+    const amountInput = screen.getByPlaceholderText(/amount/i);
+    expect(amountInput).toBeDisabled();
   });
 });

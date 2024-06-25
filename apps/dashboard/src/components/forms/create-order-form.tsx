@@ -52,14 +52,23 @@ export default function CreateOrderForm({
         phone: z.string().optional(),
       })
       .optional(),
-    products: z.array(
-      z.object({
-        id: z.number(),
-        amount: z.number().min(1),
-        price: z.string().optional(),
+    products: z
+      .array(
+        z.object({
+          id: z.number(),
+          value: z.string().min(1, {
+            message: 'Product is required',
+          }),
+          amount: z.number().min(1, {
+            message:
+              'Amount must be at least 1, if there is no stock left, consider selecting a different product.',
+          }),
+          price: z.string().optional(),
+        })
+      )
+      .min(1, {
+        message: 'You are required to have at least one product.',
       }),
-      { message: 'You are required to have at least one product.' }
-    ),
     note: z.string().optional(),
   });
 
@@ -67,7 +76,7 @@ export default function CreateOrderForm({
     resolver: zodResolver(schema),
     defaultValues: {
       show_id: params.show ? parseInt(params.show) : undefined,
-      products: [{ id: undefined, amount: 1 }],
+      products: [],
     },
   });
 
@@ -80,16 +89,11 @@ export default function CreateOrderForm({
   const [showSelectOpen, setShowSelectOpen] = useState(false);
   const [showSearch, setShowSearch] = useState('');
   const [products, setProducts] = useState<Product[] | null>(null);
-  const [productsSelectOpen, setProductsSelectOpen] = useState(false);
-  const [productsSearch, setProductsSearch] = useState('');
 
   const debouncedCustomerSearch = useDebounceCallback(setCustomerSearch, 500, {
     trailing: true,
   });
   const debouncedShowSearch = useDebounceCallback(setShowSearch, 500, {
-    trailing: true,
-  });
-  const debouncedProductsSearch = useDebounceCallback(setProductsSearch, 500, {
     trailing: true,
   });
 
@@ -104,9 +108,11 @@ export default function CreateOrderForm({
   }, [showSearch]);
 
   const fetchProducts = useCallback(async () => {
-    const res = await getProductsAction({ search: productsSearch || '' });
+    const res = await getProductsAction({
+      show_id: show || parseInt(params.show),
+    });
     setProducts(res as Product[]);
-  }, [productsSearch]);
+  }, [params.show, show]);
 
   const mappedCustomers = useMemo(
     () =>
@@ -162,16 +168,19 @@ export default function CreateOrderForm({
   useEffect(() => {
     if (show) {
       const data = shows?.find((s) => s.id === show);
-      if (data) form.setValue('show_id', data.id);
+      if (data) {
+        form.setValue('show_id', data.id);
+        form.setValue('products', []);
+        setProducts(null);
+      }
     }
   }, [show, shows, form]);
 
   useEffect(() => {
-    if (productsSearch) fetchProducts();
-  }, [productsSearch, fetchProducts]);
-  useEffect(() => {
-    if (productsSelectOpen && !products) fetchProducts();
-  }, [productsSelectOpen, products, fetchProducts]);
+    if (show) {
+      fetchProducts();
+    }
+  }, [show, fetchProducts]);
 
   const {
     fields: productFields,
@@ -183,26 +192,38 @@ export default function CreateOrderForm({
   });
 
   async function onSubmit(data: z.infer<typeof schema>) {
-    await toast.promise(createOrdersAction(data), {
-      loading: 'Creating order...',
-      success: (data: { payment_url: string }) => {
-        callback && callback();
-        return (
-          <p className='font-medium'>
-            Order created.{' '}
-            <a
-              className='text-primary-500 underline'
-              href={data.payment_url}
-              target='_blank'
-              rel='noreferrer'
-            >
-              Click here to complete payment
-            </a>
-          </p>
-        );
-      },
-      error: 'Failed to create order',
-    });
+    await toast.promise(
+      createOrdersAction({
+        ...data,
+        products: data.products.map((product) => ({
+          id: parseInt(product.value),
+          amount: product.amount,
+          price: product.price,
+        })),
+      }),
+      {
+        loading: 'Creating order...',
+        success: (data: { payment_url: string }) => {
+          callback && callback();
+          return (
+            <p className='font-medium'>
+              Order created.{' '}
+              <a
+                className='text-primary-500 underline'
+                href={data.payment_url}
+                target='_blank'
+                rel='noreferrer'
+              >
+                Click here to complete payment
+              </a>
+            </p>
+          );
+        },
+        error: (error) => {
+          return `Failed to create order: ${error.message}`;
+        },
+      }
+    );
   }
 
   return (
@@ -270,36 +291,57 @@ export default function CreateOrderForm({
 
         <div className='mt-4'>
           <FormLabel className='mb-2 block'>Products</FormLabel>
-          <div className='space-y-2 divide-y'>
-            {productFields.map((field, index) => (
-              <OrderProductField
-                className='pt-2 first:pt-0'
-                key={field.id}
-                index={index}
-                field={field}
-                form={form}
-                products={products}
-                onRemove={() => removeProduct(index)}
-                onOpenChange={setProductsSelectOpen}
-                onSearch={debouncedProductsSearch}
-              />
-            ))}
-          </div>
+          <div className='space-y-2'>
+            {productFields.length === 0 && !show && (
+              <div className='p-2 text-center text-sm text-muted-foreground'>
+                No products found for this show.
+              </div>
+            )}
 
-          <div className='my-2 flex justify-end'>
-            <Button
-              size='sm'
-              type='button'
-              variant='secondary'
-              onClick={() =>
-                appendProduct({
-                  id: products?.length ? products?.length + 1 : 1,
-                  amount: 1,
-                })
-              }
-            >
-              <Plus className='mr-1 !size-3' /> Add product
-            </Button>
+            {productFields.length === 0 && show && (
+              <div className='p-2 text-center text-sm text-muted-foreground'>
+                Click the &quot;+ Add product&quot; button to add products to
+                your order.
+              </div>
+            )}
+
+            <FormField
+              name='products'
+              render={() => (
+                <div>
+                  {productFields.map((field, index) => (
+                    <OrderProductField
+                      className='pt-2 first:pt-0'
+                      key={field.id}
+                      index={index}
+                      field={field}
+                      form={form}
+                      products={products}
+                      onRemove={() => removeProduct(index)}
+                    />
+                  ))}
+
+                  <div className='my-2 flex justify-end'>
+                    <Button
+                      size='sm'
+                      type='button'
+                      variant='secondary'
+                      disabled={!show}
+                      onClick={() =>
+                        appendProduct({ id: 1, value: '', amount: 0 })
+                      }
+                    >
+                      <Plus className='mr-1 !size-3' /> Add product
+                    </Button>
+                  </div>
+
+                  {form.formState.errors.products &&
+                    !Array.isArray(form.formState.errors.products) && (
+                      <FormMessage />
+                    )}
+                </div>
+              )}
+            />
           </div>
         </div>
 
@@ -329,7 +371,10 @@ export default function CreateOrderForm({
         </div>
 
         <div className='flex justify-end'>
-          <Button disabled={form.formState.isSubmitting} type='submit'>
+          <Button
+            disabled={form.formState.isSubmitting}
+            type='submit'
+          >
             Create
           </Button>
         </div>

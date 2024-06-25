@@ -1,12 +1,11 @@
 import type { Product } from '@repo/lib';
 import { cn } from '@repo/lib';
 import { Trash } from 'lucide-react';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import type { FieldArrayWithId, UseFormReturn } from 'react-hook-form';
 
 import { CurrencyInput } from '@/components/currency-input';
 import { Button } from '@/components/ui/button';
-import Combobox from '@/components/ui/combobox';
 import {
   FormControl,
   FormField,
@@ -15,6 +14,13 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 
 type OrderProductFieldProps = {
   index: number;
@@ -24,73 +30,7 @@ type OrderProductFieldProps = {
   field: FieldArrayWithId<any>;
   onRemove: (index: number) => void;
   products: Product[] | null;
-  onOpenChange: (open: boolean) => void;
   className?: string;
-  onSearch: (search: string) => void;
-};
-
-const ProductCombobox = ({
-  index,
-  products,
-  selectOpen,
-  setSelectOpen,
-  onOpenChange,
-  onSearch,
-  field,
-  form,
-}: {
-  index: number;
-  products: Product[] | null;
-  selectOpen: boolean;
-  setSelectOpen: (open: boolean) => void;
-  onOpenChange: (open: boolean) => void;
-  onSearch: (search: string) => void;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  field: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  form: UseFormReturn<any>;
-}) => {
-  const items = useMemo(
-    () =>
-      products?.map((product) => ({
-        value: product.id,
-        label: product.name,
-      })),
-    [products]
-  );
-
-  function onChange(value: undefined | number | string | boolean) {
-    field.onChange(value);
-    form.setValue(
-      `products.${index}.price`,
-      products?.find((product) => product.id === value)?.price
-    );
-  }
-
-  return (
-    <FormItem className='mb-1 flex flex-col'>
-      <FormControl>
-        <Combobox
-          name={`products.${index}.id`}
-          className='w-full'
-          required
-          async
-          placeholder='Select product...'
-          items={items}
-          open={selectOpen}
-          onOpenChange={(open) => {
-            setSelectOpen(open);
-            onOpenChange(open);
-          }}
-          loading={!products}
-          value={field.value || ''}
-          onValueChange={onChange}
-          onSearch={onSearch}
-        />
-      </FormControl>
-      <FormMessage />
-    </FormItem>
-  );
 };
 
 export default function OrderProductField({
@@ -99,18 +39,21 @@ export default function OrderProductField({
   field,
   onRemove,
   products,
-  onOpenChange,
   className,
-  onSearch,
 }: OrderProductFieldProps) {
-  const [selectOpen, setSelectOpen] = useState(false);
   const previousProductId = useRef(null);
 
-  const watcher = form.watch(`products.${index}.id`);
+  const watcher = form.watch(`products.${index}`);
   const memoizedProduct = useMemo(
-    () => products?.find((product) => product.id === watcher),
-    [products, watcher]
+    () => products?.find((product) => product.id === parseInt(watcher.value)),
+    [products, watcher.value]
   );
+
+  useEffect(() => {
+    if (watcher && memoizedProduct && previousProductId.current !== watcher) {
+      form.setValue(`products.${index}.amount`, 0);
+    }
+  }, [form, index, memoizedProduct, watcher]);
 
   useEffect(() => {
     if (watcher && memoizedProduct && previousProductId.current !== watcher) {
@@ -127,21 +70,53 @@ export default function OrderProductField({
       <div className='w-full'>
         <FormField
           control={form.control}
-          name={`products.${index}.id`}
+          name={`products.${index}`}
           render={({ field }) => (
-            <ProductCombobox
-              index={index}
-              products={products}
-              selectOpen={selectOpen}
-              setSelectOpen={setSelectOpen}
-              onOpenChange={onOpenChange}
-              onSearch={onSearch}
-              field={field}
-              form={form}
-            />
+            <>
+              <FormItem>
+                <Select
+                  defaultValue={field.value.value}
+                  onValueChange={(value) =>
+                    field.onChange({
+                      ...field.value,
+                      value: value,
+                    })
+                  }
+                >
+                  <FormControl>
+                    <SelectTrigger aria-label='select product'>
+                      <SelectValue placeholder='Select product' />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {products?.map((product) => (
+                      <SelectItem key={product.id} value={`${product.id}`}>
+                        {product.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </FormItem>
+
+              <FormField
+                control={form.control}
+                name={`products.${index}.value`}
+                render={() => <FormMessage className='mt-2' />}
+              />
+            </>
           )}
         />
 
+        {memoizedProduct && (
+          <div className='my-2 rounded bg-primary-foreground p-2 text-sm text-muted-foreground'>
+            <ul>
+              <li className='flex items-center justify-between'>
+                <span>Stock left:</span>
+                <span>{memoizedProduct?.pivot?.stock}</span>
+              </li>
+            </ul>
+          </div>
+        )}
         <div className='flex gap-2'>
           <FormField
             control={form.control}
@@ -155,9 +130,22 @@ export default function OrderProductField({
                   <Input
                     type='number'
                     placeholder='Amount'
+                    min={1}
+                    max={memoizedProduct?.pivot?.stock || undefined}
                     className='w-16'
+                    disabled={!memoizedProduct}
                     value={value?.toString() || '1'}
-                    onChange={(e) => onChange(parseInt(e.target.value, 10))}
+                    onChange={(e) => {
+                      // if value is greater than stock, set it to stock
+                      if (
+                        parseInt(e.target.value, 10) >
+                        (memoizedProduct?.pivot?.stock || 0)
+                      ) {
+                        onChange(memoizedProduct?.pivot?.stock);
+                      } else {
+                        onChange(parseInt(e.target.value, 10));
+                      }
+                    }}
                   />
                 </FormControl>
                 <FormMessage />
@@ -174,7 +162,7 @@ export default function OrderProductField({
                   Price
                 </FormLabel>
                 <FormControl>
-                  <CurrencyInput {...field} />
+                  <CurrencyInput disabled={!memoizedProduct} {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
