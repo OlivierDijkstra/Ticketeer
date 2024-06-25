@@ -26,7 +26,7 @@ export async function getPaymentsActions({
 
 export async function refundPaymentAction({
   payment_id,
-  data
+  data,
 }: {
   payment_id: string;
   data: {

@@ -46,6 +46,6 @@ describe('CurrencyInput', () => {
     const input = getByDisplayValue('$0.00');
 
     fireEvent.change(input, { target: { value: '6000' } });
-    expect(getByDisplayValue(formatMoney(50.00))).toBeInTheDocument();
+    expect(getByDisplayValue(formatMoney(50.0))).toBeInTheDocument();
   });
 });

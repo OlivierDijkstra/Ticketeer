@@ -169,7 +169,9 @@ describe('CreateOrderForm', () => {
     // Add second product
     await user.click(screen.getByRole('button', { name: /add product/i }));
     await user.click(
-      screen.getAllByRole('combobox', { name: /select product/i })[1] as HTMLElement
+      screen.getAllByRole('combobox', {
+        name: /select product/i,
+      })[1] as HTMLElement
     );
     await user.click(screen.getByRole('option', { name: 'Product 1' }));
 
@@ -303,7 +305,9 @@ describe('CreateOrderForm', () => {
       </TooltipProvider>
     );
 
-    expect(screen.getByRole('button', { name: /add product/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: /add product/i })
+    ).toBeInTheDocument();
   });
 
   test('handles form submission error', async () => {

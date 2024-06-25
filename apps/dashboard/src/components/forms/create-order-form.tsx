@@ -366,10 +366,7 @@ export default function CreateOrderForm({
         </div>
 
         <div className='flex justify-end'>
-          <Button
-            disabled={form.formState.isSubmitting}
-            type='submit'
-          >
+          <Button disabled={form.formState.isSubmitting} type='submit'>
             Create
           </Button>
         </div>

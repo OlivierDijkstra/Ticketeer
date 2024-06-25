@@ -46,7 +46,7 @@ export default function OrderCard({ order }: { order: Order }) {
         <Badge className='mb-1 max-w-fit'>{order.status}</Badge>
 
         <CopyToClipboard value={order.order_number}>
-          <h1 className='line-clamp-1 group min-w-0 gap-2 font-semibold tracking-tight'>
+          <h1 className='group line-clamp-1 min-w-0 gap-2 font-semibold tracking-tight'>
             {order.order_number}
           </h1>
         </CopyToClipboard>
@@ -129,7 +129,9 @@ export default function OrderCard({ order }: { order: Order }) {
           <li className='flex items-center justify-between'>
             <span className='text-muted-foreground'>Subtotal</span>
             <span>
-              {formatMoney(parseFloat(order.total) - parseFloat(order.service_fee))}
+              {formatMoney(
+                parseFloat(order.total) - parseFloat(order.service_fee)
+              )}
             </span>
           </li>
           <li className='flex items-center justify-between'>

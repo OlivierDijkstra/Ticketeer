@@ -1,10 +1,5 @@
 import formatMoney, { generateProduct } from '@repo/lib';
-import {
-  fireEvent,
-  render,
-  screen,
-  waitFor,
-} from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import type { UseFormReturn } from 'react-hook-form';
 import { useForm } from 'react-hook-form';

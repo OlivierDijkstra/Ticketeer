@@ -1,7 +1,7 @@
 import formatMoney, { generatePayment } from '@repo/lib';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { toast } from 'sonner';
-import type { Mock} from 'vitest';
+import type { Mock } from 'vitest';
 import { describe, expect, it, vi } from 'vitest';
 
 import RefundPaymentForm from '@/components/forms/refund-payment-form';

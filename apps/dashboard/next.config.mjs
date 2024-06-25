@@ -23,6 +23,11 @@ const nextConfig = {
         hostname: 'api.test.local',
         pathname: '**',
       },
+      {
+        protocol: 'https',
+        hostname: '5a1e-143-178-232-105.ngrok-free.app',
+        pathname: '**',
+      },
     ],
   },
   async redirects() {

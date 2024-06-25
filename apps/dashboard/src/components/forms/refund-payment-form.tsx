@@ -27,7 +27,6 @@ export default function RefundPaymentForm({
   payment: Payment;
   callback?: () => void;
 }) {
-
   const maxAmount = useMemo(() => {
     return (
       parseFloat(payment.amount) -
@@ -74,7 +73,7 @@ export default function RefundPaymentForm({
           render={({ field }) => (
             <FormItem>
               <FormLabel>Amount</FormLabel>
-              <p className='text-muted-foreground text-sm'>
+              <p className='text-sm text-muted-foreground'>
                 Maximum amount: {formatMoney(maxAmount)}
               </p>
               <FormControl>

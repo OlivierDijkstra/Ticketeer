@@ -1,3 +1,4 @@
+// TODO This causes warnings in console: https://github.com/tailwindlabs/tailwindcss/discussions/11127#discussioncomment-9162723
 import colors from 'tailwindcss/colors';
 
 export const API_URL = process.env.NEXT_PUBLIC_BACKEND_API_URL;
