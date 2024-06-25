@@ -23,8 +23,6 @@ export default async function CustomersTable({
     sorting?: { id: string; desc: boolean };
   }) {
     'use server';
-    // TODO: determine if we really need show_id for customers as it requires
-    // api changes
     return await getCustomersAction({ page, sorting, show_id: show?.id });
   }
 
