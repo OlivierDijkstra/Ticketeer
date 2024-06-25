@@ -3,7 +3,6 @@
 import {
   CalendarDays,
   Home,
-  Settings,
   Shirt,
   ShoppingCart,
   Users,
@@ -96,18 +95,6 @@ export default function NavigationSidebar() {
             </Link>
           </TooltipTrigger>
           <TooltipContent side='right'>Customers</TooltipContent>
-        </Tooltip>
-      </nav>
-
-      <nav className='mt-auto flex flex-col items-center gap-4 px-2 py-4'>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Link href='#' className={getClassesForPath('settings')}>
-              <Settings className='h-5 w-5' />
-              <span className='sr-only'>Settings</span>
-            </Link>
-          </TooltipTrigger>
-          <TooltipContent side='right'>Settings</TooltipContent>
         </Tooltip>
       </nav>
     </aside>

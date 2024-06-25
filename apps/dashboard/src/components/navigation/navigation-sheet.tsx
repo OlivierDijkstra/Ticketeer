@@ -4,7 +4,6 @@ import {
   CalendarDays,
   Home,
   PanelLeft,
-  Settings,
   Shirt,
   ShoppingCart,
   Users,
@@ -81,11 +80,6 @@ export default function NavigationSheet() {
           >
             <Users className='h-5 w-5' />
             Customers
-          </Link>
-
-          <Link href='#' className={getClassesForPath('settings')}>
-            <Settings className='h-5 w-5' />
-            Settings
           </Link>
         </nav>
       </SheetContent>
