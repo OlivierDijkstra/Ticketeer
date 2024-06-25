@@ -16,8 +16,8 @@ export default async function Page({
   };
 }) {
   return (
-    <div>
-      <div className='mb-4 grid grid-cols-1 gap-4 sm:grid-cols-3'>
+    <div className='space-y-4'>
+      <div className='grid grid-cols-1 gap-4 sm:grid-cols-3'>
         <Suspense fallback={<SkeletonStatistic />}>
           <NewOrdersStatistic />
         </Suspense>
@@ -26,7 +26,7 @@ export default async function Page({
         </Suspense>
       </div>
 
-      <div className='mb-2'>
+      <div>
         <Suspense fallback={<SkeletonGraph />}>
           <RevenueGraph />
         </Suspense>
