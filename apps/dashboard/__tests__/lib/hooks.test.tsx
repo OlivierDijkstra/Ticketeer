@@ -1,10 +1,16 @@
 import { act, renderHook } from '@testing-library/react';
-import { afterEach, describe, expect, test, vi } from 'vitest';
+import type { Mock} from 'vitest';
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 
+import * as colors from '@/lib/colors';
 import * as hooks from '@/lib/hooks';
 
 vi.mock('next-themes', () => ({
   useTheme: () => ({ theme: 'light', systemTheme: 'light' }),
+}));
+
+vi.mock('@/lib/colors', () => ({
+  getCssVariableAsHex: vi.fn(),
 }));
 
 vi.mock('react', async (importActual) => {
@@ -20,39 +26,63 @@ vi.mock('react', async (importActual) => {
 
 describe('hooks', () => {
   describe('useGraphColors', () => {
+    beforeEach(() => {
+      vi.useFakeTimers();
+      (colors.getCssVariableAsHex as Mock).mockImplementation(
+        (variable: string) => {
+          if (variable === 'primary') return '#000000';
+          if (variable === 'secondary') return '#2563eb';
+          return '#000000';
+        }
+      );
+    });
+
     afterEach(() => {
       vi.clearAllMocks();
+      vi.useRealTimers();
     });
 
-    test('returns light colors', () => {
-      const colors = hooks.useGraphColors();
-      expect(colors).toEqual({
-        primary: '#fff',
+    test('initializes with default colors', () => {
+      const { result } = renderHook(() => hooks.useGraphColors());
+      expect(result.current).toEqual({
+        primary: '#000000',
         secondary: '#2563eb',
       });
     });
 
-    test('returns dark colors', () => {
-      vi.mock('next-themes', () => ({
-        useTheme: () => ({ theme: 'dark', systemTheme: 'dark' }),
-      }));
+    test('updates colors when theme changes', async () => {
+      const { result } = renderHook(() => hooks.useGraphColors());
 
-      const colors = hooks.useGraphColors();
-      expect(colors).toEqual({
-        primary: '#fff',
+      // Initial render
+      expect(result.current).toEqual({
+        primary: '#000000',
         secondary: '#2563eb',
       });
-    });
 
-    test('returns system colors', () => {
+      // Simulate theme change
       vi.mock('next-themes', () => ({
-        useTheme: () => ({ theme: 'system', systemTheme: 'dark' }),
+        useTheme: vi
+          .fn()
+          .mockReturnValue({ theme: 'dark', systemTheme: 'dark' }),
       }));
 
-      const colors = hooks.useGraphColors();
-      expect(colors).toEqual({
-        primary: '#fff',
-        secondary: '#2563eb',
+      (colors.getCssVariableAsHex as Mock).mockImplementation(
+        (variable: string) => {
+          if (variable === 'primary') return '#ffffff';
+          if (variable === 'secondary') return '#3b82f6';
+          return '#ffffff';
+        }
+      );
+
+      const { result: newResult } = renderHook(() => hooks.useGraphColors());
+
+      // Fast-forward timers and wait for state update
+      await act(async () => {
+        vi.runAllTimers();
+        expect(newResult.current).toEqual({
+          primary: '#ffffff',
+          secondary: '#3b82f6',
+        });
       });
     });
   });

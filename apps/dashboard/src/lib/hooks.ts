@@ -1,25 +1,39 @@
 import { useTheme } from 'next-themes';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 
-import { GRAPH_COLORS } from '@/lib/constants';
+import { getCssVariableAsHex } from '@/lib/colors';
 
 export function useGraphColors() {
+  const [primary, setPrimary] = useState<string>(
+    getCssVariableAsHex('primary')
+  );
+  const [secondary, setSecondary] = useState<string>(
+    getCssVariableAsHex('secondary')
+  );
+
   const { theme, systemTheme } = useTheme();
 
-  const colors = useMemo(() => {
-    if (!theme || !systemTheme) {
-      return GRAPH_COLORS.light;
-    }
+  useEffect(() => {
+    const updateColors = () => {
+      const newPrimary = getCssVariableAsHex('primary');
+      const newSecondary = getCssVariableAsHex('secondary');
+      // console.log('🎨', newPrimary, newSecondary);
+      setPrimary(newPrimary);
+      setSecondary(newSecondary);
+    };
 
-    // First we check if its system
-    if (theme === 'system' && systemTheme) {
-      return GRAPH_COLORS[systemTheme];
-    }
-
-    return GRAPH_COLORS[theme as 'light' | 'dark'];
+    // Wait for the next frame to ensure Tailwind has applied the theme changes
+    requestAnimationFrame(() => {
+      // console.log('🔥');
+      // Add a small delay to ensure CSS variables are updated
+      setTimeout(updateColors, 50);
+    });
   }, [theme, systemTheme]);
 
-  return colors;
+  return {
+    primary,
+    secondary,
+  };
 }
 
 type TimeType = 'hour' | 'minute';
