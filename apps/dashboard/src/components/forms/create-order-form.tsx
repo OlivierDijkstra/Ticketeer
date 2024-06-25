@@ -82,12 +82,12 @@ export default function CreateOrderForm({
 
   const [customers, setCustomers] = useState<Customer[] | null>(null);
   const [customer, setCustomer] = useState<string | undefined>(undefined);
-  const [customerSelectOpen, setCustomerSelectOpen] = useState(false);
-  const [customerSearch, setCustomerSearch] = useState('');
+  const [customerSelectOpen, setCustomerSelectOpen] = useState<boolean>(false);
+  const [customerSearch, setCustomerSearch] = useState<string>('');
   const [shows, setShows] = useState<Show[] | null>(null);
   const [show, setShow] = useState<number | undefined>(undefined);
-  const [showSelectOpen, setShowSelectOpen] = useState(false);
-  const [showSearch, setShowSearch] = useState('');
+  const [showSelectOpen, setShowSelectOpen] = useState<boolean>(false);
+  const [showSearch, setShowSearch] = useState<string>('');
   const [products, setProducts] = useState<Product[] | null>(null);
 
   const debouncedCustomerSearch = useDebounceCallback(setCustomerSearch, 500, {
@@ -135,11 +135,29 @@ export default function CreateOrderForm({
   );
 
   useEffect(() => {
-    if (customerSearch) fetchCustomers();
-  }, [customerSearch, fetchCustomers]);
+    if (customerSearch || (customerSelectOpen && !customers)) {
+      fetchCustomers();
+    }
+  }, [customerSearch, customerSelectOpen, customers, fetchCustomers]);
+
   useEffect(() => {
-    if (customerSelectOpen && !customers) fetchCustomers();
-  }, [customerSelectOpen, customers, fetchCustomers]);
+    if (showSearch || (showSelectOpen && !shows)) {
+      fetchShows();
+    }
+  }, [showSearch, showSelectOpen, shows, fetchShows]);
+
+  useEffect(() => {
+    if (show) {
+      const data = shows?.find((s) => s.id === show);
+      if (data) {
+        form.setValue('show_id', data.id);
+        form.setValue('products', []);
+        setProducts(null);
+        fetchProducts();
+      }
+    }
+  }, [show, shows, form, fetchProducts]);
+
   useEffect(() => {
     if (customer) {
       const data = customers?.find((c) => c.id === customer);
@@ -158,29 +176,6 @@ export default function CreateOrderForm({
       }
     }
   }, [customer, customers, form]);
-
-  useEffect(() => {
-    if (showSearch) fetchShows();
-  }, [showSearch, fetchShows]);
-  useEffect(() => {
-    if (showSelectOpen && !shows) fetchShows();
-  }, [showSelectOpen, shows, fetchShows]);
-  useEffect(() => {
-    if (show) {
-      const data = shows?.find((s) => s.id === show);
-      if (data) {
-        form.setValue('show_id', data.id);
-        form.setValue('products', []);
-        setProducts(null);
-      }
-    }
-  }, [show, shows, form]);
-
-  useEffect(() => {
-    if (show) {
-      fetchProducts();
-    }
-  }, [show, fetchProducts]);
 
   const {
     fields: productFields,
