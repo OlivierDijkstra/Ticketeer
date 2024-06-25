@@ -7,13 +7,14 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Schema;
 use Laravel\Scout\Builder as ScoutBuilder;
-use Illuminate\Support\Collection;
 
 trait HandlesPaginationAndFiltering
 {
     private $defaultPerPage = 6;
+
     private $pivotFieldsCache = [];
 
     /**
@@ -33,10 +34,12 @@ trait HandlesPaginationAndFiltering
 
         if ($request->has('page') || $request->has('per_page')) {
             $results = $this->paginate($request, $query);
+
             return $this->flattenPivotFields($results);
         }
 
         $results = $query->get();
+
         return $this->flattenPivotFields($results);
     }
 
@@ -51,6 +54,7 @@ trait HandlesPaginationAndFiltering
     {
         $perPage = $request->input('per_page', $this->defaultPerPage);
         $this->applySorting($request, $query);
+
         return $query->paginate($perPage);
     }
 
@@ -59,7 +63,6 @@ trait HandlesPaginationAndFiltering
      *
      * @param  Request  $request  The HTTP request object.
      * @param  Builder  $query  The Eloquent query builder.
-     * @return void
      */
     private function applySorting(Request $request, Builder $query): void
     {
@@ -82,6 +85,7 @@ trait HandlesPaginationAndFiltering
         if ($request->has('show_id')) {
             $query = $this->applyShowIdFilter($request, $query);
         }
+
         return $query;
     }
 
@@ -90,7 +94,6 @@ trait HandlesPaginationAndFiltering
      *
      * @param  Request  $request  The HTTP request object.
      * @param  Builder|ScoutBuilder  $query  The Eloquent query builder or Scout builder.
-     * @return void
      */
     private function applyBasicFilters(Request $request, Builder|ScoutBuilder $query): void
     {
@@ -113,7 +116,8 @@ trait HandlesPaginationAndFiltering
     private function flattenPivotFields($results): LengthAwarePaginator|Collection
     {
         $items = $results instanceof LengthAwarePaginator ? $results->items() : $results;
-        collect($items)->transform(fn($item) => $this->hoistPivotFields($item));
+        collect($items)->transform(fn ($item) => $this->hoistPivotFields($item));
+
         return $results;
     }
 
@@ -133,6 +137,7 @@ trait HandlesPaginationAndFiltering
                 }
             }
         }
+
         return $item;
     }
 
@@ -142,6 +147,7 @@ trait HandlesPaginationAndFiltering
      * @param  Request  $request  The HTTP request object.
      * @param  Builder|ScoutBuilder  $query  The Eloquent query builder or Scout builder.
      * @return Builder|ScoutBuilder The query builder with applied show_id filter.
+     *
      * @throws Exception If no valid relation is found.
      */
     private function applyShowIdFilter(Request $request, Builder|ScoutBuilder $query): Builder|ScoutBuilder
@@ -149,7 +155,7 @@ trait HandlesPaginationAndFiltering
         $model = $query instanceof ScoutBuilder ? $query->model : $query->getModel();
         $relation = $this->getShowRelation($model);
 
-        if (!$relation) {
+        if (! $relation) {
             throw new Exception("No valid 'shows' or 'show' relation found on the model.");
         }
 
@@ -204,6 +210,7 @@ trait HandlesPaginationAndFiltering
     private function applyBelongsToShowIdFilter(Request $request, Builder|ScoutBuilder $query, \Illuminate\Database\Eloquent\Relations\BelongsTo $relation): Builder|ScoutBuilder
     {
         $foreignKey = $relation->getForeignKeyName();
+
         return $query->where($foreignKey, $request->input('show_id'));
     }
 
@@ -285,7 +292,7 @@ trait HandlesPaginationAndFiltering
      */
     private function getPivotFields(string $pivotTable): array
     {
-        if (!isset($this->pivotFieldsCache[$pivotTable])) {
+        if (! isset($this->pivotFieldsCache[$pivotTable])) {
             $this->pivotFieldsCache[$pivotTable] = Schema::getColumnListing($pivotTable);
         }
 

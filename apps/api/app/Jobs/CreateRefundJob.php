@@ -15,6 +15,7 @@ class CreateRefundJob implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     protected $payment;
+
     protected $amount;
 
     public function __construct(Payment $payment, $amount)

@@ -20,7 +20,7 @@ class CreatePaymentAction
                 'order_id' => $order->order_number,
                 'show_id' => $order->show_id,
             ]),
-            'webhookUrl' => config('app.url') . '/webhooks/mollie',
+            'webhookUrl' => config('app.url').'/webhooks/mollie',
             'metadata' => [
                 'order_id' => $order->id,
             ],

@@ -13,7 +13,7 @@ class PaymentsController extends Controller
     public static function middleware(): array
     {
         return [
-            new Middleware('auth:sanctum')
+            new Middleware('auth:sanctum'),
         ];
     }
 
@@ -27,6 +27,7 @@ class PaymentsController extends Controller
     public function refund(RefundPaymentRequest $request, Payment $payment)
     {
         CreateRefundJob::dispatch($payment, $request->amount);
+
         return response()->json(['message' => 'Payment refunded']);
     }
 }

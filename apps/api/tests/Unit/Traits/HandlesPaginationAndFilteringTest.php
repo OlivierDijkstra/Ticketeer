@@ -358,6 +358,7 @@ class HandlesPaginationAndFilteringTest extends TestCase
         $this->assertInstanceOf(\Illuminate\Support\Collection::class, $result);
         $this->assertCount(10, $result); // Assuming there are 10 shows created in the setup
     }
+
     public function test_search_with_customer_model()
     {
         $request = new Request([

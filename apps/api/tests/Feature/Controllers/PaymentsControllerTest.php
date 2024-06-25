@@ -12,6 +12,7 @@ use Tests\TestCase;
 class PaymentsControllerTest extends TestCase
 {
     protected $order;
+
     protected $payment;
 
     public function setUp(): void

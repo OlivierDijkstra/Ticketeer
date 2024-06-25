@@ -70,7 +70,7 @@ class OrderController extends Controller
                 HandleCustomerJob::dispatch($customerData, $order);
             }
         } catch (\Exception $e) {
-            if (!empty($decrementedProducts)) {
+            if (! empty($decrementedProducts)) {
                 $restoreProductStockAction->handle($decrementedProducts, $show->id);
             }
             $order->delete();

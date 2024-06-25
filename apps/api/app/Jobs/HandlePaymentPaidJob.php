@@ -9,7 +9,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use \Mollie\Api\Resources\Payment as MolliePayment;
+use Mollie\Api\Resources\Payment as MolliePayment;
 use Spatie\Stats\StatsWriter;
 
 class HandlePaymentPaidJob implements ShouldQueue
@@ -17,6 +17,7 @@ class HandlePaymentPaidJob implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     protected Payment $payment;
+
     protected MolliePayment $mollie;
 
     public function __construct(Payment $payment, MolliePayment $mollie)
