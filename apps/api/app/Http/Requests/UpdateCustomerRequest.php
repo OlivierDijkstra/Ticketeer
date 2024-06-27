@@ -26,12 +26,6 @@ class UpdateCustomerRequest extends FormRequest
             'last_name' => 'required|string',
             'email' => 'required|email',
             'phone' => 'required|string',
-            'address.street' => 'required||string',
-            'address.street2' => 'nullable|string',
-            'address.city' => 'required|string',
-            'address.state' => 'required|string',
-            'address.country' => 'required|string',
-            'address.postal_code' => 'required|string',
         ];
     }
 }
