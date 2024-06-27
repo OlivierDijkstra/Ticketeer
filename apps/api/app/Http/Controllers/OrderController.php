@@ -7,6 +7,7 @@ use App\Actions\CreatePaymentAction;
 use App\Actions\RestoreProductStockAction;
 use App\Http\Requests\CreatePaymentLinkRequest;
 use App\Http\Requests\StoreOrderRequest;
+use App\Http\Requests\UpdateOrderRequest;
 use App\Jobs\HandleCustomerJob;
 use App\Models\Order;
 use App\Models\Show;
@@ -94,10 +95,9 @@ class OrderController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Order $order)
+    public function update(UpdateOrderRequest $request, Order $order)
     {
         $order->update($request->all());
-
         return $order;
     }
 
