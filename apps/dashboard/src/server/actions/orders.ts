@@ -100,7 +100,8 @@ export async function updateOrderAction({
 }: {
   order_id: string;
   data: {
-    description: string | null;
+    customer_id?: string | null;
+    description?: string | null;
   };
 }) {
   return await fetchWithAuth<Order>(`api/orders/${order_id}`, {
