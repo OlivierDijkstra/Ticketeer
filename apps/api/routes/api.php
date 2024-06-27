@@ -3,12 +3,14 @@
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentsController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\ShowController;
 use App\Http\Controllers\StatsController;
+use App\Http\Controllers\TicketController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -85,3 +87,13 @@ Route::get('stats', [StatsController::class, 'index'])->name('stats.index');
 // Search
 //
 Route::get('search', SearchController::class)->name('search');
+
+//
+// Tickets
+//
+Route::get('tickets/validate', [TicketController::class, 'validate'])->name('tickets.validate');
+
+//
+// Notifications
+//
+Route::post('notifications/tickets', [NotificationController::class, 'notifyTickets'])->name('notifications.tickets');
