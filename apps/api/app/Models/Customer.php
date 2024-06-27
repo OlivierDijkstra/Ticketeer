@@ -8,11 +8,12 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Notifications\Notifiable;
 use Spatie\Stats\StatsWriter;
 
 class Customer extends Model
 {
-    use HasFactory, HasUuids, Searchable, SoftDeletes;
+    use HasFactory, HasUuids, Searchable, SoftDeletes, Notifiable;
 
     protected $with = ['address'];
 
