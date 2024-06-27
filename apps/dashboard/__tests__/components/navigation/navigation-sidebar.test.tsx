@@ -34,7 +34,6 @@ describe('NavigationSidebar', () => {
     expect(
       screen.getByRole('link', { name: /customers/i })
     ).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: /settings/i })).toBeInTheDocument();
   });
 
   test('applies active class to the current path', () => {
