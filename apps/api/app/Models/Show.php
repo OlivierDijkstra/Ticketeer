@@ -24,6 +24,8 @@ class Show extends Model
     protected $casts = [
         'enabled' => 'boolean',
         'guests' => 'json',
+        'start' => 'datetime',
+        'end' => 'datetime',
     ];
 
     protected $dates = [
