@@ -182,7 +182,7 @@ class ShowControllerTest extends TestCase
         $response = $this->getJson(route('shows.index', ['search' => $search]));
 
         $response->assertStatus(200);
-        $response->assertJsonFragment(['start' => $search->format('Y-m-d H:i:s')]);
+        $response->assertJsonFragment(['start' => $search->toISOString()]);
     }
 
     public function test_pagination()
