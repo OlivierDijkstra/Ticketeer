@@ -62,7 +62,6 @@ class CustomerControllerTest extends TestCase
         Sanctum::actingAs($this->user);
 
         $needle = 'Jane';
-        $needle2 = 'Anyway street';
 
         $customer = Customer::first();
 
