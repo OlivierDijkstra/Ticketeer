@@ -9,6 +9,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "bacon/bacon-qr-code": "^3.0",
         "laravel/fortify": "^1.21",
         "laravel/framework": "^11.0",
         "laravel/horizon": "^5.24",
@@ -17,9 +18,11 @@
         "laravel/scout": "^10.9",
         "laravel/telescope": "^5.0",
         "laravel/tinker": "^2.9",
+        "mallardduck/blade-lucide-icons": "^1.21",
         "mollie/laravel-mollie": "^3.0",
         "nunomaduro/collision": "^8.0",
         "spatie/laravel-medialibrary": "^11.4",
+        "spatie/laravel-pdf": "^1.5",
         "spatie/laravel-stats": "^2.3",
         "typesense/typesense-php": "^4.9"
     },
