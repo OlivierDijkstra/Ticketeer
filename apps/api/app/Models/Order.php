@@ -24,7 +24,12 @@ class Order extends Model
         'refunded_amount',
     ];
 
-    protected $with = ['products', 'show', 'customer', 'payments'];
+    protected $with = ['products', 'show', 'customer', 'payments', 'tickets'];
+
+    public function tickets()
+    {
+        return $this->hasMany(Ticket::class);
+    }
 
     public function payments()
     {
