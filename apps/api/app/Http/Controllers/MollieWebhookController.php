@@ -2,18 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\GenerateTicketsJob;
 use App\Jobs\HandlePaymentPaidJob;
 use App\Jobs\HandlePaymentPartiallyRefundedJob;
 use App\Jobs\HandlePaymentRefundedJob;
 use App\Models\Payment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Bus;
 use Mollie\Laravel\Facades\Mollie;
 
 class MollieWebhookController extends Controller
 {
     public function __invoke(Request $request)
     {
-        if (! $request->has('id')) {
+        if (!$request->has('id')) {
             return;
         }
 
@@ -44,7 +46,10 @@ class MollieWebhookController extends Controller
                         break;
                     }
 
-                    HandlePaymentPaidJob::dispatch($payment, $mollie);
+                    Bus::chain([
+                        new HandlePaymentPaidJob($payment, $mollie),
+                        new GenerateTicketsJob($payment),
+                    ])->dispatch();
                 }
                 break;
             case 'failed':
