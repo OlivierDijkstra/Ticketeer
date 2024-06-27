@@ -20,7 +20,7 @@ return new class extends Migration
             $table->foreignUuid('customer_id')
                 ->nullable()
                 ->constrained()
-                ->onDelete('cascade');
+                ->onDelete('set null');
 
             $table->string('order_number')
                 ->unique();
