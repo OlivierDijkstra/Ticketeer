@@ -18,7 +18,7 @@ import { DEFAULT_PRETTY_DATE_FORMAT } from '@/lib/constants';
 import { handleFieldUpdate } from '@/lib/utils';
 import { updateOrderAction } from '@/server/actions/orders';
 
-export default function OrderCard({ order }: { order: Order }) {
+export default function OrderCard({ order, className }: { order: Order; className?: string }) {
   const [description, setDescription] = useState(order.description);
   const [loading, setLoading] = useState(false);
 
@@ -41,7 +41,7 @@ export default function OrderCard({ order }: { order: Order }) {
   }
 
   return (
-    <Card className='overflow-hidden'>
+    <Card className={cn('overflow-hidden', className)}>
       <CardHeader className='bg-muted/50'>
         <Badge className='mb-1 max-w-fit'>{order.status}</Badge>
 
