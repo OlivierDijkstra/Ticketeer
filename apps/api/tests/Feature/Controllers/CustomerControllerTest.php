@@ -34,13 +34,6 @@ class CustomerControllerTest extends TestCase
             'last_name' => 'Doe',
             'email' => 'johndoe@example.com',
             'phone' => '1234567890',
-            'address' => [
-                'street' => '123 Main St',
-                'city' => 'Springfield',
-                'state' => 'IL',
-                'country' => 'USA',
-                'postal_code' => '62701',
-            ],
         ]);
 
         $response->assertStatus(201);
@@ -49,14 +42,6 @@ class CustomerControllerTest extends TestCase
             'first_name' => 'John',
             'last_name' => 'Doe',
             'email' => 'johndoe@example.com',
-        ]);
-
-        $this->assertDatabaseHas('addresses', [
-            'street' => '123 Main St',
-            'city' => 'Springfield',
-            'state' => 'IL',
-            'country' => 'USA',
-            'postal_code' => '62701',
         ]);
     }
 
@@ -78,16 +63,12 @@ class CustomerControllerTest extends TestCase
 
         $needle = 'Jane';
         $needle2 = 'Anyway street';
-        $address = Address::factory()->make([
-            'street' => $needle2,
-        ]);
 
         $customer = Customer::first();
 
         $response = $this->putJson(route('customers.update', $customer), [
             ...$customer->toArray(),
             'first_name' => $needle,
-            'address' => $address->toArray(),
         ]);
 
         $response->assertStatus(200);
@@ -102,14 +83,6 @@ class CustomerControllerTest extends TestCase
             'first_name' => $customer->first_name,
             'last_name' => $customer->last_name,
             'email' => $customer->email,
-        ]);
-
-        $this->assertDatabaseHas('addresses', [
-            'street' => $needle2,
-            'city' => $address->city,
-            'state' => $address->state,
-            'country' => $address->country,
-            'postal_code' => $address->postal_code,
         ]);
     }
 

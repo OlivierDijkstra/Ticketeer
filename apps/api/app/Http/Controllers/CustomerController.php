@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreUpdateCustomerRequest;
+use App\Http\Requests\StoreCustomerRequest;
+use App\Http\Requests\UpdateCustomerRequest;
 use App\Models\Customer;
 use App\Traits\HandlesPaginationAndFiltering;
 use Illuminate\Http\Request;
@@ -36,11 +37,9 @@ class CustomerController extends Controller implements HasMiddleware
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreUpdateCustomerRequest $request)
+    public function store(StoreCustomerRequest $request)
     {
         $customer = Customer::create($request->validated());
-        $customer->address()->update($request->validated('address'));
-
         return $customer;
     }
 
@@ -55,11 +54,9 @@ class CustomerController extends Controller implements HasMiddleware
     /**
      * Update the specified resource in storage.
      */
-    public function update(StoreUpdateCustomerRequest $request, Customer $customer)
+    public function update(UpdateCustomerRequest $request, Customer $customer)
     {
         $customer->update($request->validated());
-        $customer->address()->update($request->validated('address'));
-
         return $customer;
     }
 
