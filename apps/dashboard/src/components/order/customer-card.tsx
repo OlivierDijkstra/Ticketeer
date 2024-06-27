@@ -5,6 +5,8 @@ import { Eye } from 'lucide-react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 
+import CreateCustomerDialog from '@/components/dialogs/create-customer-dialog';
+import LinkCustomerDialog from '@/components/dialogs/link-customer-dialog';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 
@@ -32,25 +34,37 @@ export default function CustomerCard({ customer }: { customer?: Customer }) {
       </CardHeader>
 
       <CardContent className='mt-4 text-sm'>
-        <ul className='grid gap-3'>
-          <li className='flex items-center justify-between'>
-            <span className='text-muted-foreground'>Name</span>
-            {customer ? (
-              <span>{`${customer?.first_name} ${customer?.last_name}`}</span>
-            ) : (
-              <span>-</span>
-            )}
-          </li>
-          <li className='flex items-center justify-between'>
-            <span className='text-muted-foreground'>Email</span>
-            <span>{customer?.email}</span>
-          </li>
+        {customer ? (
+          <ul className='grid gap-3'>
+            <li className='flex items-center justify-between'>
+              <span className='text-muted-foreground'>Name</span>
+              <span>{`${customer.first_name} ${customer.last_name}`}</span>
+            </li>
+            <li className='flex items-center justify-between'>
+              <span className='text-muted-foreground'>Email</span>
+              <span>{customer.email}</span>
+            </li>
 
-          <li className='flex items-center justify-between'>
-            <span className='text-muted-foreground'>Phone</span>
-            <span>{customer?.phone || 'N/A'}</span>
-          </li>
-        </ul>
+            <li className='flex items-center justify-between'>
+              <span className='text-muted-foreground'>Phone</span>
+              <span>{customer?.phone || 'N/A'}</span>
+            </li>
+          </ul>
+        ) : (
+          <div className='flex flex-col items-center justify-center gap-2 py-8'>
+            <p className='text-muted-foreground'>
+              No customer is linked to this order.
+            </p>
+            
+            <CreateCustomerDialog>
+              <Button>Create customer</Button>
+            </CreateCustomerDialog>
+
+            <LinkCustomerDialog>
+              <Button variant='outline'>Link existing customer</Button>
+            </LinkCustomerDialog>
+          </div>
+        )}
       </CardContent>
     </Card>
   );
