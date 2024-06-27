@@ -23,7 +23,7 @@ export default function AddressCard({ address }: { address?: Address }) {
         <ul className='grid gap-3'>
           <li className='flex items-center justify-between text-right'>
             <span className='text-muted-foreground'>Street</span>
-            <span>{`${address?.street}, ${address?.street2 || ''}`}</span>
+            <span>{`${address?.street || ''}${address?.street2 ? `, ${address?.street2}` : ''}`}</span>
           </li>
 
           <li className='flex items-center justify-between'>
