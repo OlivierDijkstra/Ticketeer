@@ -199,6 +199,13 @@ export interface Customer {
   updated_at: string; // Dates as strings
 }
 
+export type CreateCustomer = {
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone?: string | null;
+}
+
 export type OrderStatus =
   | "pending"
   | "paid"
@@ -225,6 +232,7 @@ export interface Order {
   event: Event;
   products: Product[];
   payments: Payment[];
+  tickets?: Ticket[];
 }
 
 export type PaymentStatus =
@@ -251,4 +259,16 @@ export interface Payment {
   payment_url?: string | null; // Optional field
   created_at: string; // Dates as strings
   updated_at: string; // Dates as strings
+}
+
+export interface Ticket {
+  id: number;
+  order_id: string;
+  product_id: number;
+  unique_code: string;
+  is_used: boolean;
+  used_at: string | null;
+  created_at: string;
+  updated_at: string;
+  product: Product;
 }
