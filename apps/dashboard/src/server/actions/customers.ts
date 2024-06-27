@@ -1,6 +1,6 @@
 'use server';
 
-import type { Customer, PaginatedResponse } from '@repo/lib';
+import type { CreateCustomer, Customer, PaginatedResponse } from '@repo/lib';
 import { createUrl } from '@repo/lib';
 
 import { fetchWithAuth } from '@/lib/fetch';
@@ -39,5 +39,16 @@ export async function getCustomerAction({
     next: {
       tags: ['customers'],
     },
+  });
+}
+
+export async function createCustomerAction({
+  data,
+}: {
+  data: CreateCustomer;
+}) {
+  return await fetchWithAuth<Customer>('api/customers', {
+    method: 'POST',
+    body: data,
   });
 }
