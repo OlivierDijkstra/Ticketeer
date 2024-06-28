@@ -27,7 +27,6 @@ class MollieWebhookController extends Controller
         switch ($mollie->status) {
             case 'paid':
                 if ($payment) {
-                    // Determine the payments amountRefunded
                     $amountRefunded = $mollie->amountRefunded->value;
 
                     // if the amount is higher than 0 but not equal to the amount of the payment, it's partially refunded
