@@ -9,6 +9,7 @@ import type {
   User,
   Order,
   Payment,
+  Ticket,
 } from "@repo/lib";
 
 function generateString(length: number): string {
@@ -236,5 +237,20 @@ export function generateOrder(order: Partial<Order> = {}): Order {
     products: [generateProduct()],
     payments: [],
     ...order,
+  };
+}
+
+export function generateTicket(ticket: Partial<Ticket> = {}): Ticket {
+  return {
+    id: Math.floor(Math.random() * 9999) + 1,
+    order_id: generateString(10),
+    product_id: Math.floor(Math.random() * 9999) + 1,
+    unique_code: generateString(10),
+    is_used: false,
+    used_at: null,
+    created_at: "2021-06-01T00:00:00",
+    updated_at: "2021-06-01T00:00:00",
+    product: generateProduct(),
+    ...ticket,
   };
 }
