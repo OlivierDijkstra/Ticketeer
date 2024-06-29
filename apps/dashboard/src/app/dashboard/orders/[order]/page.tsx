@@ -3,6 +3,7 @@ import { Suspense } from 'react';
 import CustomerCard from '@/components/order/customer-card';
 import EventCard from '@/components/order/event-card';
 import OrderCard from '@/components/order/order-card';
+import TicketsCard from '@/components/order/tickets-card';
 import SkeletonGraph from '@/components/skeletons/skeleton-graph';
 import PaymentsTable from '@/components/tables/PaymentsTable/payments-table';
 import { getOrderAction } from '@/server/actions/orders';
@@ -21,23 +22,27 @@ export default async function Page({
   });
 
   return (
-    <div className='grid gap-4 md:grid-cols-3'>
-      <div className='row-start-2 space-y-4 md:col-span-2 md:row-start-1'>
-        <Suspense fallback={<SkeletonGraph />}>
-          <PaymentsTable
-            page={searchParams?.page_payments}
-            order_id={params?.order}
-          />
-        </Suspense>
+    <div className='space-y-4'>
+      <div className='flex flex-col md:gap-4 md:grid md:grid-cols-3'>
+        <div className='order-2 row-start-2 gap-4 flex flex-col-reverse space-y-4 md:order-none md:col-span-2 md:row-start-1 md:block'>
+          <Suspense fallback={<SkeletonGraph />}>
+            <PaymentsTable
+              page={searchParams?.page_payments}
+              order_id={params?.order}
+            />
+          </Suspense>
 
-        <div className='grid gap-4 lg:grid-cols-2'>
           <EventCard show={order.show} />
-
-          <CustomerCard customer={order.customer} />
         </div>
+
+        <OrderCard className='order-1 md:order-none' order={order} />
       </div>
 
-      <OrderCard order={order} />
+      <div className='grid lg:grid-cols-2 gap-4'>
+        <CustomerCard customer={order.customer} />
+
+        {order.tickets && <TicketsCard order={order} />}
+      </div>
     </div>
   );
 }
