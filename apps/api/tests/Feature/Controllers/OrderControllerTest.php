@@ -4,17 +4,19 @@ namespace Tests\Feature\Controllers;
 
 use App\Actions\CreatePaymentAction;
 use App\Jobs\HandleCustomerJob;
+use App\Jobs\GenerateTicketsJob;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\Show;
+use App\Notifications\TicketsNotification;
 use Illuminate\Support\Facades\Queue;
+use Illuminate\Support\Facades\Notification;
 use Mockery\MockInterface;
 use Tests\TestCase;
 
 class OrderControllerTest extends TestCase
 {
     protected $show;
-
     protected $products;
 
     public function setUp(): void
@@ -31,6 +33,8 @@ class OrderControllerTest extends TestCase
 
     public function test_store_order_successfully()
     {
+        Queue::fake();
+
         $requestData = [
             'show_id' => $this->show->id,
             'products' => $this->products->map(fn ($product) => ['id' => $product->id, 'amount' => 1])->toArray(),
@@ -72,7 +76,6 @@ class OrderControllerTest extends TestCase
 
         Queue::assertPushed(HandleCustomerJob::class);
     }
-
     public function test_store_order_handles_payment_exception()
     {
         $requestData = [
@@ -185,5 +188,40 @@ class OrderControllerTest extends TestCase
 
         $response->assertStatus(200);
         $this->assertDatabaseMissing('orders', ['id' => $order->id]);
+    }
+
+    public function test_store_order_with_no_products()
+    {
+        $requestData = [
+            'show_id' => $this->show->id,
+            'products' => [],
+            'redirect_url' => 'http://example.com',
+            'tos' => true,
+        ];
+
+        $response = $this->postJson(route('orders.store'), $requestData);
+
+        $response->assertStatus(422);
+    }
+
+    public function test_store_order_with_only_upsell_products()
+    {
+        $upsellProduct = Product::factory()->create(['is_upsell' => true]);
+        $this->show->products()->attach($upsellProduct->id, ['amount' => 10]);
+
+        $requestData = [
+            'show_id' => $this->show->id,
+            'products' => [['id' => $upsellProduct->id, 'amount' => 1]],
+            'redirect_url' => 'http://example.com',
+            'tos' => true,
+        ];
+
+        $response = $this->postJson(route('orders.store'), $requestData);
+
+        $response->assertStatus(201);
+        $this->assertDatabaseHas('orders', ['show_id' => $this->show->id]);
+
+        // Assert that no tickets were generated
+        $this->assertDatabaseMissing('tickets', ['order_id' => $response->json('order.id')]);
     }
 }
