@@ -99,7 +99,7 @@ export default function EventMediaZone({ event }: { event: Event }) {
       setMediaState(res.media);
 
       toast.success('Cover updated', {
-        description: 'Cover has been set successfully',
+        description: 'This image will be used as the cover for the event.',
       });
     } catch (error) {
       toast.error('Failed to set cover', {
