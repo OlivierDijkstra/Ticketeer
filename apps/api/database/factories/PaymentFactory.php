@@ -19,7 +19,7 @@ class PaymentFactory extends Factory
         return [
             'order_id' => \App\Models\Order::factory(),
             'transaction_id' => 'tr_' . fake()->regexify('[A-Za-z0-9]{16}'),
-            'status' => fake()->randomElement(['open', 'paid', 'failed', 'canceled', 'expired']),
+            'status' => 'open',
             'amount' => fake()->randomFloat(2, 10, 1000),
             'payment_method' => fake()->randomElement(['credit_card', 'paypal', 'bank_transfer']),
             'amount_refunded' => fake()->optional(0.1)->randomFloat(2, 0, 100),
