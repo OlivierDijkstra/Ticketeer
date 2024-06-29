@@ -60,11 +60,12 @@ class MollieWebhookController extends Controller
                 break;
             case 'canceled':
                 if ($payment) {
-                    $payment->delete();
+                    $payment->update([
+                        'status' => 'canceled',
+                    ]);
                 }
                 break;
             case 'expired':
-                // Delete the order
                 if ($payment) {
                     $payment->delete();
                 }
