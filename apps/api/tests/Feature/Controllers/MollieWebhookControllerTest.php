@@ -10,10 +10,14 @@ use App\Models\Payment;
 use Illuminate\Support\Facades\Bus;
 use Mockery;
 use Mollie\Api\MollieApiClient;
+use PHPUnit\Framework\Attributes\PreserveGlobalState;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use Tests\TestCase;
 
 class MollieWebhookControllerTest extends TestCase
 {
+    #[RunInSeparateProcess]
+    #[PreserveGlobalState(false)]
     public function test_webhook_handles_paid_status()
     {
         Bus::fake();
@@ -43,6 +47,8 @@ class MollieWebhookControllerTest extends TestCase
         ]);
     }
 
+    #[RunInSeparateProcess]
+    #[PreserveGlobalState(false)]
     public function test_webhook_handles_failed_status()
     {
         $transaction_id = 'tr_failed123';
@@ -65,6 +71,8 @@ class MollieWebhookControllerTest extends TestCase
         ]);
     }
 
+    #[RunInSeparateProcess]
+    #[PreserveGlobalState(false)]
     public function test_webhook_handles_canceled_status()
     {
         $transaction_id = 'tr_canceled456';
@@ -84,6 +92,8 @@ class MollieWebhookControllerTest extends TestCase
         $this->assertDatabaseMissing('payments', ['id' => $payment->id]);
     }
 
+    #[RunInSeparateProcess]
+    #[PreserveGlobalState(false)]
     public function test_webhook_handles_expired_status()
     {
         $transaction_id = 'tr_expired789';
@@ -103,6 +113,8 @@ class MollieWebhookControllerTest extends TestCase
         $this->assertDatabaseMissing('payments', ['id' => $payment->id]);
     }
 
+    #[RunInSeparateProcess]
+    #[PreserveGlobalState(false)]
     public function test_webhook_handles_partial_refund()
     {
         Bus::fake();
@@ -126,6 +138,8 @@ class MollieWebhookControllerTest extends TestCase
         Bus::assertDispatched(HandlePaymentPartiallyRefundedJob::class);
     }
 
+    #[RunInSeparateProcess]
+    #[PreserveGlobalState(false)]
     public function test_webhook_handles_full_refund()
     {
         Bus::fake();
@@ -148,6 +162,8 @@ class MollieWebhookControllerTest extends TestCase
         Bus::assertDispatched(HandlePaymentRefundedJob::class);
     }
 
+    #[RunInSeparateProcess]
+    #[PreserveGlobalState(false)]
     private function mockMolliePayment($transaction_id, $status, $amount, $refunded_amount = '0.00')
     {
         $mollieMock = Mockery::mock('overload:Mollie\Laravel\Facades\Mollie');
