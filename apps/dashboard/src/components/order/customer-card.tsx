@@ -55,7 +55,7 @@ export default function CustomerCard({ customer }: { customer?: Customer }) {
             <p className='text-muted-foreground'>
               No customer is linked to this order.
             </p>
-            
+
             <CreateCustomerDialog>
               <Button>Create customer</Button>
             </CreateCustomerDialog>

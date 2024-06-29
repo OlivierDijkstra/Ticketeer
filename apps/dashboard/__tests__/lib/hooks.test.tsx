@@ -1,5 +1,5 @@
 import { act, renderHook } from '@testing-library/react';
-import type { Mock} from 'vitest';
+import type { Mock } from 'vitest';
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 
 import * as colors from '@/lib/colors';

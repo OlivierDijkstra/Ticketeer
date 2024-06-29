@@ -34,18 +34,18 @@ export default function TicketsCard({ order }: { order: Order }) {
           <DropdownMenuTrigger asChild>
             <Button
               onClick={sendTicketNotification}
-              size="sm"
+              size='sm'
               variant='outline'
               className='shrink-0'
             >
-              <MoreHorizontal className='!size-3 mr-2' /> Options
+              <MoreHorizontal className='mr-2 !size-3' /> Options
             </Button>
           </DropdownMenuTrigger>
 
           <DropdownMenuContent align='end'>
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem onClick={sendTicketNotification}>
-              <TicketIcon className='!size-3 mr-2' /> Send Tickets
+              <TicketIcon className='mr-2 !size-3' /> Send Tickets
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

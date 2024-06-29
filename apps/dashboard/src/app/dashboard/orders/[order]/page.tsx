@@ -23,8 +23,8 @@ export default async function Page({
 
   return (
     <div className='space-y-4'>
-      <div className='flex flex-col md:gap-4 md:grid md:grid-cols-3'>
-        <div className='order-2 row-start-2 gap-4 flex flex-col-reverse space-y-4 md:order-none md:col-span-2 md:row-start-1 md:block'>
+      <div className='flex flex-col md:grid md:grid-cols-3 md:gap-4'>
+        <div className='order-2 row-start-2 flex flex-col-reverse gap-4 space-y-4 md:order-none md:col-span-2 md:row-start-1 md:block'>
           <Suspense fallback={<SkeletonGraph />}>
             <PaymentsTable
               page={searchParams?.page_payments}
@@ -38,7 +38,7 @@ export default async function Page({
         <OrderCard className='order-1 md:order-none' order={order} />
       </div>
 
-      <div className='grid lg:grid-cols-2 gap-4'>
+      <div className='grid gap-4 lg:grid-cols-2'>
         <CustomerCard customer={order.customer} />
 
         {order.tickets && <TicketsCard order={order} />}

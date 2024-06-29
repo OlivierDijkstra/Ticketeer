@@ -4,19 +4,17 @@ namespace Tests\Feature\Controllers;
 
 use App\Actions\CreatePaymentAction;
 use App\Jobs\HandleCustomerJob;
-use App\Jobs\GenerateTicketsJob;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\Show;
-use App\Notifications\TicketsNotification;
 use Illuminate\Support\Facades\Queue;
-use Illuminate\Support\Facades\Notification;
 use Mockery\MockInterface;
 use Tests\TestCase;
 
 class OrderControllerTest extends TestCase
 {
     protected $show;
+
     protected $products;
 
     public function setUp(): void
@@ -76,6 +74,7 @@ class OrderControllerTest extends TestCase
 
         Queue::assertPushed(HandleCustomerJob::class);
     }
+
     public function test_store_order_handles_payment_exception()
     {
         $requestData = [

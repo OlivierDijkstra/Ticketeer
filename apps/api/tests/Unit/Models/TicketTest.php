@@ -2,11 +2,11 @@
 
 namespace Tests\Unit\Models;
 
-use App\Models\Ticket;
+use App\Models\Event;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\Show;
-use App\Models\Event;
+use App\Models\Ticket;
 use Tests\TestCase;
 
 class TicketTest extends TestCase

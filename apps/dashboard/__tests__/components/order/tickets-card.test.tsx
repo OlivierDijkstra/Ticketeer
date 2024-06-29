@@ -1,5 +1,10 @@
 import type { Order } from '@repo/lib';
-import { generateOrder, generateProduct, generateShow, generateTicket } from '@repo/lib';
+import {
+  generateOrder,
+  generateProduct,
+  generateShow,
+  generateTicket,
+} from '@repo/lib';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { toast } from 'sonner';

@@ -58,11 +58,11 @@ class TicketsNotification extends Notification implements ShouldQueue
             ->save($file_path);
 
         return (new MailMessage)
-                    ->subject('Tickets for ' . $event->name)
-                    ->greeting('Hello ' . $notifiable->name)
-                    ->line('You have purchased ' . $this->order->quantity . ' tickets for ' . $event->name . ' on ' . $pretty_formatted_start_date . ' at ' . $pretty_formatted_time)
-                    ->line('The tickets have been attached to this email.')
-                    ->attach($file_path);
+            ->subject('Tickets for '.$event->name)
+            ->greeting('Hello '.$notifiable->name)
+            ->line('You have purchased '.$this->order->quantity.' tickets for '.$event->name.' on '.$pretty_formatted_start_date.' at '.$pretty_formatted_time)
+            ->line('The tickets have been attached to this email.')
+            ->attach($file_path);
     }
 
     /**

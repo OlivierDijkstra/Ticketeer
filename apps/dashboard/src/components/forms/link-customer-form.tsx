@@ -45,7 +45,7 @@ export default function LinkCustomerForm({
   const [customers, setCustomers] = useState<Customer[] | null>(null);
   const [customerSelectOpen, setCustomerSelectOpen] = useState<boolean>(false);
   const [customerSearch, setCustomerSearch] = useState<string>('');
- 
+
   const debouncedCustomerSearch = useDebounceCallback(setCustomerSearch, 500, {
     trailing: true,
   });

@@ -2,7 +2,6 @@
 
 namespace Tests\Feature\Controllers;
 
-use App\Models\Address;
 use App\Models\Customer;
 use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;

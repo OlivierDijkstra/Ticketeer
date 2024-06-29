@@ -18,7 +18,13 @@ import { DEFAULT_PRETTY_DATE_FORMAT } from '@/lib/constants';
 import { handleFieldUpdate } from '@/lib/utils';
 import { updateOrderAction } from '@/server/actions/orders';
 
-export default function OrderCard({ order, className }: { order: Order; className?: string }) {
+export default function OrderCard({
+  order,
+  className,
+}: {
+  order: Order;
+  className?: string;
+}) {
   const [description, setDescription] = useState(order.description);
   const [loading, setLoading] = useState(false);
 

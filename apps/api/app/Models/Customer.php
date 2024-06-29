@@ -13,7 +13,7 @@ use Spatie\Stats\StatsWriter;
 
 class Customer extends Model
 {
-    use HasFactory, HasUuids, Searchable, SoftDeletes, Notifiable;
+    use HasFactory, HasUuids, Notifiable, Searchable, SoftDeletes;
 
     protected $with = ['address'];
 

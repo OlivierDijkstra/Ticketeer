@@ -42,11 +42,7 @@ export async function getCustomerAction({
   });
 }
 
-export async function createCustomerAction({
-  data,
-}: {
-  data: CreateCustomer;
-}) {
+export async function createCustomerAction({ data }: { data: CreateCustomer }) {
   return await fetchWithAuth<Customer>('api/customers', {
     method: 'POST',
     body: data,

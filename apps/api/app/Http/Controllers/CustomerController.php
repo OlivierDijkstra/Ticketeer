@@ -40,6 +40,7 @@ class CustomerController extends Controller implements HasMiddleware
     public function store(StoreCustomerRequest $request)
     {
         $customer = Customer::create($request->validated());
+
         return $customer;
     }
 
@@ -57,6 +58,7 @@ class CustomerController extends Controller implements HasMiddleware
     public function update(UpdateCustomerRequest $request, Customer $customer)
     {
         $customer->update($request->validated());
+
         return $customer;
     }
 

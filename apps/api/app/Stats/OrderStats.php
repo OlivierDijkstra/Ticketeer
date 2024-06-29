@@ -2,6 +2,4 @@
 
 namespace App\Stats;
 
-class OrderStats extends BaseStats
-{
-}
+class OrderStats extends BaseStats {}

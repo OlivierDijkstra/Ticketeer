@@ -1,12 +1,6 @@
 'use client';
 
-import {
-  CalendarDays,
-  Home,
-  Shirt,
-  ShoppingCart,
-  Users,
-} from 'lucide-react';
+import { CalendarDays, Home, Shirt, ShoppingCart, Users } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 

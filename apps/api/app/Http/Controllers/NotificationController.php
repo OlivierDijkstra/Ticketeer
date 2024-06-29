@@ -14,8 +14,8 @@ class NotificationController extends Controller
     public function notifyTickets(TicketsNotificationRequest $request)
     {
         $order = Order::find($request->order_id);
-        
-        if (!$order->customer) {
+
+        if (! $order->customer) {
             return response()->json(['message' => 'Customer not found'], 404);
         }
 

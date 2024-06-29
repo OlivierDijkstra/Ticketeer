@@ -2,6 +2,4 @@
 
 namespace App\Stats;
 
-class RevenueStats extends BaseStats
-{
-}
+class RevenueStats extends BaseStats {}
