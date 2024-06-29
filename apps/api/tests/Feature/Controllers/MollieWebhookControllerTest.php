@@ -6,6 +6,7 @@ use App\Jobs\GenerateTicketsJob;
 use App\Jobs\HandlePaymentPaidJob;
 use App\Jobs\HandlePaymentPartiallyRefundedJob;
 use App\Jobs\HandlePaymentRefundedJob;
+use App\Jobs\RestoreProductStockJob;
 use App\Models\Payment;
 use Illuminate\Support\Facades\Bus;
 use Mockery;
@@ -51,6 +52,8 @@ class MollieWebhookControllerTest extends TestCase
     #[PreserveGlobalState(false)]
     public function test_webhook_handles_failed_status()
     {
+        Bus::fake();
+
         $transaction_id = 'tr_failed123';
         $amount = '15.00';
 
@@ -69,13 +72,17 @@ class MollieWebhookControllerTest extends TestCase
             'id' => $payment->id,
             'status' => 'failed',
         ]);
+
+        Bus::assertDispatched(RestoreProductStockJob::class);
     }
 
     #[RunInSeparateProcess]
     #[PreserveGlobalState(false)]
-    public function test_webhook_handles_canceled_status()
+    public function test_webhook_handles_cancelled_status()
     {
-        $transaction_id = 'tr_canceled456';
+        Bus::fake();
+
+        $transaction_id = 'tr_cancelled456';
         $amount = '20.00';
 
         $payment = Payment::factory()->create([
@@ -84,18 +91,25 @@ class MollieWebhookControllerTest extends TestCase
             'amount' => $amount,
         ]);
 
-        $this->mockMolliePayment($transaction_id, 'canceled', $amount);
+        $this->mockMolliePayment($transaction_id, 'cancelled', $amount);
 
         $response = $this->postJson('/webhooks/mollie', ['id' => $transaction_id]);
 
         $response->assertStatus(200);
-        $this->assertDatabaseMissing('payments', ['id' => $payment->id]);
+        $this->assertDatabaseHas('payments', [
+            'id' => $payment->id,
+            'status' => 'cancelled',
+        ]);
+
+        Bus::assertDispatched(RestoreProductStockJob::class);
     }
 
     #[RunInSeparateProcess]
     #[PreserveGlobalState(false)]
     public function test_webhook_handles_expired_status()
     {
+        Bus::fake();
+
         $transaction_id = 'tr_expired789';
         $amount = '25.00';
 
@@ -111,6 +125,8 @@ class MollieWebhookControllerTest extends TestCase
 
         $response->assertStatus(200);
         $this->assertDatabaseMissing('payments', ['id' => $payment->id]);
+
+        Bus::assertDispatched(RestoreProductStockJob::class);
     }
 
     #[RunInSeparateProcess]
@@ -159,11 +175,12 @@ class MollieWebhookControllerTest extends TestCase
 
         $response->assertStatus(200);
 
-        Bus::assertDispatched(HandlePaymentRefundedJob::class);
+        Bus::assertChained([
+            HandlePaymentRefundedJob::class,
+            RestoreProductStockJob::class,
+        ]);
     }
 
-    #[RunInSeparateProcess]
-    #[PreserveGlobalState(false)]
     private function mockMolliePayment($transaction_id, $status, $amount, $refunded_amount = '0.00')
     {
         $mollieMock = Mockery::mock('overload:Mollie\Laravel\Facades\Mollie');

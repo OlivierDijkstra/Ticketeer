@@ -6,6 +6,7 @@ use App\Jobs\GenerateTicketsJob;
 use App\Jobs\HandlePaymentPaidJob;
 use App\Jobs\HandlePaymentPartiallyRefundedJob;
 use App\Jobs\HandlePaymentRefundedJob;
+use App\Jobs\RestoreProductStockJob;
 use App\Models\Payment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Bus;
@@ -15,7 +16,7 @@ class MollieWebhookController extends Controller
 {
     public function __invoke(Request $request)
     {
-        if (! $request->has('id')) {
+        if (!$request->has('id')) {
             return;
         }
 
@@ -29,7 +30,7 @@ class MollieWebhookController extends Controller
                 if ($payment) {
                     $amountRefunded = $mollie->amountRefunded->value;
 
-                    // if the amount is higher than 0 but not equal to the amount of the payment, it's partially refunded
+                    //  if the amount is higher than 0 but not equal to the amount of the payment, it's partially refunded
                     if ($amountRefunded > 0 && $amountRefunded !== $mollie->amount->value) {
                         HandlePaymentPartiallyRefundedJob::dispatch($payment, $mollie);
                         break;
@@ -37,7 +38,11 @@ class MollieWebhookController extends Controller
 
                     // if the amountRefunded is equal to the amount of the payment, it's fully refunded
                     if ($amountRefunded === $mollie->amount->value) {
-                        HandlePaymentRefundedJob::dispatch($payment, $mollie);
+                        Bus::chain([
+                            new HandlePaymentRefundedJob($payment, $mollie),
+                            new RestoreProductStockJob($payment),
+                        ])->dispatch();
+                        
                         break;
                     }
 
@@ -56,18 +61,24 @@ class MollieWebhookController extends Controller
                     $payment->update([
                         'status' => 'failed',
                     ]);
+
+                    RestoreProductStockJob::dispatch($payment);
                 }
                 break;
-            case 'canceled':
+            case 'cancelled':
                 if ($payment) {
                     $payment->update([
-                        'status' => 'canceled',
+                        'status' => 'cancelled',
                     ]);
+
+                    RestoreProductStockJob::dispatch($payment);
                 }
                 break;
             case 'expired':
                 if ($payment) {
                     $payment->delete();
+
+                    RestoreProductStockJob::dispatch($payment);
                 }
                 break;
             default:
