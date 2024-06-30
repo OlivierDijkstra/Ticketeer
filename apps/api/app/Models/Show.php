@@ -19,6 +19,7 @@ class Show extends Model
         'enabled',
         'guests',
         'description',
+        'email_description',
     ];
 
     protected $casts = [
