@@ -80,6 +80,7 @@ export interface Show {
   enabled: boolean;
   guests: string[];
   description: string | null;
+  email_description: string | null;
   address: Address;
   products: Product[];
   deleted_at?: string | null; // Optional field
