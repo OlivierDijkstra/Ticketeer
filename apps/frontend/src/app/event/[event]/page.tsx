@@ -8,7 +8,7 @@ export default async function Page({ params }: { params: { event: string } }) {
 
   const showsUrl = createUrl('/api/shows/', {
     event_id: event.id,
-    'shows.enabled': true,
+    'enabled': true,
   });
 
   const shows = await fetchJson<Show[]>(showsUrl);
