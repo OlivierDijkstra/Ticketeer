@@ -75,7 +75,8 @@ export default function CreateCustomerForm({
               }
             );
           }
-
+          
+          callback && callback();
           return 'The customer has been successfully created';
         },
         error: 'Failed to create customer',
