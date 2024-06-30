@@ -1,5 +1,8 @@
 import type { Show } from '@repo/lib';
+import { PlusIcon } from 'lucide-react';
 
+import CreateCustomerDialog from '@/components/dialogs/create-customer-dialog';
+import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { DataTable } from '@/components/ui/data-table';
 import { getCustomersAction } from '@/server/actions/customers';
@@ -30,8 +33,14 @@ export default async function CustomersTable({
 
   return (
     <Card>
-      <CardHeader>
+      <CardHeader className='flex-row items-center justify-between gap-2'>
         <CardTitle>Customers</CardTitle>
+
+        <CreateCustomerDialog>
+          <Button>
+            <PlusIcon className='mr-2' /> Add Customer
+          </Button>
+        </CreateCustomerDialog>
       </CardHeader>
 
       <CardContent>
