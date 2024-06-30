@@ -32,6 +32,24 @@ export default function ShowTitleCard({ show }: { show: Show }) {
     });
   }
 
+  async function handleEmailDescriptionChange(value: string | number | null) {
+    await handleFieldUpdate<Show, typeof updateShowAction>({
+      updateAction: updateShowAction,
+      data: {
+        show_id: show.id,
+        data: {
+          email_description: value ? `${value}` : null,
+        },
+      },
+      setLoading,
+      setData: (data: Show) => {
+        setShowData(data);
+      },
+      successMessage: 'Show email description updated successfully',
+      errorMessage: 'Failed to update show email description',
+    });
+  }
+
   return (
     <Card
       className={cn([
@@ -56,16 +74,39 @@ export default function ShowTitleCard({ show }: { show: Show }) {
 
         <hr className='my-4' />
 
-        <p className='text-sm font-medium'>Description</p>
-        <EditableField
-          type='textarea'
-          minLength={0}
-          value={showData.description}
-          onChange={handleDescriptionChange}
-          className='text-sm text-muted-foreground'
-          tooltipText='Edit show description'
-          placeholder='No description set'
-        />
+        <div className='space-y-2'>
+          <div>
+            <p className='text-sm font-medium'>Description</p>
+            
+            <EditableField
+              type='textarea'
+              minLength={0}
+              value={showData.description}
+              onChange={handleDescriptionChange}
+              className='text-sm text-muted-foreground'
+              tooltipText='Edit show description'
+              placeholder='No description set'
+            />
+          </div>
+
+          <div>
+            <p className='text-sm font-medium'>Email Description</p>
+            <p className='text-xs text-muted-foreground mb-2'>
+              This description will be on the email confirmation sent to
+              customers.
+            </p>
+
+            <EditableField
+              type='textarea'
+              minLength={0}
+              value={showData.email_description}
+              onChange={handleEmailDescriptionChange}
+              className='text-sm text-muted-foreground'
+              tooltipText='Edit show email description'
+              placeholder='No email description set'
+            />
+          </div>
+        </div>
       </CardContent>
     </Card>
   );
