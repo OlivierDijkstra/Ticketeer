@@ -26,6 +26,7 @@ class UpdateShowRequest extends FormRequest
             'end' => ['nullable', 'date'],
             'enabled' => ['nullable', 'boolean'],
             'description' => ['nullable', 'string'],
+            'email_description' => ['nullable', 'string'],
             'guests' => ['nullable', 'array'],
             'guests.*' => ['string'],
         ];

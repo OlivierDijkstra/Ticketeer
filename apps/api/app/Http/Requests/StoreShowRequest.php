@@ -26,6 +26,7 @@ class StoreShowRequest extends FormRequest
             'end' => ['required', 'date'],
             'enabled' => ['required', 'boolean'],
             'description' => ['nullable', 'string'],
+            'email_description' => ['nullable', 'string'],
             'guests' => ['nullable', 'array'],
             'guests.*' => ['string'],
         ];
