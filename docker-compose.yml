@@ -124,11 +124,11 @@ services:
     extra_hosts:
       - "${API_DOMAIN:-api.test.local}:host-gateway"
     command: sh -c 'sh /start-nginx.sh'
-    # logging:
-    #   driver: "json-file"
-    #   options:
-    #     max-size: "10m"
-    #     max-file: "3"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
   redis:
     image: redis:alpine
