@@ -193,5 +193,9 @@ EXPOSE 8000
 
 RUN mv /tmp/vendor vendor
 
+# Copy the artisan file and set permissions
+COPY --chown=${USER}:${USER} apps/api/artisan ./artisan
+RUN chmod +x ./artisan
+
 # Set the entrypoint to the start-container script
 ENTRYPOINT ["start-container"]
