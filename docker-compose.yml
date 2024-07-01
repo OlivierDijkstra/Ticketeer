@@ -2,8 +2,7 @@ version: "3.9"
 
 # Common configurations for environment variables and networks
 x-common-environment-networks: &common-environment-networks
-  env_file:
-    - stack.env
+  env_file: stack.env
   networks:
     - app-network
 
