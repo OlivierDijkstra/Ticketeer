@@ -106,7 +106,7 @@ services:
     image: nginx:alpine
     volumes:
       - ./nginx.tmpl:/etc/nginx/conf.d/nginx.conf.template
-      - ./start-nginx.sh:/start-nginx.sh:ro   # Add the script to the container
+      - ./start-nginx.sh:/start-nginx.sh:ro
     ports:
       - "80:80"
     depends_on:
@@ -123,7 +123,7 @@ services:
       retries: 3
     extra_hosts:
       - "${API_DOMAIN:-api.test.local}:host-gateway"
-    command: sh -c '/start-nginx.sh'
+    command: sh -c 'chmod +x /start-nginx.sh && /start-nginx.sh'
     logging:
       driver: "json-file"
       options:
