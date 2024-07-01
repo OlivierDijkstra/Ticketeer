@@ -1,56 +1,25 @@
 version: "3.9"
-
-# Common configurations for networks
-x-common-networks: &common-networks
+# Common configurations for environment variables and networks
+x-common-environment-networks: &common-environment-networks
+  env_file: stack.env
   networks:
     - app-network
-
 # Common build configuration for services using the API Dockerfile
 x-api-service-build: &api-service-build
   build:
     context: .
     dockerfile: ./apps/api/Dockerfile
-
 # Common volume configuration for services using the API application code
 x-api-service-volumes: &api-service-volumes
   volumes:
     - ./apps/api:/var/www/html # Mounting as read-only for security
-
-# Common environment variables
-x-common-environment: &common-environment
-  DOMAIN: ${DOMAIN}
-  API_DOMAIN: ${API_DOMAIN}
-  APP_NAME: ${APP_NAME}
-  APP_ENV: ${APP_ENV}
-  APP_KEY: ${APP_KEY}
-  APP_DEBUG: ${APP_DEBUG}
-  APP_URL: ${APP_URL}
-  DB_CONNECTION: ${DB_CONNECTION}
-  DB_HOST: ${DB_HOST}
-  DB_PORT: ${DB_PORT}
-  DB_DATABASE: ${DB_DATABASE}
-  DB_USERNAME: ${DB_USERNAME}
-  DB_PASSWORD: ${DB_PASSWORD}
-  REDIS_HOST: ${REDIS_HOST}
-  REDIS_PASSWORD: ${REDIS_PASSWORD}
-  REDIS_PORT: ${REDIS_PORT}
-
 services:
   dashboard:
     build:
       context: .
       dockerfile: ./apps/dashboard/Dockerfile
     restart: always
-    <<: *common-networks
-    environment:
-      <<: *common-environment
-      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
-      NEXTAUTH_URL: ${NEXTAUTH_URL}
-      NEXT_PUBLIC_BACKEND_API_URL: ${NEXT_PUBLIC_BACKEND_API_URL}
-      NEXT_PUBLIC_REFERRER_URL: ${NEXT_PUBLIC_REFERRER_URL}
-      NEXT_PUBLIC_DEBUG: ${NEXT_PUBLIC_DEBUG}
-      NEXT_PUBLIC_LOCALE: ${NEXT_PUBLIC_LOCALE}
-      NEXT_PUBLIC_CURRENCY: ${NEXT_PUBLIC_CURRENCY}
+    <<: *common-environment-networks
     depends_on:
       - api
     ports:
@@ -64,9 +33,7 @@ services:
         max-file: "3"
 
   api:
-    <<: [*api-service-build, *common-networks, *api-service-volumes]
-    environment:
-      <<: *common-environment
+    <<: [*api-service-build, *common-environment-networks, *api-service-volumes]
     ports:
       - "8000:8000"
     depends_on:
@@ -91,17 +58,15 @@ services:
           memory: 512M
 
   horizon:
-    <<: [*api-service-build, *common-networks, *api-service-volumes]
+    <<: [*api-service-build, *common-environment-networks, *api-service-volumes]
     environment:
-      <<: *common-environment
       CONTAINER_MODE: horizon
     depends_on:
       - api
 
   worker:
-    <<: [*api-service-build, *common-networks, *api-service-volumes]
+    <<: [*api-service-build, *common-environment-networks, *api-service-volumes]
     environment:
-      <<: *common-environment
       CONTAINER_MODE: worker
       WORKER_COMMAND: "php /var/www/html/artisan queue:work --tries=3"
     depends_on:
@@ -113,11 +78,10 @@ services:
         limits:
           cpus: '0.50'
           memory: 256M
-
+          
   scout_worker:
-    <<: [*api-service-build, *common-networks, *api-service-volumes]
+    <<: [*api-service-build, *common-environment-networks, *api-service-volumes]
     environment:
-      <<: *common-environment
       CONTAINER_MODE: worker
       WORKER_COMMAND: "php /var/www/html/artisan queue:work --queue=scout --tries=3"
     depends_on:
@@ -131,9 +95,8 @@ services:
           memory: 256M
 
   scheduler:
-    <<: [*api-service-build, *common-networks, *api-service-volumes]
+    <<: [*api-service-build, *common-environment-networks, *api-service-volumes]
     environment:
-      <<: *common-environment
       CONTAINER_MODE: scheduler
     depends_on:
       - db
@@ -149,10 +112,10 @@ services:
     depends_on:
       - dashboard
       - api
-    <<: *common-networks
+    <<: *common-environment-networks
     environment:
-      - DOMAIN=${DOMAIN}
-      - API_DOMAIN=${API_DOMAIN}
+      - DOMAIN=${DOMAIN:-test.local}
+      - API_DOMAIN=${API_DOMAIN:-api.test.local}
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost"]
       interval: 30s
@@ -179,7 +142,7 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
-    <<: *common-networks
+    <<: *common-environment-networks
     logging:
       driver: "json-file"
       options:
@@ -207,7 +170,7 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
-    <<: *common-networks
+    <<: *common-environment-networks
     logging:
       driver: "json-file"
       options:
@@ -227,7 +190,7 @@ services:
       - typesense_data:/data
     ports:
       - "${TYPESENSE_PORT:-8108}:8108"
-    <<: *common-networks
+    <<: *common-environment-networks
     logging:
       driver: "json-file"
       options:
@@ -238,11 +201,10 @@ services:
         limits:
           cpus: '0.25'
           memory: 256M
-
+          
 volumes:
   mysql_data:
   typesense_data:
-
 networks:
   app-network:
     driver: bridge
