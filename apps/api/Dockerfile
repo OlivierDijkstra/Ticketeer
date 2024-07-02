@@ -138,17 +138,13 @@ RUN arch="$(apk --print-arch)" \
 RUN addgroup -g ${WWWGROUP} ${USER} \
     && adduser -D -h ${ROOT} -G ${USER} -u ${WWWUSER} -s /bin/sh ${USER}
 
-# Change ownership of the application directory
-RUN chown -R ${USER}:${USER} ${ROOT}
-
-# Switch to the non-root user
-USER ${USER}
-
 RUN mkdir -p /var/log/supervisor /var/run/supervisor \
     && chown -R ${USER}:${USER} ${ROOT} /var/log /var/run \
     && chmod -R a+rw ${ROOT} /var/log /var/run
 
 RUN cp ${PHP_INI_DIR}/php.ini-production ${PHP_INI_DIR}/php.ini
+
+USER ${USER}
 
 COPY --link --chown=${USER}:${USER} --from=vendor /usr/bin/composer /usr/bin/composer
 COPY --link --chown=${USER}:${USER} apps/api/composer.json apps/api/composer.lock ./
@@ -180,7 +176,6 @@ COPY --link --chown=${USER}:${USER} apps/api/deployment/octane/Swoole/supervisor
 COPY --link --chown=${USER}:${USER} apps/api/deployment/supervisord.*.conf /etc/supervisor/conf.d/
 COPY --link --chown=${USER}:${USER} apps/api/deployment/php.ini ${PHP_INI_DIR}/conf.d/99-octane.ini
 COPY --link --chown=${USER}:${USER} apps/api/deployment/start-container /usr/local/bin/start-container
-RUN chmod +x /usr/local/bin/start-container
 
 # Install PHP dependencies using Composer
 RUN composer install \
@@ -190,14 +185,13 @@ RUN composer install \
     --no-dev \
     && composer clear-cache
 
+# Make the start-container script executable
+RUN chmod +x /usr/local/bin/start-container
+
 # Expose port 8000 for the application
 EXPOSE ${API_PORT:-8000}
 
 RUN mv /tmp/vendor vendor
-
-# Copy the artisan file and set permissions
-COPY --chown=${USER}:${USER} apps/api/artisan ./artisan
-RUN chmod +x ./artisan
 
 # Set the entrypoint to the start-container script
 ENTRYPOINT ["start-container"]
