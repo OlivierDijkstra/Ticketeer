@@ -17,13 +17,13 @@ WORKDIR ${ROOT}
 
 RUN npm config set update-notifier false && npm set progress=false
 
-COPY --link package*.json ./
+COPY --link apps/api/package*.json ./
 
 RUN if [ -f $ROOT/package-lock.json ]; \
     then \
-    npm ci --loglevel=error --no-audit; \
+    npm ci --loglevel=error --no-audit --ignore-scripts; \
     else \
-    npm install --loglevel=error --no-audit; \
+    npm install --loglevel=error --no-audit --ignore-scripts; \
     fi
 
 COPY --link . .
