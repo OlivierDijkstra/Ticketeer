@@ -7,6 +7,10 @@ ARG NODE_VERSION=20-alpine
 # Base stage: Use Node.js to install Turbo globally
 ###########################################
 FROM node:${NODE_VERSION} AS base
+
+# Set the root directory
+ENV ROOT=/var/www/html
+
 # Install Turbo globally
 RUN yarn global add turbo
 
