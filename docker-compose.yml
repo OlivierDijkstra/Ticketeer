@@ -131,7 +131,6 @@ services:
         max-file: "3"
     volumes:
       - /etc/letsencrypt:/etc/letsencrypt:ro
-      - ./nginx.tmpl:/etc/nginx/conf.d/nginx.conf.template:ro
 
   redis:
     image: redis:alpine
