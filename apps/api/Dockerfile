@@ -189,8 +189,8 @@ RUN composer install \
 # Make the start-container script executable
 RUN chmod +x /usr/local/bin/start-container
 
-# Expose port 8000 for the application
-EXPOSE 8000
+# Expose port 8001 for the application
+EXPOSE 8001
 
 RUN mv /tmp/vendor vendor
 

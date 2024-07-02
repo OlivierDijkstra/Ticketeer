@@ -25,7 +25,25 @@ services:
     ports:
       - "3000:3000"
     extra_hosts:
-      - "${DOMAIN:-test.local}:host-gateway"
+      - "${DASHBOARD_DOMAIN:-dashboard.test.local}:host-gateway"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  frontend:
+    build:
+      context: .
+      dockerfile: ./apps/frontend/Dockerfile
+    restart: always
+    <<: *common-environment-networks
+    depends_on:
+      - api
+    ports:
+      - "3000:3000"
+    extra_hosts:
+      - "${FRONTEND_DOMAIN:-test.local}:host-gateway"
     logging:
       driver: "json-file"
       options:
@@ -84,7 +102,8 @@ services:
       - api
     <<: *common-environment-networks
     environment:
-      - DOMAIN=${DOMAIN:-test.local}
+      - FRONTEND_DOMAIN=${FRONTEND_DOMAIN:-test.local}
+      - DASHBOARD_DOMAIN=${DASHBOARD_DOMAIN:-dashboard.test.local}
       - API_DOMAIN=${API_DOMAIN:-api.test.local}
       - API_PORT=${API_PORT:-8000}
     healthcheck:
