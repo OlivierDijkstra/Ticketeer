@@ -120,7 +120,7 @@ RUN cp ${PHP_INI_DIR}/php.ini-production ${PHP_INI_DIR}/php.ini
 USER ${USER}
 
 COPY --link --chown=${USER}:${USER} --from=vendor /usr/bin/composer /usr/bin/composer
-COPY --link --chown=${USER}:${USER} composer.json composer.lock ./
+COPY --link --chown=${USER}:${USER} apps/api/composer.json apps/api/composer.lock ./
 
 RUN composer install \
     --no-dev \
@@ -130,7 +130,7 @@ RUN composer install \
     --no-scripts \
     --audit
 
-COPY --link --chown=${USER}:${USER} . .
+COPY --link --chown=${USER}:${USER} apps/api .
 COPY --link --chown=${USER}:${USER} --from=build ${ROOT}/public public
 
 RUN mkdir -p \
