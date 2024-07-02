@@ -1,5 +1,7 @@
 import PollOrder from '@/components/poll-order';
 
+export const dynamic = 'force-dynamic';
+
 export default function Page({
   searchParams,
 }: {
