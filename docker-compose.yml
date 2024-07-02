@@ -39,6 +39,7 @@ services:
     depends_on:
       - db
       - redis
+      - typesense
     healthcheck:
       test: ["CMD", "php", "artisan", "octane:status"]
       interval: 30s
@@ -69,8 +70,7 @@ services:
     environment:
       CONTAINER_MODE: scheduler
     depends_on:
-      - db
-      - redis
+      - api
 
   nginx:
     build:
