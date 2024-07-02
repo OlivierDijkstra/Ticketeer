@@ -37,7 +37,7 @@ RUN yarn install --frozen-lockfile --ignore-scripts
 ###########################################
 COPY --from=builder /app/out/full/ .
 # Run the build command for the API
-RUN yarn turbo run build --filter=api...
+RUN yarn turbo run build --filter=api... && mkdir -p /app/build && mv /app/apps/api/public/build /app/build
 
 ###########################################
 # Final stage: Use PHP to set up the final image
@@ -46,8 +46,9 @@ FROM php:${PHP_VERSION}-cli-alpine
 WORKDIR /var/www/html
 # Copy the built application from the installer stage
 COPY --from=installer /app ./
-# Copy build outputs from the build stage
-COPY --from=builder /app/apps/api/public/build ./public/build
+
+# Copy the built assets from the builder stage
+COPY --from=builder /app/build ./public/build
 
 # Copy public assets from the installer stage
 COPY --link --chown=${USER}:${USER} --from=installer /app/public public
