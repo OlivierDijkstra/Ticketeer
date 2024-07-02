@@ -41,7 +41,7 @@ services:
     depends_on:
       - api
     ports:
-      - "3000:3000"
+      - "3001:3000"
     extra_hosts:
       - "${FRONTEND_DOMAIN:-test.local}:host-gateway"
     logging:
