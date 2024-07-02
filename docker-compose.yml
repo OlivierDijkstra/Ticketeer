@@ -104,9 +104,9 @@ services:
 
   nginx:
     image: nginx:alpine
-    volumes:
-      - ./nginx.tmpl:/etc/nginx/conf.d/nginx.conf.template:ro
-      - ./start-nginx.sh:/start-nginx.sh:ro
+    # volumes:
+    #   - ./nginx.tmpl:/etc/nginx/conf.d/nginx.conf.template:ro
+    #   - ./start-nginx.sh:/start-nginx.sh:ro
     ports:
       - "80:80"
     depends_on:
