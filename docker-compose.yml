@@ -108,6 +108,7 @@ services:
       dockerfile: Dockerfile.nginx
     ports:
       - "80:80"
+      - "443:443"
     depends_on:
       - dashboard
       - api
@@ -131,7 +132,6 @@ services:
     volumes:
       - /etc/letsencrypt:/etc/letsencrypt:ro
       - ./nginx.tmpl:/etc/nginx/conf.d/nginx.conf.template:ro
-      - ./start-nginx.sh:/start-nginx.sh:ro
 
   redis:
     image: redis:alpine
