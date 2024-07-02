@@ -1,0 +1,6 @@
+[mysqld]
+mysql_native_password=ON
+#default-authentication-plugin=mysql_native_password
+general_log = 0
+general_log_file = /var/lib/mysql/general.log
+default_time_zone='+00:00'
