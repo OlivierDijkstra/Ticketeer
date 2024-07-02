@@ -1,31 +1,58 @@
-# Accepted values: 8.3 - 8.2
+# Set the PHP and Composer versions
 ARG PHP_VERSION=8.3
-
 ARG COMPOSER_VERSION=latest
-
-###########################################
-# Build frontend assets with Yarn
-###########################################
-
 ARG NODE_VERSION=20-alpine
 
-FROM node:${NODE_VERSION} AS build
-
-ENV ROOT=/var/www/html
-
-WORKDIR ${ROOT}
-
-RUN corepack enable && corepack prepare yarn@stable --activate
-
-COPY --link package.json yarn.lock ./
-
-RUN yarn install --frozen-lockfile
-
-COPY --link . .
-
-RUN yarn build
+###########################################
+# Base stage: Use Node.js to install Turbo globally
+###########################################
+FROM node:${NODE_VERSION} AS base
+# Install Turbo globally
+RUN yarn global add turbo
 
 ###########################################
+# Builder stage: Prune the project using Turbo
+###########################################
+FROM base AS builder
+WORKDIR /app
+# Copy all files to the working directory
+COPY . .
+# Prune the project to optimize the build process
+RUN turbo prune api --docker
+
+###########################################
+# Installer stage: Install dependencies
+###########################################
+FROM base AS installer
+WORKDIR /app
+# Copy pruned package.json and yarn.lock from the builder stage
+COPY --from=builder /app/out/json/ .
+COPY --from=builder /app/out/yarn.lock ./yarn.lock
+# Install dependencies using the frozen lockfile
+RUN yarn install --frozen-lockfile --ignore-scripts
+
+###########################################
+# Build stage: Build the project
+###########################################
+COPY --from=builder /app/out/full/ .
+# Run the build command for the API
+RUN yarn turbo run build --filter=api...
+
+###########################################
+# Final stage: Use PHP to set up the final image
+###########################################
+FROM php:${PHP_VERSION}-cli-alpine
+WORKDIR /var/www/html
+# Copy the built application from the installer stage
+COPY --from=installer /app ./
+
+# Copy public assets from the installer stage
+COPY --link --chown=octane:octane --from=installer /app/public public
+
+# Ensure utilities.sh is copied before appending to .bashrc
+COPY --link --chown=octane:octane apps/api/deployment/utilities.sh /tmp/utilities.sh
+# Append utilities.sh to .bashrc
+RUN cat /tmp/utilities.sh >> ~/.bashrc
 
 FROM composer:${COMPOSER_VERSION} AS vendor
 
@@ -120,7 +147,7 @@ RUN cp ${PHP_INI_DIR}/php.ini-production ${PHP_INI_DIR}/php.ini
 USER ${USER}
 
 COPY --link --chown=${USER}:${USER} --from=vendor /usr/bin/composer /usr/bin/composer
-COPY --link --chown=${USER}:${USER} composer.json composer.lock ./
+COPY --link --chown=${USER}:${USER} apps/api/composer.json apps/api/composer.lock ./
 
 RUN composer install \
     --no-dev \
@@ -130,8 +157,11 @@ RUN composer install \
     --no-scripts \
     --audit
 
-COPY --link --chown=${USER}:${USER} . .
-COPY --link --chown=${USER}:${USER} --from=build ${ROOT}/public public
+# Move the vendor directory to a tmp directory
+RUN mv vendor /tmp/vendor
+
+COPY --link --chown=${USER}:${USER} apps/api ./
+# COPY --link --chown=${USER}:${USER} --from=build ${ROOT}/public public
 
 RUN mkdir -p \
     storage/framework/sessions \
@@ -147,6 +177,7 @@ COPY --link --chown=${USER}:${USER} apps/api/deployment/supervisord.*.conf /etc/
 COPY --link --chown=${USER}:${USER} apps/api/deployment/php.ini ${PHP_INI_DIR}/conf.d/99-octane.ini
 COPY --link --chown=${USER}:${USER} apps/api/deployment/start-container /usr/local/bin/start-container
 
+# Install PHP dependencies using Composer
 RUN composer install \
     --classmap-authoritative \
     --no-interaction \
@@ -154,12 +185,13 @@ RUN composer install \
     --no-dev \
     && composer clear-cache
 
+# Make the start-container script executable
 RUN chmod +x /usr/local/bin/start-container
 
-RUN cat apps/api/deployment/utilities.sh >> ~/.bashrc
+# Expose port 8000 for the application
+EXPOSE ${API_PORT:-8000}
 
-EXPOSE 8000
+RUN mv /tmp/vendor vendor
 
+# Set the entrypoint to the start-container script
 ENTRYPOINT ["start-container"]
-
-HEALTHCHECK --start-period=5s --interval=2s --timeout=5s --retries=8 CMD php artisan octane:status || exit 1
