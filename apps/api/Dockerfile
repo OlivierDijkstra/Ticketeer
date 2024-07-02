@@ -47,10 +47,10 @@ WORKDIR /var/www/html
 COPY --from=installer /app ./
 
 # Copy public assets from the installer stage
-COPY --link --chown=${USER}:${USER} --from=installer /app/public public
+COPY --link --chown=octane:octane --from=installer /app/public public
 
 # Ensure utilities.sh is copied before appending to .bashrc
-COPY --link --chown=${USER}:${USER} apps/api/deployment/utilities.sh /tmp/utilities.sh
+COPY --link --chown=octane:octane apps/api/deployment/utilities.sh /tmp/utilities.sh
 # Append utilities.sh to .bashrc
 RUN cat /tmp/utilities.sh >> ~/.bashrc
 
@@ -194,4 +194,4 @@ EXPOSE ${API_PORT:-8000}
 RUN mv /tmp/vendor vendor
 
 # Set the entrypoint to the start-container script
-# ENTRYPOINT ["start-container"]
+ENTRYPOINT ["start-container"]
