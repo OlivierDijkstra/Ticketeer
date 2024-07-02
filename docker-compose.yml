@@ -64,36 +64,6 @@ services:
     depends_on:
       - api
 
-  worker:
-    <<: [*api-service-build, *common-environment-networks]
-    environment:
-      CONTAINER_MODE: worker
-      WORKER_COMMAND: "php /var/www/html/artisan queue:work --tries=3"
-    depends_on:
-      - db
-      - redis
-    deploy:
-      # replicas: 3
-      resources:
-        limits:
-          cpus: '0.50'
-          memory: 256M
-          
-  scout_worker:
-    <<: [*api-service-build, *common-environment-networks]
-    environment:
-      CONTAINER_MODE: worker
-      WORKER_COMMAND: "php /var/www/html/artisan queue:work --queue=scout --tries=3"
-    depends_on:
-      - db
-      - redis
-    deploy:
-      # replicas: 2
-      resources:
-        limits:
-          cpus: '0.50'
-          memory: 256M
-
   scheduler:
     <<: [*api-service-build, *common-environment-networks]
     environment:
