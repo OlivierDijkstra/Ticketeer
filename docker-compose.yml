@@ -103,10 +103,9 @@ services:
   #     - redis
 
   nginx:
-    image: nginx:alpine
-    # volumes:
-    #   - ./nginx.tmpl:/etc/nginx/conf.d/nginx.conf.template:ro
-    #   - ./start-nginx.sh:/start-nginx.sh:ro
+    build:
+      context: .
+      dockerfile: Dockerfile.nginx
     ports:
       - "80:80"
     depends_on:
@@ -123,7 +122,6 @@ services:
       retries: 3
     extra_hosts:
       - "${API_DOMAIN:-api.test.local}:host-gateway"
-    command: sh -c 'sh /start-nginx.sh'
     logging:
       driver: "json-file"
       options:
