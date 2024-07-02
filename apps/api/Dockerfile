@@ -161,7 +161,7 @@ RUN composer install \
 
 RUN chmod +x /usr/local/bin/start-container
 
-RUN cat apps/api/deployment/utilities.sh >> ~/.bashrc
+# RUN cat apps/api/deployment/utilities.sh >> ~/.bashrc
 
 EXPOSE 8000
 
