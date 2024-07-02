@@ -28,7 +28,7 @@ RUN if [ -f $ROOT/package-lock.json ]; \
 
 COPY --link . .
 
-RUN npm run build
+# RUN npm run build
 
 ###########################################
 
