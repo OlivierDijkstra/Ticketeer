@@ -17,7 +17,7 @@ WORKDIR ${ROOT}
 
 RUN corepack enable && corepack prepare yarn@stable --activate
 
-COPY --link package.json yarn.lock ./
+COPY --link apps/api/package.json apps/api/yarn.lock ./
 
 RUN yarn install --frozen-lockfile
 
