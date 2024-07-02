@@ -164,7 +164,7 @@ RUN composer install \
 RUN mv vendor /tmp/vendor
 
 COPY --link --chown=${USER}:${USER} apps/api ./
-# COPY --link --chown=${USER}:${USER} --from=build ${ROOT}/public public
+COPY --link --chown=${USER}:${USER} --from=build ${ROOT}/public public
 
 RUN mkdir -p \
     storage/framework/sessions \
