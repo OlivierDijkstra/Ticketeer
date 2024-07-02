@@ -4,6 +4,11 @@ x-common-environment-networks: &common-environment-networks
   env_file: stack.env
   networks:
     - app-network
+# Common build configuration for services using the API Dockerfile
+x-api-service-build: &api-service-build
+  build:
+    context: .
+    dockerfile: ./apps/api/Dockerfile
 # Common volume configuration for services using the API application code
 x-api-service-volumes: &api-service-volumes
   volumes:
@@ -28,10 +33,7 @@ services:
         max-file: "3"
 
   api:
-    <<: [*common-environment-networks]
-    build:
-      context: .
-      dockerfile: ./apps/api/Dockerfile
+    <<: [*api-service-build, *common-environment-networks]
     ports:
       - "${API_PORT:-8000}:8000"    
     depends_on:
@@ -56,16 +58,14 @@ services:
           memory: 512M
 
   horizon:
-    <<: *common-environment-networks
-    image: api
+    <<: [*api-service-build, *common-environment-networks]
     environment:
       CONTAINER_MODE: horizon
     depends_on:
       - api
 
   worker:
-    <<: *common-environment-networks
-    image: api
+    <<: [*api-service-build, *common-environment-networks]
     environment:
       CONTAINER_MODE: worker
       WORKER_COMMAND: "php /var/www/html/artisan queue:work --tries=3"
@@ -73,15 +73,14 @@ services:
       - db
       - redis
     deploy:
-      replicas: 3
+      # replicas: 3
       resources:
         limits:
           cpus: '0.50'
           memory: 256M
-
+          
   scout_worker:
-    <<: *common-environment-networks
-    image: api
+    <<: [*api-service-build, *common-environment-networks]
     environment:
       CONTAINER_MODE: worker
       WORKER_COMMAND: "php /var/www/html/artisan queue:work --queue=scout --tries=3"
@@ -89,15 +88,14 @@ services:
       - db
       - redis
     deploy:
-      replicas: 2
+      # replicas: 2
       resources:
         limits:
           cpus: '0.50'
           memory: 256M
 
   scheduler:
-    <<: *common-environment-networks
-    image: api
+    <<: [*api-service-build, *common-environment-networks]
     environment:
       CONTAINER_MODE: scheduler
     depends_on:
