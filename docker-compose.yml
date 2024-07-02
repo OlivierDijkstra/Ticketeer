@@ -4,11 +4,6 @@ x-common-environment-networks: &common-environment-networks
   env_file: stack.env
   networks:
     - app-network
-# Common build configuration for services using the API Dockerfile
-x-api-service-build: &api-service-build
-  build:
-    context: .
-    dockerfile: ./apps/api/Dockerfile
 # Common volume configuration for services using the API application code
 x-api-service-volumes: &api-service-volumes
   volumes:
@@ -33,7 +28,10 @@ services:
         max-file: "3"
 
   api:
-    <<: [*api-service-build, *common-environment-networks]
+    <<: [*common-environment-networks]
+    build:
+      context: .
+      dockerfile: ./apps/api/Dockerfile
     ports:
       - "${API_PORT:-8000}:8000"    
     depends_on:
@@ -57,50 +55,54 @@ services:
           cpus: '0.50'
           memory: 512M
 
-  # horizon:
-  #   <<: [*api-service-build, *common-environment-networks, *api-service-volumes]
-  #   environment:
-  #     CONTAINER_MODE: horizon
-  #   depends_on:
-  #     - api
+  horizon:
+    <<: *common-environment-networks
+    image: api
+    environment:
+      CONTAINER_MODE: horizon
+    depends_on:
+      - api
 
-  # worker:
-  #   <<: [*api-service-build, *common-environment-networks, *api-service-volumes]
-  #   environment:
-  #     CONTAINER_MODE: worker
-  #     WORKER_COMMAND: "php /var/www/html/artisan queue:work --tries=3"
-  #   depends_on:
-  #     - db
-  #     - redis
-  #   deploy:
-  #     replicas: 3 # Scaling the worker service
-  #     resources:
-  #       limits:
-  #         cpus: '0.50'
-  #         memory: 256M
-          
-  # scout_worker:
-  #   <<: [*api-service-build, *common-environment-networks, *api-service-volumes]
-  #   environment:
-  #     CONTAINER_MODE: worker
-  #     WORKER_COMMAND: "php /var/www/html/artisan queue:work --queue=scout --tries=3"
-  #   depends_on:
-  #     - db
-  #     - redis
-  #   deploy:
-  #     replicas: 2 # Scaling the scout_worker service
-  #     resources:
-  #       limits:
-  #         cpus: '0.50'
-  #         memory: 256M
+  worker:
+    <<: *common-environment-networks
+    image: api
+    environment:
+      CONTAINER_MODE: worker
+      WORKER_COMMAND: "php /var/www/html/artisan queue:work --tries=3"
+    depends_on:
+      - db
+      - redis
+    deploy:
+      replicas: 3
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 256M
 
-  # scheduler:
-  #   <<: [*api-service-build, *common-environment-networks, *api-service-volumes]
-  #   environment:
-  #     CONTAINER_MODE: scheduler
-  #   depends_on:
-  #     - db
-  #     - redis
+  scout_worker:
+    <<: *common-environment-networks
+    image: api
+    environment:
+      CONTAINER_MODE: worker
+      WORKER_COMMAND: "php /var/www/html/artisan queue:work --queue=scout --tries=3"
+    depends_on:
+      - db
+      - redis
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 256M
+
+  scheduler:
+    <<: *common-environment-networks
+    image: api
+    environment:
+      CONTAINER_MODE: scheduler
+    depends_on:
+      - db
+      - redis
 
   nginx:
     build:
