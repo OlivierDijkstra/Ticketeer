@@ -5,7 +5,7 @@ set -e
 echo "Current user: $(id)"
 echo "Current directory: $(pwd)"
 echo "Directory contents:"
-ls -la
+ls -a
 
 container_mode=${CONTAINER_MODE:-"http"}
 octane_server=${OCTANE_SERVER}
