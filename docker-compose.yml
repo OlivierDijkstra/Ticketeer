@@ -34,17 +34,13 @@ services:
 
   api:
     <<: [*api-service-build, *common-environment-networks]
-    volumes:
-      - ./apps/api:/var/www/html:cached
-      - /var/www/html/vendor
-      - /var/www/html/node_modules
     ports:
       - "${API_PORT:-8000}:8000"
     depends_on:
       - db
       - redis
     healthcheck:
-      test: ["CMD", "php", "/var/www/html/artisan", "octane:status"]
+      test: ["CMD", "php", "artisan", "octane:status"]
       interval: 30s
       timeout: 10s
       retries: 3
