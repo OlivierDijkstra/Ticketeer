@@ -15,15 +15,20 @@ ENV ROOT=/var/www/html
 
 WORKDIR ${ROOT}
 
-RUN corepack enable && corepack prepare yarn@stable --activate
+RUN npm config set update-notifier false && npm set progress=false
 
-COPY --link apps/api/package.json yarn.lock ./
+COPY --link package*.json ./
 
-RUN yarn install --frozen-lockfile --ignore-scripts
+RUN if [ -f $ROOT/package-lock.json ]; \
+    then \
+    npm ci --loglevel=error --no-audit; \
+    else \
+    npm install --loglevel=error --no-audit; \
+    fi
 
 COPY --link . .
 
-RUN yarn build
+RUN npm run build
 
 ###########################################
 
