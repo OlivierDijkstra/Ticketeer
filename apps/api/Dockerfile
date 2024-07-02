@@ -19,7 +19,7 @@ RUN corepack enable && corepack prepare yarn@stable --activate
 
 COPY --link apps/api/package.json yarn.lock ./
 
-RUN yarn install --frozen-lockfile
+RUN yarn install --frozen-lockfile --ignore-scripts
 
 COPY --link . .
 
