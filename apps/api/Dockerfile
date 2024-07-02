@@ -8,9 +8,6 @@ ARG NODE_VERSION=20-alpine
 ###########################################
 FROM node:${NODE_VERSION} AS base
 
-# Set the root directory
-ENV ROOT=/var/www/html
-
 # Install Turbo globally
 RUN yarn global add turbo
 
