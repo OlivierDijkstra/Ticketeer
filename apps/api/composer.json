@@ -10,6 +10,7 @@
     "require": {
         "php": "^8.2",
         "bacon/bacon-qr-code": "^3.0",
+        "fakerphp/faker": "^1.23",
         "laravel/fortify": "^1.21",
         "laravel/framework": "^11.0",
         "laravel/horizon": "^5.24",
@@ -30,7 +31,6 @@
         "typesense/typesense-php": "^4.9"
     },
     "require-dev": {
-        "fakerphp/faker": "^1.23",
         "laravel/pint": "^1.16",
         "laravel/sail": "^1.26",
         "mockery/mockery": "^1.6",
