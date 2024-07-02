@@ -35,9 +35,7 @@ services:
   api:
     <<: [*api-service-build, *common-environment-networks]
     ports:
-      - "${API_PORT:-8000}:8000"
-    environment:
-      ROOT: /var/www/html
+      - "${API_PORT:-8000}:8000"    
     depends_on:
       - db
       - redis
