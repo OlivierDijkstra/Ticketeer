@@ -46,8 +46,8 @@ FROM php:${PHP_VERSION}-cli-alpine
 WORKDIR /var/www/html
 # Copy the built application from the installer stage
 COPY --from=installer /app ./
-# # Copy build outputs from the build stage
-# COPY --from=builder /app/apps/api/public/build ./public/build
+# Copy build outputs from the build stage
+COPY --from=builder /app/apps/api/public/build ./public/build
 
 # Copy public assets from the installer stage
 COPY --link --chown=${USER}:${USER} --from=installer /app/public public
@@ -164,7 +164,7 @@ RUN composer install \
 RUN mv vendor /tmp/vendor
 
 COPY --link --chown=${USER}:${USER} apps/api ./
-COPY --link --chown=${USER}:${USER} --from=builder ${ROOT}/public public
+# COPY --link --chown=${USER}:${USER} --from=builder ${ROOT}/public public
 
 RUN mkdir -p \
     storage/framework/sessions \
