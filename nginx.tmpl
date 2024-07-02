@@ -5,7 +5,15 @@ events {
 http {
     server {
         listen 80;
+        listen 443 ssl;
         server_name ${DOMAIN};
+
+        ssl_certificate /etc/letsencrypt/live/${DOMAIN}/fullchain.pem;
+        ssl_certificate_key /etc/letsencrypt/live/${DOMAIN}/privkey.pem;
+
+        if ($scheme != "https") {
+            return 301 https://$host$request_uri;
+        }
 
         location / {
             proxy_pass http://dashboard:3000;
@@ -18,7 +26,15 @@ http {
 
     server {
         listen 80;
+        listen 443 ssl;
         server_name ${API_DOMAIN};
+
+        ssl_certificate /etc/letsencrypt/live/${API_DOMAIN}/fullchain.pem;
+        ssl_certificate_key /etc/letsencrypt/live/${API_DOMAIN}/privkey.pem;
+
+        if ($scheme != "https") {
+            return 301 https://$host$request_uri;
+        }
 
         location / {
             proxy_pass http://api:${API_PORT:-8000};
