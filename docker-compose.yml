@@ -158,7 +158,7 @@ services:
 
   db:
     image: mysql:8.4
-    command: --default-authentication-plugin=mysql_native_password
+    command: --mysql-native-password=ON
     environment:
       MYSQL_DATABASE: ${MYSQL_DATABASE}
       MYSQL_USER: ${MYSQL_USER}
