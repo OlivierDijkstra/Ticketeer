@@ -1,7 +1,10 @@
 #!/usr/bin/env sh
 set -e
 
-pwd
+# Add these lines at the beginning of the script
+echo "Current user: $(id)"
+echo "Current directory: $(pwd)"
+echo "Directory contents:"
 ls -la
 
 container_mode=${CONTAINER_MODE:-"http"}
@@ -9,8 +12,6 @@ octane_server=${OCTANE_SERVER}
 running_migrations_and_seeders=${RUNNING_MIGRATIONS_AND_SEEDERS:-"false"}
 
 echo "Container mode: $container_mode"
-
-echo "WEPAWPEAPWEPWAEPWAE"
 
 initialStuff() {
     php artisan storage:link; \
