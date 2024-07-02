@@ -136,7 +136,7 @@ RUN composer install \
     --audit
 
 COPY --link --chown=${USER}:${USER} apps/api .
-COPY --link --chown=${USER}:${USER} --from=build ${ROOT}/public public
+# COPY --link --chown=${USER}:${USER} --from=build ${ROOT}/public public
 
 RUN mkdir -p \
     storage/framework/sessions \
