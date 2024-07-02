@@ -7,6 +7,13 @@ echo "Current directory: $(pwd)"
 echo "Directory contents:"
 ls -la
 
+# Set default values for WWWUSER and WWWGROUP if not set
+WWWUSER=${WWWUSER:-1000}
+WWWGROUP=${WWWGROUP:-1000}
+
+# Ensure the USER environment variable is set
+USER=${USER:-octane}
+
 container_mode=${CONTAINER_MODE:-"http"}
 octane_server=${OCTANE_SERVER}
 running_migrations_and_seeders=${RUNNING_MIGRATIONS_AND_SEEDERS:-"false"}

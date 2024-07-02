@@ -34,7 +34,10 @@ services:
 
   api:
     <<: [*api-service-build, *common-environment-networks, *api-service-volumes]
-    user: "${WWWUSER}:${WWWGROUP}"  # Add this line
+    user: "${WWWUSER:-1000}:${WWWGROUP:-1000}"
+    environment:
+      WWWUSER: ${WWWUSER:-1000}
+      WWWGROUP: ${WWWGROUP:-1000}
     ports:
       - "${API_PORT:-8000}:8000"
     depends_on:
