@@ -194,4 +194,4 @@ EXPOSE ${API_PORT:-8000}
 RUN mv /tmp/vendor vendor
 
 # Set the entrypoint to the start-container script
-ENTRYPOINT ["start-container"]
+# ENTRYPOINT ["start-container"]
