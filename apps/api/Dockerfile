@@ -47,7 +47,7 @@ WORKDIR /var/www/html
 # Copy the built application from the installer stage
 COPY --from=installer /app ./
 # Copy build outputs from the build stage
-COPY --from=builder /app/apps/api/public/build ./public/build
+# COPY --from=builder /app/apps/api/public/build ./public/build
 
 # Copy public assets from the installer stage
 COPY --link --chown=${USER}:${USER} --from=installer /app/public public
