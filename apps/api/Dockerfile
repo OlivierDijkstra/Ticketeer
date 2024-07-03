@@ -40,10 +40,42 @@ COPY --from=builder /app/out/full/ .
 RUN yarn build
 
 ###########################################
+# Node.js stage: Install Node.js and npm
+###########################################
+FROM node:${NODE_VERSION} AS node
+
+###########################################
 # Final stage: Use PHP to set up the final image
 ###########################################
 FROM php:${PHP_VERSION}-cli-alpine
 WORKDIR /var/www/html
+
+# Install dependencies for Browsershot and other tools
+RUN apk update && apk add --no-cache \
+    chromium \
+    nss \
+    freetype \
+    harfbuzz \
+    ca-certificates \
+    ttf-freefont \
+    nodejs \
+    npm \
+    # ... (your existing packages)
+    supervisor \
+    libsodium-dev
+
+# Copy Node.js and npm from the node stage
+COPY --from=node /usr/local/bin/node /usr/local/bin/
+COPY --from=node /usr/local/lib/node_modules /usr/local/lib/node_modules
+COPY --from=node /usr/local/bin/npm /usr/local/bin/
+
+# Create a symlink for node
+RUN ln -s /usr/local/bin/node /usr/local/bin/nodejs
+
+# Set environment variables for Browsershot
+ENV CHROME_BIN=/usr/bin/chromium-browser \
+    CHROME_PATH=/usr/lib/chromium/
+
 # Copy the built application from the installer stage
 COPY --from=installer /app ./
 
@@ -188,13 +220,6 @@ RUN composer install \
 
 # Make the start-container script executable
 RUN chmod +x /usr/local/bin/start-container
-
-RUN curl -sL https://deb.nodesource.com/setup_12.x -o nodesource_setup.sh
-RUN bash nodesource_setup.sh
-RUN apt-get install nodejs -y
-RUN npm install npm@6 -g
-RUN command -v node
-RUN command -v npm
 
 # Expose port 8001 for the application
 EXPOSE 8001
