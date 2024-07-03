@@ -90,6 +90,8 @@ ADD --chmod=0755 https://github.com/mlocati/docker-php-extension-installer/relea
 RUN apk update; \
     apk upgrade; \
     apk add --no-cache \
+    nodejs \
+	npm \
     curl \
     wget \
     nano \
@@ -121,16 +123,6 @@ RUN apk update; \
     swoole \
     && docker-php-source delete \
     && rm -rf /var/cache/apk/* /tmp/* /var/tmp/*
-
-ENV NODE_VERSION=16.13.0
-RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
-ENV NVM_DIR=/root/.nvm
-RUN . "$NVM_DIR/nvm.sh" && nvm install ${NODE_VERSION}
-RUN . "$NVM_DIR/nvm.sh" && nvm use v${NODE_VERSION}
-RUN . "$NVM_DIR/nvm.sh" && nvm alias default v${NODE_VERSION}
-ENV PATH="/root/.nvm/versions/node/v${NODE_VERSION}/bin/:${PATH}"
-RUN node --version
-RUN npm --version
 
 RUN arch="$(apk --print-arch)" \
     && case "$arch" in \
