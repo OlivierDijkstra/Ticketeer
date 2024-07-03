@@ -50,6 +50,9 @@ COPY --from=installer /app ./
 # Copy the built assets from the builder stage
 COPY --from=builder /app/build ./public/build
 
+# # Copy public assets from the builder stage (if they exist)
+# COPY --from=builder /app/public ./public
+
 # Copy public assets from the installer stage
 COPY --link --chown=${USER}:${USER} --from=installer /app/public public
 
@@ -165,7 +168,7 @@ RUN composer install \
 RUN mv vendor /tmp/vendor
 
 COPY --link --chown=${USER}:${USER} apps/api ./
-COPY --link --chown=${USER}:${USER} --from=builder ${ROOT}/public public
+# COPY --link --chown=${USER}:${USER} --from=builder ${ROOT}/public public
 
 RUN mkdir -p \
     storage/framework/sessions \
