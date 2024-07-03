@@ -98,8 +98,6 @@ RUN apk update; \
     ca-certificates \
     supervisor \
     libsodium-dev \
-    nodejs \
-    npm \
     # Install PHP extensions
     && install-php-extensions \
     bz2 \
@@ -123,6 +121,13 @@ RUN apk update; \
     swoole \
     && docker-php-source delete \
     && rm -rf /var/cache/apk/* /tmp/* /var/tmp/*
+
+RUN apt-get update && apt-get install -y \
+    software-properties-common \
+    npm
+RUN npm install npm@latest -g && \
+    npm install n -g && \
+    n latest
 
 RUN arch="$(apk --print-arch)" \
     && case "$arch" in \
