@@ -37,7 +37,7 @@ RUN yarn install --frozen-lockfile --ignore-scripts
 ###########################################
 COPY --from=builder /app/out/full/ .
 # Run the build command for the API
-RUN yarn turbo run build --filter=api... && mkdir -p /app/build && mv /app/apps/api/public/build /app/build
+RUN yarn build
 
 ###########################################
 # Final stage: Use PHP to set up the final image
@@ -165,7 +165,7 @@ RUN composer install \
 RUN mv vendor /tmp/vendor
 
 COPY --link --chown=${USER}:${USER} apps/api ./
-COPY --link --chown=${USER}:${USER} --from=builder apps/api/public/build ./public/build
+COPY --link --chown=${USER}:${USER} --from=builder /app/apps/api/public/build ./public/build
 
 RUN mkdir -p \
     storage/framework/sessions \
