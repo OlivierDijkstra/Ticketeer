@@ -59,9 +59,6 @@ FROM composer:${COMPOSER_VERSION} AS vendor
 
 FROM php:${PHP_VERSION}-cli-alpine
 
-# Install Node.js
-RUN apk add --no-cache nodejs npm yarn
-
 LABEL maintainer="SMortexa <seyed.me720@gmail.com>"
 LABEL org.opencontainers.image.title="Laravel Octane Dockerfile"
 LABEL org.opencontainers.image.description="Production-ready Dockerfile for Laravel Octane"
@@ -101,6 +98,8 @@ RUN apk update; \
     ca-certificates \
     supervisor \
     libsodium-dev \
+    nodejs \
+    npm \
     # Install PHP extensions
     && install-php-extensions \
     bz2 \
