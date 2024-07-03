@@ -47,14 +47,8 @@ WORKDIR /var/www/html
 # Copy the built application from the installer stage
 COPY --from=installer /app ./
 
-# Copy the built assets from the builder stage
-COPY --from=builder /app/build ./public/build
-
-# Copy public assets from the builder stage (if they exist)
-COPY --from=builder /app/public ./public
-
-# Copy public assets from the installer stage
-COPY --link --chown=${USER}:${USER} --from=installer /app/public public
+# # Copy public assets from the installer stage
+# COPY --link --chown=${USER}:${USER} --from=installer /app/public public
 
 # Ensure utilities.sh is copied before appending to .bashrc
 COPY --link --chown=${USER}:${USER} apps/api/deployment/utilities.sh /tmp/utilities.sh
@@ -168,9 +162,7 @@ RUN composer install \
 RUN mv vendor /tmp/vendor
 
 COPY --link --chown=${USER}:${USER} apps/api ./
-
-COPY --from=builder /app/build ./public/build
-# COPY --from=builder /app/public ./public
+COPY --link --chown=${USER}:${USER} --from=installer ${ROOT}/public public
 
 RUN mkdir -p \
     storage/framework/sessions \
