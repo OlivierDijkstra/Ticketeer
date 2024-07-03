@@ -72,25 +72,6 @@ FROM composer:${COMPOSER_VERSION} AS vendor
 
 FROM php:${PHP_VERSION}-cli-alpine
 
-# Install dependencies for Browsershot and other tools
-RUN apk update && apk add --no-cache \
-    chromium \
-    nss \
-    freetype \
-    harfbuzz \
-    ca-certificates \
-    ttf-freefont \
-    nodejs \
-    npm \
-    # ... (your existing packages)
-    supervisor \
-    libsodium-dev
-
-# Copy Node.js and npm from the node stage
-COPY --from=node /usr/local/bin/node /usr/local/bin/
-COPY --from=node /usr/local/lib/node_modules /usr/local/lib/node_modules
-COPY --from=node /usr/local/bin/npm /usr/local/bin/
-
 LABEL maintainer="SMortexa <seyed.me720@gmail.com>"
 LABEL org.opencontainers.image.title="Laravel Octane Dockerfile"
 LABEL org.opencontainers.image.description="Production-ready Dockerfile for Laravel Octane"
@@ -153,6 +134,26 @@ RUN apk update; \
     swoole \
     && docker-php-source delete \
     && rm -rf /var/cache/apk/* /tmp/* /var/tmp/*
+
+# 🔥 This is where I left off. 🔥
+# Install dependencies for Browsershot and other tools
+RUN apk add --no-cache \
+    chromium
+    # nss \
+    # freetype \
+    # harfbuzz \
+    # ca-certificates \
+    # ttf-freefont \
+    # nodejs \
+    # npm \
+    # # ... (your existing packages)
+    # supervisor \
+    # libsodium-dev
+
+# Copy Node.js and npm from the node stage
+COPY --from=node /usr/local/bin/node /usr/local/bin/
+COPY --from=node /usr/local/lib/node_modules /usr/local/lib/node_modules
+COPY --from=node /usr/local/bin/npm /usr/local/bin/
 
 RUN arch="$(apk --print-arch)" \
     && case "$arch" in \
