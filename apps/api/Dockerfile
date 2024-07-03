@@ -170,7 +170,7 @@ RUN mv vendor /tmp/vendor
 COPY --link --chown=${USER}:${USER} apps/api ./
 
 COPY --from=builder /app/build ./public/build
-COPY --from=builder /app/public ./public
+# COPY --from=builder /app/public ./public
 
 RUN mkdir -p \
     storage/framework/sessions \
