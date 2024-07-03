@@ -137,8 +137,7 @@ RUN apk update; \
 
 # 🔥 This is where I left off. 🔥
 # Install dependencies for Browsershot and other tools
-RUN apk add --no-cache \
-    chromium
+RUN apk add --no-cache chromium
     # nss \
     # freetype \
     # harfbuzz \
