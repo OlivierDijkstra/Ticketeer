@@ -7,6 +7,13 @@ running_migrations_and_seeders=${RUNNING_MIGRATIONS_AND_SEEDERS:-"false"}
 
 echo "Container mode: $container_mode"
 
+echo "Contents of public folder:"
+ls -la /var/www/html/public
+
+echo "\nContents of public/build folder:"
+ls -la /var/www/html/public/build
+
+
 initialStuff() {
     php artisan storage:link; \
     php artisan optimize:clear; \
