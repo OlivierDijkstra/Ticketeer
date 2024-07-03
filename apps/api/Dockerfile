@@ -90,8 +90,6 @@ ADD --chmod=0755 https://github.com/mlocati/docker-php-extension-installer/relea
 RUN apk update; \
     apk upgrade; \
     apk add --no-cache \
-    nodejs \
-	npm \
     curl \
     wget \
     nano \
@@ -190,6 +188,13 @@ RUN composer install \
 
 # Make the start-container script executable
 RUN chmod +x /usr/local/bin/start-container
+
+RUN curl -sL https://deb.nodesource.com/setup_12.x -o nodesource_setup.sh
+RUN bash nodesource_setup.sh
+RUN apt-get install nodejs -y
+RUN npm install npm@6 -g
+RUN command -v node
+RUN command -v npm
 
 # Expose port 8001 for the application
 EXPOSE 8001
