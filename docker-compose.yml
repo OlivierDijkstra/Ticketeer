@@ -76,19 +76,19 @@ services:
           cpus: '0.50'
           memory: 512M
 
-  horizon:
-    <<: [*api-service-build, *common-environment-networks]
-    environment:
-      CONTAINER_MODE: horizon
-    depends_on:
-      - api
+  # horizon:
+  #   <<: [*api-service-build, *common-environment-networks]
+  #   environment:
+  #     CONTAINER_MODE: horizon
+  #   depends_on:
+  #     - api
 
-  scheduler:
-    <<: [*api-service-build, *common-environment-networks]
-    environment:
-      CONTAINER_MODE: scheduler
-    depends_on:
-      - api
+  # scheduler:
+  #   <<: [*api-service-build, *common-environment-networks]
+  #   environment:
+  #     CONTAINER_MODE: scheduler
+  #   depends_on:
+  #     - api
 
   nginx:
     build:
