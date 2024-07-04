@@ -40,11 +40,6 @@ COPY --from=builder /app/out/full/ .
 RUN yarn build
 
 ###########################################
-# Node.js stage: Install Node.js and npm
-###########################################
-FROM node:${NODE_VERSION} AS node
-
-###########################################
 # Final stage: Use PHP to set up the final image
 ###########################################
 FROM php:${PHP_VERSION}-cli-alpine
