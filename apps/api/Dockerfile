@@ -48,10 +48,6 @@ WORKDIR /var/www/html
 # Create a symlink for node
 RUN ln -s /usr/local/bin/node /usr/local/bin/nodejs
 
-# Set environment variables for Browsershot
-ENV CHROME_BIN=/usr/bin/chromium-browser \
-    CHROME_PATH=/usr/lib/chromium/
-
 # Copy the built application from the installer stage
 COPY --from=installer /app ./
 
@@ -130,8 +126,8 @@ RUN apk update; \
     && docker-php-source delete \
     && rm -rf /var/cache/apk/* /tmp/* /var/tmp/*
 
-RUN apk add --update npm
-RUN npm install puppeteer --location=global
+# RUN apk add --update npm
+# RUN npm install puppeteer --location=global
 
 RUN arch="$(apk --print-arch)" \
     && case "$arch" in \

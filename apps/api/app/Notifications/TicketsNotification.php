@@ -9,6 +9,7 @@ use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use Spatie\TemporaryDirectory\TemporaryDirectory;
 use Illuminate\Support\HtmlString;
+use Spatie\Browsershot\Browsershot;
 
 use function Spatie\LaravelPdf\Support\pdf;
 
@@ -54,6 +55,11 @@ class TicketsNotification extends Notification implements ShouldQueue
         $file_path = $tempDirectory->path('tickets.pdf');
 
         $pdf = pdf()
+            ->withBrowsershot(function (Browsershot $browsershot) {
+                $browsershot
+                    ->setRemoteInstance('172.22.0.100', '9222')
+                    ->showBackground();
+            })
             ->format('A4')
             ->view('pdf.tickets', compact('order'))
             ->save($file_path);
