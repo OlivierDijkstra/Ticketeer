@@ -57,7 +57,8 @@ class TicketsNotification extends Notification implements ShouldQueue
         $pdf = pdf()
             ->withBrowsershot(function (Browsershot $browsershot) {
                 $browsershot
-                    ->setRemoteInstance('172.22.0.100', '9222')
+                    ->setRemoteInstance('chromium', 9222)
+                    ->waitUntilNetworkIdle()
                     ->showBackground();
             })
             ->format('A4')
