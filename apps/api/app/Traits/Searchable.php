@@ -27,7 +27,7 @@ trait Searchable
         // find any fields that are json and convert them to an array
         foreach ($casts as $field => $cast) {
             if ($cast === 'json' && isset($this->{$field}) && is_string($this->{$field})) {
-                $this->{$field} = json_decode($this->{$field}, true);
+                $this->{$field} = json_encode(json_decode($this->{$field}, true));
             }
         }
 
