@@ -17,14 +17,12 @@ export function useGraphColors() {
     const updateColors = () => {
       const newPrimary = getCssVariableAsHex('primary');
       const newSecondary = getCssVariableAsHex('secondary');
-      // console.log('🎨', newPrimary, newSecondary);
       setPrimary(newPrimary);
       setSecondary(newSecondary);
     };
 
     // Wait for the next frame to ensure Tailwind has applied the theme changes
     requestAnimationFrame(() => {
-      // console.log('🔥');
       // Add a small delay to ensure CSS variables are updated
       setTimeout(updateColors, 50);
     });
