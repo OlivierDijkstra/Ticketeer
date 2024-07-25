@@ -28,6 +28,7 @@ interface ComboboxProps {
     value: Value;
     label: string;
     subtitle?: string;
+    disabled?: boolean;
   }[];
   placeholder?: string;
   onOpenChange?: (open: boolean) => void;
@@ -136,6 +137,7 @@ export default function Combobox({
                         setOpenState(false);
                       }}
                       disabled={
+                        item.disabled ||
                         required &&
                         (async
                           ? (value as { value: Value })?.value === item.value
