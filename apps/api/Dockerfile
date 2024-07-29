@@ -143,74 +143,74 @@ RUN curl -fsSL https://deb.nodesource.com/setup_22.x -o nodesource_setup.sh
 RUN bash nodesource_setup.sh
 RUN apt-get install -y nodejs
 
-RUN arch="$(uname -m)" \
-    && case "$arch" in \
-    armhf) _cronic_fname='supercronic-linux-arm' ;; \
-    aarch64) _cronic_fname='supercronic-linux-arm64' ;; \
-    x86_64) _cronic_fname='supercronic-linux-amd64' ;; \
-    x86) _cronic_fname='supercronic-linux-386' ;; \
-    *) echo >&2 "error: unsupported architecture: $arch"; exit 1 ;; \
-    esac \
-    && wget -q "https://github.com/aptible/supercronic/releases/download/v0.2.29/${_cronic_fname}" \
-    -O /usr/bin/supercronic \
-    && chmod +x /usr/bin/supercronic \
-    && mkdir -p /etc/supercronic \
-    && echo "*/1 * * * * php ${ROOT}/artisan schedule:run --no-interaction" > /etc/supercronic/laravel
+# RUN arch="$(uname -m)" \
+#     && case "$arch" in \
+#     armhf) _cronic_fname='supercronic-linux-arm' ;; \
+#     aarch64) _cronic_fname='supercronic-linux-arm64' ;; \
+#     x86_64) _cronic_fname='supercronic-linux-amd64' ;; \
+#     x86) _cronic_fname='supercronic-linux-386' ;; \
+#     *) echo >&2 "error: unsupported architecture: $arch"; exit 1 ;; \
+#     esac \
+#     && wget -q "https://github.com/aptible/supercronic/releases/download/v0.2.29/${_cronic_fname}" \
+#     -O /usr/bin/supercronic \
+#     && chmod +x /usr/bin/supercronic \
+#     && mkdir -p /etc/supercronic \
+#     && echo "*/1 * * * * php ${ROOT}/artisan schedule:run --no-interaction" > /etc/supercronic/laravel
 
-RUN userdel --remove --force www-data \
-    && groupadd --force -g ${WWWGROUP} ${USER} \
-    && useradd -ms /bin/bash --no-log-init --no-user-group -g ${WWWGROUP} -u ${WWWUSER} ${USER}
+# RUN userdel --remove --force www-data \
+#     && groupadd --force -g ${WWWGROUP} ${USER} \
+#     && useradd -ms /bin/bash --no-log-init --no-user-group -g ${WWWGROUP} -u ${WWWUSER} ${USER}
 
-RUN chown -R ${USER}:${USER} ${ROOT} /var/{log,run} \
-    && chmod -R a+rw ${ROOT} /var/{log,run}
+# RUN chown -R ${USER}:${USER} ${ROOT} /var/{log,run} \
+#     && chmod -R a+rw ${ROOT} /var/{log,run}
 
-RUN cp ${PHP_INI_DIR}/php.ini-production ${PHP_INI_DIR}/php.ini
+# RUN cp ${PHP_INI_DIR}/php.ini-production ${PHP_INI_DIR}/php.ini
 
-USER ${USER}
+# USER ${USER}
 
-COPY --link --chown=${USER}:${USER} --from=vendor /usr/bin/composer /usr/bin/composer
-COPY --link --chown=${USER}:${USER} apps/api/composer.json apps/api/composer.lock ./
+# COPY --link --chown=${USER}:${USER} --from=vendor /usr/bin/composer /usr/bin/composer
+# COPY --link --chown=${USER}:${USER} apps/api/composer.json apps/api/composer.lock ./
 
-RUN composer install \
-    --no-dev \
-    --no-interaction \
-    --no-autoloader \
-    --no-ansi \
-    --no-scripts \
-    --audit
+# RUN composer install \
+#     --no-dev \
+#     --no-interaction \
+#     --no-autoloader \
+#     --no-ansi \
+#     --no-scripts \
+#     --audit
 
-# Move the vendor directory to a tmp directory
-RUN mv vendor /tmp/vendor
+# # Move the vendor directory to a tmp directory
+# RUN mv vendor /tmp/vendor
 
-COPY --link --chown=${USER}:${USER} apps/api ./
-COPY --from=installer /app/apps/api/public/build ./public/build
-COPY --from=installer /tmp/node_modules ./node_modules
+# COPY --link --chown=${USER}:${USER} apps/api ./
+# COPY --from=installer /app/apps/api/public/build ./public/build
+# COPY --from=installer /tmp/node_modules ./node_modules
 
-RUN mkdir -p \
-    storage/framework/{sessions,views,cache,testing} \
-    storage/logs \
-    bootstrap/cache && chmod -R a+rw storage
+# RUN mkdir -p \
+#     storage/framework/{sessions,views,cache,testing} \
+#     storage/logs \
+#     bootstrap/cache && chmod -R a+rw storage
 
-COPY --link --chown=${USER}:${USER} apps/api/deployment/supervisord.conf /etc/supervisor/
-COPY --link --chown=${USER}:${USER} apps/api/deployment/octane/Swoole/supervisord.swoole.conf /etc/supervisor/conf.d/
-COPY --link --chown=${USER}:${USER} apps/api/deployment/supervisord.*.conf /etc/supervisor/conf.d/
-COPY --link --chown=${USER}:${USER} apps/api/deployment/php.ini ${PHP_INI_DIR}/conf.d/99-octane.ini
-COPY --link --chown=${USER}:${USER} apps/api/deployment/start-container /usr/local/bin/start-container
+# COPY --link --chown=${USER}:${USER} apps/api/deployment/supervisord.conf /etc/supervisor/
+# COPY --link --chown=${USER}:${USER} apps/api/deployment/octane/Swoole/supervisord.swoole.conf /etc/supervisor/conf.d/
+# COPY --link --chown=${USER}:${USER} apps/api/deployment/supervisord.*.conf /etc/supervisor/conf.d/
+# COPY --link --chown=${USER}:${USER} apps/api/deployment/php.ini ${PHP_INI_DIR}/conf.d/99-octane.ini
+# COPY --link --chown=${USER}:${USER} apps/api/deployment/start-container /usr/local/bin/start-container
 
-# Install PHP dependencies using Composer
-RUN composer install \
-    --classmap-authoritative \
-    --no-interaction \
-    --no-ansi \
-    --no-dev \
-    && composer clear-cache
+# # Install PHP dependencies using Composer
+# RUN composer install \
+#     --classmap-authoritative \
+#     --no-interaction \
+#     --no-ansi \
+#     --no-dev \
+#     && composer clear-cache
 
-RUN chmod +x /usr/local/bin/start-container
+# RUN chmod +x /usr/local/bin/start-container
 
-EXPOSE 8001
+# EXPOSE 8001
 
-RUN mv /tmp/vendor vendor
+# RUN mv /tmp/vendor vendor
 
-RUN node node_modules/puppeteer/install.mjs
+# RUN node node_modules/puppeteer/install.mjs
 
-ENTRYPOINT ["start-container"]
+# ENTRYPOINT ["start-container"]
