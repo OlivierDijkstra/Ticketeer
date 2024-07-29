@@ -50,25 +50,29 @@ class TicketsNotification extends Notification implements ShouldQueue
 
         $order = $this->order;
 
-        $tempDirectory = TemporaryDirectory::make();
+        // $tempDirectory = TemporaryDirectory::make(public_path('pdf/tmp'));
 
-        $file_path = $tempDirectory->path('tickets.pdf');
+        // $file_path = $tempDirectory->path('tickets.pdf');
+
+        $file_path = public_path('tickets.pdf');
 
         $pdf = pdf()
             ->withBrowsershot(function (Browsershot $browsershot) {
                 $browsershot
-                    ->setRemoteInstance('chromium', 9222)
-                    ->waitUntilNetworkIdle()
                     ->showBackground();
+                // ->setRemoteInstance('172.22.0.100', '9222')
+                // ->setCustomTempPath(public_path())
+                // ->waitUntilNetworkIdle()
+                // ->noSandbox()
             })
             ->format('A4')
             ->view('pdf.tickets', compact('order'))
             ->save($file_path);
 
         return (new MailMessage)
-            ->subject('Tickets for '.$event->name)
-            ->greeting('Hello '.$notifiable->name)
-            ->line('You have purchased '.$this->order->quantity.' tickets for '.$event->name.' on '.$pretty_formatted_start_date.' at '.$pretty_formatted_time)
+            ->subject('Tickets for ' . $event->name)
+            ->greeting('Hello ' . $notifiable->name)
+            ->line('You have purchased ' . $this->order->quantity . ' tickets for ' . $event->name . ' on ' . $pretty_formatted_start_date . ' at ' . $pretty_formatted_time)
             ->line('The tickets have been attached to this email.')
             ->line(new HtmlString($show->email_description))
             ->attach($file_path);

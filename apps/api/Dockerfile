@@ -39,6 +39,9 @@ COPY --from=builder /app/out/full/ .
 # Run the build command for the API
 RUN yarn build
 
+# Copy node_modules to a temporary location
+RUN cp -R node_modules /tmp/node_modules
+
 ###########################################
 # Final stage: Use PHP to set up the final image
 ###########################################
@@ -53,6 +56,9 @@ COPY --from=installer /app ./
 
 # Copy public assets from the installer stage
 COPY --link --chown=${USER}:${USER} --from=installer /app/public public
+
+# Copy node_modules from the installer stage
+COPY --from=installer /tmp/node_modules ./node_modules
 
 # Ensure utilities.sh is copied before appending to .bashrc
 COPY --link --chown=${USER}:${USER} apps/api/deployment/utilities.sh /tmp/utilities.sh
@@ -91,8 +97,8 @@ RUN ln -snf /usr/share/zoneinfo/${TZ} /etc/localtime \
 
 ADD --chmod=0755 https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
 
-RUN apk update; \
-    apk upgrade; \
+RUN apk update && \
+    apk upgrade && \
     apk add --no-cache \
     curl \
     wget \
@@ -102,7 +108,7 @@ RUN apk update; \
     ca-certificates \
     supervisor \
     libsodium-dev \
-    # Install PHP extensions
+    npm \
     && install-php-extensions \
     bz2 \
     pcntl \
@@ -125,9 +131,6 @@ RUN apk update; \
     swoole \
     && docker-php-source delete \
     && rm -rf /var/cache/apk/* /tmp/* /var/tmp/*
-
-# RUN apk add --update npm
-# RUN npm install puppeteer --location=global
 
 RUN arch="$(apk --print-arch)" \
     && case "$arch" in \
@@ -170,6 +173,7 @@ RUN mv vendor /tmp/vendor
 
 COPY --link --chown=${USER}:${USER} apps/api ./
 COPY --from=installer /app/apps/api/public/build ./public/build
+COPY --from=installer /tmp/node_modules ./node_modules
 
 RUN mkdir -p \
     storage/framework/sessions \
@@ -200,6 +204,8 @@ RUN chmod +x /usr/local/bin/start-container
 EXPOSE 8001
 
 RUN mv /tmp/vendor vendor
+
+RUN node node_modules/puppeteer/install.mjs
 
 # Set the entrypoint to the start-container script
 ENTRYPOINT ["start-container"]
