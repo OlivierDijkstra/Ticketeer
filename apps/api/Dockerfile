@@ -112,7 +112,7 @@ RUN apt-get update; \
     supervisor \
     libsodium-dev \
     # Install PHP extensions
-    && install-php-extensions \
+    # && install-php-extensions \
     bz2 \
     pcntl \
     mbstring \
@@ -131,12 +131,12 @@ RUN apt-get update; \
     memcached \
     igbinary \
     ldap \
-    swoole
-    # && apt-get -y autoremove \
-    # && apt-get clean \
-    # && docker-php-source delete \
-    # && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
-    # && rm /var/log/lastlog /var/log/faillog
+    swoole \
+    && apt-get -y autoremove \
+    && apt-get clean \
+    && docker-php-source delete \
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
+    && rm /var/log/lastlog /var/log/faillog
 
 # install node
 RUN curl -fsSL https://deb.nodesource.com/setup_22.x -o nodesource_setup.sh
