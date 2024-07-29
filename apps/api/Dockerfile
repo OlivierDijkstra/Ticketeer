@@ -100,6 +100,7 @@ ADD --chmod=0755 https://github.com/mlocati/docker-php-extension-installer/relea
 
 RUN apt-get update
 RUN apt-get upgrade -yqq
+RUN apt-get install curl
 # RUN apt-get install -yqq --no-install-recommends --show-progress apt-utils
 
 # RUN apt-get update; \
