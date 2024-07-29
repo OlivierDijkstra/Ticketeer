@@ -100,7 +100,7 @@ ADD --chmod=0755 https://github.com/mlocati/docker-php-extension-installer/relea
 
 RUN apt-get update
 RUN apt-get upgrade -yqq
-RUN apt-get install -yqq --no-install-recommends --show-progress apt-utils curl wget nano git ncdu procps ca-certificates supervisor libsodium-dev
+# RUN apt-get install -yqq --no-install-recommends --show-progress apt-utils
 
 # RUN apt-get update; \
 #     apt-get upgrade -yqq; \
