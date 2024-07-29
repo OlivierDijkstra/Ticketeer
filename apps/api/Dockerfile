@@ -98,45 +98,49 @@ RUN ln -snf /usr/share/zoneinfo/${TZ} /etc/localtime \
 
 ADD --chmod=0755 https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
 
-RUN apt-get update; \
-    apt-get upgrade -yqq; \
-    apt-get install -yqq --no-install-recommends --show-progress \
-    apt-utils \
-    curl \
-    wget \
-    nano \
-	git \
-    ncdu \
-    procps \
-    ca-certificates \
-    supervisor \
-    libsodium-dev \
-    # Install PHP extensions
-    # && install-php-extensions \
-    bz2 \
-    pcntl \
-    mbstring \
-    bcmath \
-    sockets \
-    pgsql \
-    pdo_pgsql \
-    opcache \
-    exif \
-    pdo_mysql \
-    zip \
-    intl \
-    gd \
-    redis \
-    rdkafka \
-    memcached \
-    igbinary \
-    ldap \
-    swoole \
-    && apt-get -y autoremove \
-    && apt-get clean \
-    && docker-php-source delete \
-    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
-    && rm /var/log/lastlog /var/log/faillog
+RUN apt-get update
+RUN apt-get upgrade -yqq
+RUN apt-get install -yqq --no-install-recommends --show-progress apt-utils curl wget nano git ncdu procps ca-certificates supervisor libsodium-dev
+
+# RUN apt-get update; \
+#     apt-get upgrade -yqq; \
+#     apt-get install -yqq --no-install-recommends --show-progress \
+#     apt-utils \
+#     curl \
+#     wget \
+#     nano \
+# 	git \
+#     ncdu \
+#     procps \
+#     ca-certificates \
+#     supervisor \
+#     libsodium-dev \
+#     # Install PHP extensions
+#     && install-php-extensions \
+#     bz2 \
+#     pcntl \
+#     mbstring \
+#     bcmath \
+#     sockets \
+#     pgsql \
+#     pdo_pgsql \
+#     opcache \
+#     exif \
+#     pdo_mysql \
+#     zip \
+#     intl \
+#     gd \
+#     redis \
+#     rdkafka \
+#     memcached \
+#     igbinary \
+#     ldap \
+#     swoole \
+#     && apt-get -y autoremove \
+#     && apt-get clean \
+#     && docker-php-source delete \
+#     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
+#     && rm /var/log/lastlog /var/log/faillog
 
 # install node
 RUN curl -fsSL https://deb.nodesource.com/setup_22.x -o nodesource_setup.sh
