@@ -45,7 +45,7 @@ RUN cp -R node_modules /tmp/node_modules
 ###########################################
 # Final stage: Use PHP to set up the final image
 ###########################################
-FROM php:${PHP_VERSION}-cli-alpine
+FROM php:${PHP_VERSION}-cli-bookworm
 WORKDIR /var/www/html
 
 # Create a symlink for node
@@ -67,7 +67,7 @@ RUN cat /tmp/utilities.sh >> ~/.bashrc
 
 FROM composer:${COMPOSER_VERSION} AS vendor
 
-FROM php:${PHP_VERSION}-cli-alpine
+FROM php:${PHP_VERSION}-cli-bookworm
 
 LABEL maintainer="SMortexa <seyed.me720@gmail.com>"
 LABEL org.opencontainers.image.title="Laravel Octane Dockerfile"
@@ -79,7 +79,8 @@ ARG WWWUSER=1000
 ARG WWWGROUP=1000
 ARG TZ=UTC
 
-ENV TERM=xterm-color \
+ENV DEBIAN_FRONTEND=noninteractive \
+    TERM=xterm-color \
     WITH_HORIZON=false \
     WITH_SCHEDULER=false \
     OCTANE_SERVER=swoole \
@@ -90,58 +91,27 @@ ENV TERM=xterm-color \
 
 WORKDIR ${ROOT}
 
-SHELL ["/bin/sh", "-eou", "pipefail", "-c"]
+SHELL ["/bin/bash", "-eou", "pipefail", "-c"]
 
 RUN ln -snf /usr/share/zoneinfo/${TZ} /etc/localtime \
-  && echo ${TZ} > /etc/timezone
+    && echo ${TZ} > /etc/timezone
 
 ADD --chmod=0755 https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
 
-RUN apk update && \
-    apk upgrade && \
-    apk add --no-cache \
+RUN apt-get update; \
+    apt-get upgrade -yqq; \
+    apt-get install -yqq --no-install-recommends --show-progress \
+    apt-utils \
     curl \
     wget \
     nano \
+	git \
     ncdu \
     procps \
     ca-certificates \
     supervisor \
     libsodium-dev \
-    npm \
-    chromium \
-    harfbuzz \
-    nss \
-    freetype \
-    ttf-freefont \
-    font-noto-emoji \
-    wqy-zenhei \
-    alsa-lib \
-    cairo \
-    cups-libs \
-    dbus-libs \
-    eudev-libs \
-    expat \
-    fontconfig \
-    freetype \
-    gdk-pixbuf \
-    glib \
-    libgcc \
-    libstdc++ \
-    libx11 \
-    libxcb \
-    libxcomposite \
-    libxcursor \
-    libxdamage \
-    libxext \
-    libxfixes \
-    libxi \
-    libxrandr \
-    libxrender \
-    libxtst \
-    mesa-gbm \
-    pango \
-    xdg-utils \
+    # Install PHP extensions
     && install-php-extensions \
     bz2 \
     pcntl \
@@ -162,10 +132,18 @@ RUN apk update && \
     igbinary \
     ldap \
     swoole \
+    && apt-get -y autoremove \
+    && apt-get clean \
     && docker-php-source delete \
-    && rm -rf /var/cache/apk/* /tmp/* /var/tmp/*
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
+    && rm /var/log/lastlog /var/log/faillog
 
-RUN arch="$(apk --print-arch)" \
+# install node
+RUN curl -fsSL https://deb.nodesource.com/setup_22.x -o nodesource_setup.sh
+RUN bash nodesource_setup.sh
+RUN apt-get install -y nodejs
+
+RUN arch="$(uname -m)" \
     && case "$arch" in \
     armhf) _cronic_fname='supercronic-linux-arm' ;; \
     aarch64) _cronic_fname='supercronic-linux-arm64' ;; \
@@ -179,12 +157,12 @@ RUN arch="$(apk --print-arch)" \
     && mkdir -p /etc/supercronic \
     && echo "*/1 * * * * php ${ROOT}/artisan schedule:run --no-interaction" > /etc/supercronic/laravel
 
-RUN addgroup -g ${WWWGROUP} ${USER} \
-    && adduser -D -h ${ROOT} -G ${USER} -u ${WWWUSER} -s /bin/sh ${USER}
+RUN userdel --remove --force www-data \
+    && groupadd --force -g ${WWWGROUP} ${USER} \
+    && useradd -ms /bin/bash --no-log-init --no-user-group -g ${WWWGROUP} -u ${WWWUSER} ${USER}
 
-RUN mkdir -p /var/log/supervisor /var/run/supervisor \
-    && chown -R ${USER}:${USER} ${ROOT} /var/log /var/run \
-    && chmod -R a+rw ${ROOT} /var/log /var/run
+RUN chown -R ${USER}:${USER} ${ROOT} /var/{log,run} \
+    && chmod -R a+rw ${ROOT} /var/{log,run}
 
 RUN cp ${PHP_INI_DIR}/php.ini-production ${PHP_INI_DIR}/php.ini
 
@@ -209,10 +187,7 @@ COPY --from=installer /app/apps/api/public/build ./public/build
 COPY --from=installer /tmp/node_modules ./node_modules
 
 RUN mkdir -p \
-    storage/framework/sessions \
-    storage/framework/views \
-    storage/framework/cache \
-    storage/framework/testing \
+    storage/framework/{sessions,views,cache,testing} \
     storage/logs \
     bootstrap/cache && chmod -R a+rw storage
 
@@ -230,15 +205,12 @@ RUN composer install \
     --no-dev \
     && composer clear-cache
 
-# Make the start-container script executable
 RUN chmod +x /usr/local/bin/start-container
 
-# Expose port 8001 for the application
 EXPOSE 8001
 
 RUN mv /tmp/vendor vendor
 
 RUN node node_modules/puppeteer/install.mjs
 
-# Set the entrypoint to the start-container script
 ENTRYPOINT ["start-container"]
