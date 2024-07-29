@@ -59,7 +59,7 @@ services:
       - db
       - redis
       - typesense
-      - chromium
+      # - chromium
     # volumes:
       # - tmpfiles:/var/www/html/public
     healthcheck:
