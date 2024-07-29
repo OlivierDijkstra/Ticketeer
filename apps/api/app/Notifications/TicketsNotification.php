@@ -59,6 +59,7 @@ class TicketsNotification extends Notification implements ShouldQueue
         $pdf = pdf()
             ->withBrowsershot(function (Browsershot $browsershot) {
                 $browsershot
+                    ->noSandbox()
                     ->showBackground();
                 // ->setRemoteInstance('172.22.0.100', '9222')
                 // ->setCustomTempPath(public_path())
