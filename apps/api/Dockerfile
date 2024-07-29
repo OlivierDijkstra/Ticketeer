@@ -109,6 +109,39 @@ RUN apk update && \
     supervisor \
     libsodium-dev \
     npm \
+    chromium \
+    harfbuzz \
+    nss \
+    freetype \
+    ttf-freefont \
+    font-noto-emoji \
+    wqy-zenhei \
+    alsa-lib \
+    cairo \
+    cups-libs \
+    dbus-libs \
+    eudev-libs \
+    expat \
+    fontconfig \
+    freetype \
+    gdk-pixbuf \
+    glib \
+    libgcc \
+    libstdc++ \
+    libx11 \
+    libxcb \
+    libxcomposite \
+    libxcursor \
+    libxdamage \
+    libxext \
+    libxfixes \
+    libxi \
+    libxrandr \
+    libxrender \
+    libxtst \
+    mesa-gbm \
+    pango \
+    xdg-utils \
     && install-php-extensions \
     bz2 \
     pcntl \
