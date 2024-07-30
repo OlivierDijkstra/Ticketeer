@@ -21,8 +21,6 @@ services:
       - api
     ports:
       - "3000:3000"
-    # extra_hosts:
-    #   - "${DASHBOARD_DOMAIN:-dashboard.test.local}:host-gateway"
     logging:
       driver: "json-file"
       options:
@@ -39,8 +37,6 @@ services:
       - api
     ports:
       - "3001:3000"
-    # extra_hosts:
-    #   - "${FRONTEND_DOMAIN:-test.local}:host-gateway"
     logging:
       driver: "json-file"
       options:
