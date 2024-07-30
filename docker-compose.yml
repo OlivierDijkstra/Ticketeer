@@ -21,8 +21,8 @@ services:
       dockerfile: ./apps/dashboard/Dockerfile
     restart: always
     <<: *common-environment-networks
-    depends_on:
-      - api
+    # depends_on:
+      # - api
     ports:
       - "3000:3000"
     extra_hosts:
@@ -39,8 +39,8 @@ services:
       dockerfile: ./apps/frontend/Dockerfile
     restart: always
     <<: *common-environment-networks
-    depends_on:
-      - api
+    # depends_on:
+      # - api
     ports:
       - "3001:3000"
     extra_hosts:
