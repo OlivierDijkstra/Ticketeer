@@ -51,31 +51,31 @@ services:
   #       max-size: "10m"
   #       max-file: "3"
 
-  # api:
-  #   <<: [*api-service-build, *common-environment-networks]
-  #   ports:
-  #     - "${API_PORT:-8000}:8000"    
-  #   depends_on:
-  #     - db
-  #     - redis
-  #     - typesense
-  #   healthcheck:
-  #     test: ["CMD", "php", "artisan", "octane:status"]
-  #     interval: 30s
-  #     timeout: 10s
-  #     retries: 3
-  #   extra_hosts:
-  #     - "${API_DOMAIN:-api.test.local}:host-gateway"
-  #   logging:
-  #     driver: "json-file"
-  #     options:
-  #       max-size: "10m"
-  #       max-file: "3"
-  #   deploy:
-  #     resources:
-  #       limits:
-  #         cpus: '0.50'
-  #         memory: 512M
+  api:
+    <<: [*api-service-build, *common-environment-networks]
+    ports:
+      - "${API_PORT:-8000}:8000"    
+    depends_on:
+      - db
+      - redis
+      - typesense
+    healthcheck:
+      test: ["CMD", "php", "artisan", "octane:status"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    extra_hosts:
+      - "${API_DOMAIN:-api.test.local}:host-gateway"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
 
   # horizon:
   #   <<: [*api-service-build, *common-environment-networks]
@@ -197,8 +197,8 @@ services:
 volumes:
   mysql_data:
   typesense_data:
-  # tmpfiles:
-  #   driver: local
+  tmpfiles:
+    driver: local
   
 networks:
   app-network:
