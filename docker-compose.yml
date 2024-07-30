@@ -60,8 +60,8 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
-    # extra_hosts:
-    #   - "${API_DOMAIN:-api.test.local}:host-gateway"
+    extra_hosts:
+      - "${API_DOMAIN:-api.test.local}:host-gateway"
     logging:
       driver: "json-file"
       options:
