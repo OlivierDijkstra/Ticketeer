@@ -15,7 +15,7 @@ services:
     build:
       context: .
       dockerfile: ./apps/dashboard/Dockerfile
-    restart: always
+    restart: unless-stopped
     <<: *common-environment-networks
     depends_on:
       - api
@@ -36,7 +36,7 @@ services:
     build:
       context: .
       dockerfile: ./apps/frontend/Dockerfile
-    restart: always
+    restart: unless-stopped
     <<: *common-environment-networks
     depends_on:
       - api
@@ -73,6 +73,7 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
+    restart: unless-stopped
 
   horizon:
     <<: [*api-service-build, *common-environment-networks]
@@ -85,6 +86,7 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
+    restart: unless-stopped
 
   scheduler:
     <<: [*api-service-build, *common-environment-networks]
@@ -97,6 +99,7 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
+    restart: unless-stopped
 
   redis:
     image: redis:alpine
@@ -116,10 +119,11 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
+    restart: unless-stopped
 
   db:
     image: mysql:8.4
-    restart: always
+    restart: unless-stopped
     environment:
       MYSQL_DATABASE: ${MYSQL_DATABASE}
       MYSQL_USER: ${MYSQL_USER}
@@ -142,7 +146,7 @@ services:
 
   typesense:
     image: typesense/typesense:26.0
-    restart: on-failure
+    restart: unless-stopped
     command: --data-dir /data --api-key=${TYPESENSE_API_KEY} --listen-port ${TYPESENSE_PORT} --enable-cors
     volumes:
       - typesense_data:/data
