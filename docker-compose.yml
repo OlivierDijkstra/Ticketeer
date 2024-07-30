@@ -73,11 +73,6 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
-    deploy:
-      resources:
-        limits:
-          cpus: '0.50'
-          memory: 512M
 
   horizon:
     <<: [*api-service-build, *common-environment-networks]
@@ -121,11 +116,6 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
-    deploy:
-      resources:
-        limits:
-          cpus: '0.25'
-          memory: 128M
 
   db:
     image: mysql:8.4
@@ -149,11 +139,6 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
-    deploy:
-      resources:
-        limits:
-          cpus: '0.50'
-          memory: 512M
 
   typesense:
     image: typesense/typesense:26.0
@@ -174,11 +159,6 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
-    deploy:
-      resources:
-        limits:
-          cpus: '0.25'
-          memory: 256M
           
 volumes:
   mysql_data:
