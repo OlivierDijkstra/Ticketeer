@@ -25,8 +25,8 @@ services:
       - api
     ports:
       - "3000:3000"
-    extra_hosts:
-      - "${DASHBOARD_DOMAIN:-dashboard.test.local}:host-gateway"
+    # extra_hosts:
+    #   - "${DASHBOARD_DOMAIN:-dashboard.test.local}:host-gateway"
     logging:
       driver: "json-file"
       options:
@@ -43,8 +43,8 @@ services:
       - api
     ports:
       - "3001:3000"
-    extra_hosts:
-      - "${FRONTEND_DOMAIN:-test.local}:host-gateway"
+    # extra_hosts:
+    #   - "${FRONTEND_DOMAIN:-test.local}:host-gateway"
     logging:
       driver: "json-file"
       options:
@@ -64,8 +64,8 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
-    extra_hosts:
-      - "${API_DOMAIN:-api.test.local}:host-gateway"
+    # extra_hosts:
+    #   - "${API_DOMAIN:-api.test.local}:host-gateway"
     logging:
       driver: "json-file"
       options:
