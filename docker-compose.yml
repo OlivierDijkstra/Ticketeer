@@ -51,155 +51,155 @@ services:
         max-size: "10m"
         max-file: "3"
 
-  api:
-    <<: [*api-service-build, *common-environment-networks]
-    ports:
-      - "${API_PORT:-8000}:8000"    
-    depends_on:
-      - db
-      - redis
-      - typesense
-    healthcheck:
-      test: ["CMD", "php", "artisan", "octane:status"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-    extra_hosts:
-      - "${API_DOMAIN:-api.test.local}:host-gateway"
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "3"
-    deploy:
-      resources:
-        limits:
-          cpus: '0.50'
-          memory: 512M
+  # api:
+  #   <<: [*api-service-build, *common-environment-networks]
+  #   ports:
+  #     - "${API_PORT:-8000}:8000"    
+  #   depends_on:
+  #     - db
+  #     - redis
+  #     - typesense
+  #   healthcheck:
+  #     test: ["CMD", "php", "artisan", "octane:status"]
+  #     interval: 30s
+  #     timeout: 10s
+  #     retries: 3
+  #   extra_hosts:
+  #     - "${API_DOMAIN:-api.test.local}:host-gateway"
+  #   logging:
+  #     driver: "json-file"
+  #     options:
+  #       max-size: "10m"
+  #       max-file: "3"
+  #   deploy:
+  #     resources:
+  #       limits:
+  #         cpus: '0.50'
+  #         memory: 512M
 
-  horizon:
-    <<: [*api-service-build, *common-environment-networks]
-    environment:
-      CONTAINER_MODE: horizon
-    depends_on:
-      - api
+  # horizon:
+  #   <<: [*api-service-build, *common-environment-networks]
+  #   environment:
+  #     CONTAINER_MODE: horizon
+  #   depends_on:
+  #     - api
 
-  scheduler:
-    <<: [*api-service-build, *common-environment-networks]
-    environment:
-      CONTAINER_MODE: scheduler
-    depends_on:
-      - api
+  # scheduler:
+  #   <<: [*api-service-build, *common-environment-networks]
+  #   environment:
+  #     CONTAINER_MODE: scheduler
+  #   depends_on:
+  #     - api
 
-  nginx:
-    build:
-      context: .
-      dockerfile: Dockerfile.nginx
-    ports:
-      - "80:80"
-      - "443:443"
-    depends_on:
-      - dashboard
-      - api
-    <<: *common-environment-networks
-    environment:
-      - FRONTEND_DOMAIN=${FRONTEND_DOMAIN:-test.local}
-      - DASHBOARD_DOMAIN=${DASHBOARD_DOMAIN:-dashboard.test.local}
-      - API_DOMAIN=${API_DOMAIN:-api.test.local}
-      - API_PORT=${API_PORT:-8000}
-    healthcheck:
-      test: ["CMD", "nginx", "-t"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-    extra_hosts:
-      - "${API_DOMAIN:-api.test.local}:host-gateway"
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "3"
-    volumes:
-      - /etc/letsencrypt:/etc/letsencrypt:ro
+  # nginx:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile.nginx
+  #   ports:
+  #     - "80:80"
+  #     - "443:443"
+  #   depends_on:
+  #     - dashboard
+  #     - api
+  #   <<: *common-environment-networks
+  #   environment:
+  #     - FRONTEND_DOMAIN=${FRONTEND_DOMAIN:-test.local}
+  #     - DASHBOARD_DOMAIN=${DASHBOARD_DOMAIN:-dashboard.test.local}
+  #     - API_DOMAIN=${API_DOMAIN:-api.test.local}
+  #     - API_PORT=${API_PORT:-8000}
+  #   healthcheck:
+  #     test: ["CMD", "nginx", "-t"]
+  #     interval: 30s
+  #     timeout: 10s
+  #     retries: 3
+  #   extra_hosts:
+  #     - "${API_DOMAIN:-api.test.local}:host-gateway"
+  #   logging:
+  #     driver: "json-file"
+  #     options:
+  #       max-size: "10m"
+  #       max-file: "3"
+  #   volumes:
+  #     - /etc/letsencrypt:/etc/letsencrypt:ro
 
-  redis:
-    image: redis:alpine
-    environment:
-      REDIS_PASSWORD: ${REDIS_PASSWORD}
-    command: redis-server --requirepass ${REDIS_PASSWORD}
-    ports:
-      - "${REDIS_PORT:-6379}:6379"
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-    <<: *common-environment-networks
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "3"
-    deploy:
-      resources:
-        limits:
-          cpus: '0.25'
-          memory: 128M
+  # redis:
+  #   image: redis:alpine
+  #   environment:
+  #     REDIS_PASSWORD: ${REDIS_PASSWORD}
+  #   command: redis-server --requirepass ${REDIS_PASSWORD}
+  #   ports:
+  #     - "${REDIS_PORT:-6379}:6379"
+  #   healthcheck:
+  #     test: ["CMD", "redis-cli", "ping"]
+  #     interval: 30s
+  #     timeout: 10s
+  #     retries: 3
+  #   <<: *common-environment-networks
+  #   logging:
+  #     driver: "json-file"
+  #     options:
+  #       max-size: "10m"
+  #       max-file: "3"
+  #   deploy:
+  #     resources:
+  #       limits:
+  #         cpus: '0.25'
+  #         memory: 128M
 
-  db:
-    image: mysql:8.4
-    restart: always
-    environment:
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-    volumes:
-      - mysql_data:/var/lib/mysql
-    ports:
-      - "3306:3306"
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-uroot", "-p$${MYSQL_ROOT_PASSWORD}"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-    <<: *common-environment-networks
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "3"
-    deploy:
-      resources:
-        limits:
-          cpus: '0.50'
-          memory: 512M
+  # db:
+  #   image: mysql:8.4
+  #   restart: always
+  #   environment:
+  #     MYSQL_DATABASE: ${MYSQL_DATABASE}
+  #     MYSQL_USER: ${MYSQL_USER}
+  #     MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+  #   volumes:
+  #     - mysql_data:/var/lib/mysql
+  #   ports:
+  #     - "3306:3306"
+  #   healthcheck:
+  #     test: ["CMD", "mysqladmin", "ping", "-uroot", "-p$${MYSQL_ROOT_PASSWORD}"]
+  #     interval: 30s
+  #     timeout: 10s
+  #     retries: 3
+  #   <<: *common-environment-networks
+  #   logging:
+  #     driver: "json-file"
+  #     options:
+  #       max-size: "10m"
+  #       max-file: "3"
+  #   deploy:
+  #     resources:
+  #       limits:
+  #         cpus: '0.50'
+  #         memory: 512M
 
-  typesense:
-    image: typesense/typesense:26.0
-    restart: on-failure
-    command: --data-dir /data --api-key=${TYPESENSE_API_KEY} --listen-port ${TYPESENSE_PORT} --enable-cors
-    volumes:
-      - typesense_data:/data
-    ports:
-      - "${TYPESENSE_PORT:-8108}:8108"
-    <<: *common-environment-networks
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "3"
-    deploy:
-      resources:
-        limits:
-          cpus: '0.25'
-          memory: 256M
+  # typesense:
+  #   image: typesense/typesense:26.0
+  #   restart: on-failure
+  #   command: --data-dir /data --api-key=${TYPESENSE_API_KEY} --listen-port ${TYPESENSE_PORT} --enable-cors
+  #   volumes:
+  #     - typesense_data:/data
+  #   ports:
+  #     - "${TYPESENSE_PORT:-8108}:8108"
+  #   <<: *common-environment-networks
+  #   logging:
+  #     driver: "json-file"
+  #     options:
+  #       max-size: "10m"
+  #       max-file: "3"
+  #   deploy:
+  #     resources:
+  #       limits:
+  #         cpus: '0.25'
+  #         memory: 256M
           
 volumes:
-  mysql_data:
-  typesense_data:
-  tmpfiles:
-    driver: local
+  # mysql_data:
+  # typesense_data:
+  # tmpfiles:
+  #   driver: local
   
 networks:
-  app-network:
-    driver: bridge
+  # app-network:
+  #   driver: bridge
