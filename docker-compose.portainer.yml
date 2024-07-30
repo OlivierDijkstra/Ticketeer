@@ -89,7 +89,7 @@ services:
   #   environment:
   #     CONTAINER_MODE: scheduler
   #   depends_on:
-      - api
+      # - api
 
   nginx:
     build:
