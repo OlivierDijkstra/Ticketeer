@@ -15,23 +15,23 @@ x-api-service-volumes: &api-service-volumes
     - ./apps/api:/var/www/html # Mounting as read-only for security
 
 services:
-  # dashboard:
-    # build:
-    #   context: .
-    #   dockerfile: ./apps/dashboard/Dockerfile
-    # restart: always
-    # <<: *common-environment-networks
-    # # depends_on:
-    #   # - api
-    # ports:
-    #   - "3000:3000"
-    # extra_hosts:
-    #   - "${DASHBOARD_DOMAIN:-dashboard.test.local}:host-gateway"
-    # logging:
-    #   driver: "json-file"
-    #   options:
-    #     max-size: "10m"
-    #     max-file: "3"
+  dashboard:
+    build:
+      context: .
+      dockerfile: ./apps/dashboard/Dockerfile
+    restart: always
+    <<: *common-environment-networks
+    # depends_on:
+      # - api
+    ports:
+      - "3000:3000"
+    extra_hosts:
+      - "${DASHBOARD_DOMAIN:-dashboard.test.local}:host-gateway"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
   # frontend:
   #   build:
@@ -51,31 +51,31 @@ services:
   #       max-size: "10m"
   #       max-file: "3"
 
-  api:
-    <<: [*api-service-build, *common-environment-networks]
-    ports:
-      - "${API_PORT:-8000}:8000"    
-    depends_on:
-      - db
-      - redis
-      - typesense
-    healthcheck:
-      test: ["CMD", "php", "artisan", "octane:status"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-    extra_hosts:
-      - "${API_DOMAIN:-api.test.local}:host-gateway"
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "3"
-    deploy:
-      resources:
-        limits:
-          cpus: '0.50'
-          memory: 512M
+  # api:
+  #   <<: [*api-service-build, *common-environment-networks]
+  #   ports:
+  #     - "${API_PORT:-8000}:8000"    
+  #   depends_on:
+  #     - db
+  #     - redis
+  #     - typesense
+  #   healthcheck:
+  #     test: ["CMD", "php", "artisan", "octane:status"]
+  #     interval: 30s
+  #     timeout: 10s
+  #     retries: 3
+  #   extra_hosts:
+  #     - "${API_DOMAIN:-api.test.local}:host-gateway"
+  #   logging:
+  #     driver: "json-file"
+  #     options:
+  #       max-size: "10m"
+  #       max-file: "3"
+  #   deploy:
+  #     resources:
+  #       limits:
+  #         cpus: '0.50'
+  #         memory: 512M
 
   # horizon:
   #   <<: [*api-service-build, *common-environment-networks]
