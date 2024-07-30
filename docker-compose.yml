@@ -15,7 +15,7 @@ x-api-service-volumes: &api-service-volumes
     - ./apps/api:/var/www/html # Mounting as read-only for security
 
 services:
-  dashboard:
+  # dashboard:
     # build:
     #   context: .
     #   dockerfile: ./apps/dashboard/Dockerfile
