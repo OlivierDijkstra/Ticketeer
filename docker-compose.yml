@@ -16,40 +16,40 @@ x-api-service-volumes: &api-service-volumes
 
 services:
   dashboard:
-    build:
-      context: .
-      dockerfile: ./apps/dashboard/Dockerfile
-    restart: always
-    <<: *common-environment-networks
-    # depends_on:
-      # - api
-    ports:
-      - "3000:3000"
-    extra_hosts:
-      - "${DASHBOARD_DOMAIN:-dashboard.test.local}:host-gateway"
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "3"
+    # build:
+    #   context: .
+    #   dockerfile: ./apps/dashboard/Dockerfile
+    # restart: always
+    # <<: *common-environment-networks
+    # # depends_on:
+    #   # - api
+    # ports:
+    #   - "3000:3000"
+    # extra_hosts:
+    #   - "${DASHBOARD_DOMAIN:-dashboard.test.local}:host-gateway"
+    # logging:
+    #   driver: "json-file"
+    #   options:
+    #     max-size: "10m"
+    #     max-file: "3"
 
-  frontend:
-    build:
-      context: .
-      dockerfile: ./apps/frontend/Dockerfile
-    restart: always
-    <<: *common-environment-networks
-    # depends_on:
-      # - api
-    ports:
-      - "3001:3000"
-    extra_hosts:
-      - "${FRONTEND_DOMAIN:-test.local}:host-gateway"
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "3"
+  # frontend:
+  #   build:
+  #     context: .
+  #     dockerfile: ./apps/frontend/Dockerfile
+  #   restart: always
+  #   <<: *common-environment-networks
+  #   # depends_on:
+  #     # - api
+  #   ports:
+  #     - "3001:3000"
+  #   extra_hosts:
+  #     - "${FRONTEND_DOMAIN:-test.local}:host-gateway"
+  #   logging:
+  #     driver: "json-file"
+  #     options:
+  #       max-size: "10m"
+  #       max-file: "3"
 
   # api:
   #   <<: [*api-service-build, *common-environment-networks]
@@ -122,84 +122,84 @@ services:
   #   volumes:
   #     - /etc/letsencrypt:/etc/letsencrypt:ro
 
-  # redis:
-  #   image: redis:alpine
-  #   environment:
-  #     REDIS_PASSWORD: ${REDIS_PASSWORD}
-  #   command: redis-server --requirepass ${REDIS_PASSWORD}
-  #   ports:
-  #     - "${REDIS_PORT:-6379}:6379"
-  #   healthcheck:
-  #     test: ["CMD", "redis-cli", "ping"]
-  #     interval: 30s
-  #     timeout: 10s
-  #     retries: 3
-  #   <<: *common-environment-networks
-  #   logging:
-  #     driver: "json-file"
-  #     options:
-  #       max-size: "10m"
-  #       max-file: "3"
-  #   deploy:
-  #     resources:
-  #       limits:
-  #         cpus: '0.25'
-  #         memory: 128M
+  redis:
+    image: redis:alpine
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+    command: redis-server --requirepass ${REDIS_PASSWORD}
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    <<: *common-environment-networks
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 128M
 
-  # db:
-  #   image: mysql:8.4
-  #   restart: always
-  #   environment:
-  #     MYSQL_DATABASE: ${MYSQL_DATABASE}
-  #     MYSQL_USER: ${MYSQL_USER}
-  #     MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-  #   volumes:
-  #     - mysql_data:/var/lib/mysql
-  #   ports:
-  #     - "3306:3306"
-  #   healthcheck:
-  #     test: ["CMD", "mysqladmin", "ping", "-uroot", "-p$${MYSQL_ROOT_PASSWORD}"]
-  #     interval: 30s
-  #     timeout: 10s
-  #     retries: 3
-  #   <<: *common-environment-networks
-  #   logging:
-  #     driver: "json-file"
-  #     options:
-  #       max-size: "10m"
-  #       max-file: "3"
-  #   deploy:
-  #     resources:
-  #       limits:
-  #         cpus: '0.50'
-  #         memory: 512M
+  db:
+    image: mysql:8.4
+    restart: always
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-uroot", "-p$${MYSQL_ROOT_PASSWORD}"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    <<: *common-environment-networks
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
 
-  # typesense:
-  #   image: typesense/typesense:26.0
-  #   restart: on-failure
-  #   command: --data-dir /data --api-key=${TYPESENSE_API_KEY} --listen-port ${TYPESENSE_PORT} --enable-cors
-  #   volumes:
-  #     - typesense_data:/data
-  #   ports:
-  #     - "${TYPESENSE_PORT:-8108}:8108"
-  #   <<: *common-environment-networks
-  #   logging:
-  #     driver: "json-file"
-  #     options:
-  #       max-size: "10m"
-  #       max-file: "3"
-  #   deploy:
-  #     resources:
-  #       limits:
-  #         cpus: '0.25'
-  #         memory: 256M
+  typesense:
+    image: typesense/typesense:26.0
+    restart: on-failure
+    command: --data-dir /data --api-key=${TYPESENSE_API_KEY} --listen-port ${TYPESENSE_PORT} --enable-cors
+    volumes:
+      - typesense_data:/data
+    ports:
+      - "${TYPESENSE_PORT:-8108}:8108"
+    <<: *common-environment-networks
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: 256M
           
 volumes:
-  # mysql_data:
-  # typesense_data:
+  mysql_data:
+  typesense_data:
   # tmpfiles:
   #   driver: local
   
 networks:
-  # app-network:
-  #   driver: bridge
+  app-network:
+    driver: bridge
