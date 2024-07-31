@@ -36,7 +36,7 @@ export default async function RevenueChartData() {
   }));
 
   return (
-    <ChartCard title='Revenue'>
+    <ChartCard title='Revenue' description='Per month over the past 12 months'>
       <Suspense
         fallback={
           <div className='grid place-items-center'>

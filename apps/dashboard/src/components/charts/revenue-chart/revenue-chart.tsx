@@ -45,8 +45,9 @@ export default function RevenueChart({
           axisLine={false}
           tickMargin={8}
           tickFormatter={(value) => {
-            return new Date(value).toLocaleDateString('en-US', {
+            return new Date(value).toLocaleDateString(process.env.NEXT_PUBLIC_LOCALE, {
               month: 'short',
+              year: 'numeric',
             });
           }}
         />
@@ -68,9 +69,13 @@ export default function RevenueChart({
             <ChartTooltipContent
               indicator='line'
               labelFormatter={(value) => {
-                return new Date(value).toLocaleDateString('en-US', {
-                  month: 'long',
-                });
+                return new Date(value).toLocaleDateString(
+                  process.env.NEXT_PUBLIC_LOCALE,
+                  {
+                    month: 'long',
+                    year: 'numeric',
+                  }
+                );
               }}
             />
           }
