@@ -50,10 +50,6 @@ class TicketsNotification extends Notification implements ShouldQueue
 
         $order = $this->order;
 
-        // $tempDirectory = TemporaryDirectory::make(public_path('pdf/tmp'));
-
-        // $file_path = $tempDirectory->path('tickets.pdf');
-
         $file_path = public_path('tickets.pdf');
 
         $pdf = pdf()
@@ -61,10 +57,6 @@ class TicketsNotification extends Notification implements ShouldQueue
                 $browsershot
                     ->noSandbox()
                     ->showBackground();
-                // ->setRemoteInstance('172.22.0.100', '9222')
-                // ->setCustomTempPath(public_path())
-                // ->waitUntilNetworkIdle()
-                // ->noSandbox()
             })
             ->format('A4')
             ->view('pdf.tickets', compact('order'))
