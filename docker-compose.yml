@@ -140,11 +140,6 @@ services:
       - typesense_data:/data
     ports:
       - "${TYPESENSE_PORT:-8108}:8108"
-    healthcheck:
-      test: ["CMD-SHELL", "wget --spider -q http://typesense:8108/health || exit 1"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
 
 volumes:
   mysql_data:
