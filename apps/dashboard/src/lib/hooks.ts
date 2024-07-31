@@ -1,38 +1,5 @@
-import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
 
-import { getCssVariableAsHex } from '@/lib/colors';
-
-export function useGraphColors() {
-  const [primary, setPrimary] = useState<string>(
-    getCssVariableAsHex('primary')
-  );
-  const [secondary, setSecondary] = useState<string>(
-    getCssVariableAsHex('secondary')
-  );
-
-  const { theme, systemTheme } = useTheme();
-
-  useEffect(() => {
-    const updateColors = () => {
-      const newPrimary = getCssVariableAsHex('primary');
-      const newSecondary = getCssVariableAsHex('secondary');
-      setPrimary(newPrimary);
-      setSecondary(newSecondary);
-    };
-
-    // Wait for the next frame to ensure Tailwind has applied the theme changes
-    requestAnimationFrame(() => {
-      // Add a small delay to ensure CSS variables are updated
-      setTimeout(updateColors, 50);
-    });
-  }, [theme, systemTheme]);
-
-  return {
-    primary,
-    secondary,
-  };
-}
 
 type TimeType = 'hour' | 'minute';
 
