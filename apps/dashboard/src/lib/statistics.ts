@@ -70,9 +70,7 @@ export class Statistics {
 
   getPercentageIncrease(): number {
     if (this.dataPoints.length < 2) {
-      throw new Error(
-        'At least two data points are required to calculate a percentage increase.'
-      );
+      return 0;
     }
 
     const newValue = this.dataPoints[this.dataPoints.length - 1]?.value || 0;
