@@ -1,7 +1,6 @@
 import { Suspense } from 'react';
 
-import RevenueGraph from '@/components/graphs/revenue-graph';
-import SkeletonGraph from '@/components/skeletons/skeleton-graph';
+import RevenueChartData from '@/components/charts/revenue-chart/revenue-chart-data';
 import SkeletonStatistic from '@/components/skeletons/skeleton-statistic';
 import SkeletonTable from '@/components/skeletons/skeleton-table';
 import NewOrdersStatistic from '@/components/statistics/new-orders-statistic';
@@ -26,11 +25,7 @@ export default async function Page({
         </Suspense>
       </div>
 
-      <div>
-        <Suspense fallback={<SkeletonGraph />}>
-          <RevenueGraph />
-        </Suspense>
-      </div>
+      <RevenueChartData />
 
       <Suspense fallback={<SkeletonTable />}>
         <EventsTable page={searchParams?.page_events} />
