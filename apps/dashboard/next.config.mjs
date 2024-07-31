@@ -23,11 +23,6 @@ const nextConfig = {
         hostname: 'api.test.local',
         pathname: '**',
       },
-      {
-        protocol: 'https',
-        hostname: 'api.olivieralexander.com',
-        pathname: '**',
-      },
     ],
   },
   async redirects() {
