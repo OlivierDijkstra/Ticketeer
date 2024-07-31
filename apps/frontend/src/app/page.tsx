@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { createUrl, type Event } from '@repo/lib';
 
 import EventCard from '@/components/event-card';

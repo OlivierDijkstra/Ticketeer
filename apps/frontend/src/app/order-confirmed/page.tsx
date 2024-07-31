@@ -7,6 +7,8 @@ import GuestBadge from '@/components/guest-badge';
 import { Button } from '@/components/ui/button';
 import { fetchJson } from '@/lib/fetch';
 
+export const dynamic = 'force-dynamic';
+
 export default async function Page({
   searchParams,
 }: {

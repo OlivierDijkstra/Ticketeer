@@ -80,6 +80,7 @@ export default function CreateShowForm({
         event_slug: params.event,
         data: {
           description: data.description,
+          email_description: '',
           enabled: data.enabled,
           start: data.dates.start,
           end: data.dates.end,

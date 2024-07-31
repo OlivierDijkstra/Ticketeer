@@ -25,7 +25,7 @@ const nextConfig = {
       },
       {
         protocol: 'https',
-        hostname: '5a1e-143-178-232-105.ngrok-free.app',
+        hostname: 'api.olivieralexander.com',
         pathname: '**',
       },
     ],

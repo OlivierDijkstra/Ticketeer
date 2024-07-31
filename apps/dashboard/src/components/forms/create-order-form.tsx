@@ -49,6 +49,7 @@ export default function CreateOrderForm({
         city: z.string(),
         postal_code: z.string(),
         state: z.string(),
+        country: z.string(),
         phone: z.string().optional(),
       })
       .optional(),
@@ -85,7 +86,9 @@ export default function CreateOrderForm({
   const [customerSelectOpen, setCustomerSelectOpen] = useState<boolean>(false);
   const [customerSearch, setCustomerSearch] = useState<string>('');
   const [shows, setShows] = useState<Show[] | null>(null);
-  const [show, setShow] = useState<number | undefined>(undefined);
+  const [show, setShow] = useState<number | undefined>(
+    params.show ? parseInt(params.show) : undefined
+  );
   const [showSelectOpen, setShowSelectOpen] = useState<boolean>(false);
   const [showSearch, setShowSearch] = useState<string>('');
   const [products, setProducts] = useState<Product[] | null>(null);
@@ -114,15 +117,22 @@ export default function CreateOrderForm({
     setProducts(res as Product[]);
   }, [params.show, show]);
 
-  const mappedCustomers = useMemo(
-    () =>
-      customers?.map((customer) => ({
+  const mappedCustomers = useMemo(() => {
+    return customers?.map((customer) => {
+      const disabled =
+        !customer.address.street ||
+        !customer.address.city ||
+        !customer.address.postal_code ||
+        !customer.address.state;
+
+      return {
         value: customer.id,
         label: `${customer.first_name} ${customer.last_name}`,
-        subtitle: customer.email,
-      })),
-    [customers]
-  );
+        subtitle: `${customer.email} ${disabled ? '(Incomplete address)' : ''}`,
+        disabled,
+      };
+    });
+  }, [customers]);
 
   const mappedShows = useMemo(
     () =>
@@ -148,15 +158,17 @@ export default function CreateOrderForm({
 
   useEffect(() => {
     if (show) {
-      const data = shows?.find((s) => s.id === show);
-      if (data) {
-        form.setValue('show_id', data.id);
+      const data = shows?.find((s) => {
+        return s.id === show;
+      });
+      if (data || params.show) {
+        form.setValue('show_id', data?.id || show);
         form.setValue('products', []);
         setProducts(null);
         fetchProducts();
       }
     }
-  }, [show, shows, form, fetchProducts]);
+  }, [show, shows, form, fetchProducts, params.show]);
 
   useEffect(() => {
     if (customer) {
@@ -171,6 +183,7 @@ export default function CreateOrderForm({
           city: data.address.city,
           postal_code: data.address.postal_code,
           state: data.address.state,
+          country: data.address.country,
           phone: data.phone,
         });
       }

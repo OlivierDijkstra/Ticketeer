@@ -3,6 +3,8 @@ import { createUrl, type Event, type Show } from '@repo/lib';
 import ShowCard from '@/components/show-card';
 import { fetchJson } from '@/lib/fetch';
 
+export const dynamic = 'force-dynamic';
+
 export default async function Page({ params }: { params: { event: string } }) {
   const event = await fetchJson<Event>(`/api/events/${params.event}`);
 

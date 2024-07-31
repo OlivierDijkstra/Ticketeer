@@ -7,6 +7,7 @@ ARG NODE_VERSION=20-alpine
 # Base stage: Use Node.js to install Turbo globally
 ###########################################
 FROM node:${NODE_VERSION} AS base
+
 # Install Turbo globally
 RUN yarn global add turbo
 
@@ -36,18 +37,28 @@ RUN yarn install --frozen-lockfile --ignore-scripts
 ###########################################
 COPY --from=builder /app/out/full/ .
 # Run the build command for the API
-RUN yarn turbo run build --filter=api...
+RUN yarn build
+
+# Copy node_modules to a temporary location
+RUN cp -R node_modules /tmp/node_modules
 
 ###########################################
 # Final stage: Use PHP to set up the final image
 ###########################################
-FROM php:${PHP_VERSION}-cli-alpine
+FROM php:${PHP_VERSION}-cli-bookworm
 WORKDIR /var/www/html
+
+# Create a symlink for node
+RUN ln -s /usr/local/bin/node /usr/local/bin/nodejs
+
 # Copy the built application from the installer stage
 COPY --from=installer /app ./
 
 # Copy public assets from the installer stage
 COPY --link --chown=${USER}:${USER} --from=installer /app/public public
+
+# Copy node_modules from the installer stage
+COPY --from=installer /tmp/node_modules ./node_modules
 
 # Ensure utilities.sh is copied before appending to .bashrc
 COPY --link --chown=${USER}:${USER} apps/api/deployment/utilities.sh /tmp/utilities.sh
@@ -56,7 +67,7 @@ RUN cat /tmp/utilities.sh >> ~/.bashrc
 
 FROM composer:${COMPOSER_VERSION} AS vendor
 
-FROM php:${PHP_VERSION}-cli-alpine
+FROM php:${PHP_VERSION}-cli-bookworm
 
 LABEL maintainer="SMortexa <seyed.me720@gmail.com>"
 LABEL org.opencontainers.image.title="Laravel Octane Dockerfile"
@@ -68,7 +79,8 @@ ARG WWWUSER=1000
 ARG WWWGROUP=1000
 ARG TZ=UTC
 
-ENV TERM=xterm-color \
+ENV DEBIAN_FRONTEND=noninteractive \
+    TERM=xterm-color \
     WITH_HORIZON=false \
     WITH_SCHEDULER=false \
     OCTANE_SERVER=swoole \
@@ -79,19 +91,21 @@ ENV TERM=xterm-color \
 
 WORKDIR ${ROOT}
 
-SHELL ["/bin/sh", "-eou", "pipefail", "-c"]
+SHELL ["/bin/bash", "-eou", "pipefail", "-c"]
 
 RUN ln -snf /usr/share/zoneinfo/${TZ} /etc/localtime \
-  && echo ${TZ} > /etc/timezone
+    && echo ${TZ} > /etc/timezone
 
 ADD --chmod=0755 https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
 
-RUN apk update; \
-    apk upgrade; \
-    apk add --no-cache \
+RUN apt-get update; \
+    apt-get upgrade -yqq; \
+    apt-get install -yqq --no-install-recommends --show-progress \
+    apt-utils \
     curl \
     wget \
     nano \
+	git \
     ncdu \
     procps \
     ca-certificates \
@@ -118,10 +132,42 @@ RUN apk update; \
     igbinary \
     ldap \
     swoole \
+    && apt-get -y autoremove \
+    && apt-get clean \
     && docker-php-source delete \
-    && rm -rf /var/cache/apk/* /tmp/* /var/tmp/*
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
+    && rm /var/log/lastlog /var/log/faillog
 
-RUN arch="$(apk --print-arch)" \
+# Install Node
+RUN curl -fsSL https://deb.nodesource.com/setup_22.x -o nodesource_setup.sh
+RUN bash nodesource_setup.sh
+RUN apt-get install -y nodejs
+
+# Puppeteer specific dependencies
+RUN apt-get update && apt-get install -y \
+    libglib2.0-0 \
+    libnss3 \
+    libnspr4 \
+    libatk1.0-0 \
+    libatk-bridge2.0-0 \
+    libcups2 \
+    libdrm2 \
+    libdbus-1-3 \
+    libatspi2.0-0 \
+    libx11-6 \
+    libxcomposite1 \
+    libxdamage1 \
+    libxext6 \
+    libxfixes3 \
+    libxrandr2 \
+    libgbm1 \
+    libxkbcommon0 \
+    libpango-1.0-0 \
+    libcairo2 \
+    libasound2 \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN arch="$(uname -m)" \
     && case "$arch" in \
     armhf) _cronic_fname='supercronic-linux-arm' ;; \
     aarch64) _cronic_fname='supercronic-linux-arm64' ;; \
@@ -135,12 +181,12 @@ RUN arch="$(apk --print-arch)" \
     && mkdir -p /etc/supercronic \
     && echo "*/1 * * * * php ${ROOT}/artisan schedule:run --no-interaction" > /etc/supercronic/laravel
 
-RUN addgroup -g ${WWWGROUP} ${USER} \
-    && adduser -D -h ${ROOT} -G ${USER} -u ${WWWUSER} -s /bin/sh ${USER}
+RUN userdel --remove --force www-data \
+    && groupadd --force -g ${WWWGROUP} ${USER} \
+    && useradd -ms /bin/bash --no-log-init --no-user-group -g ${WWWGROUP} -u ${WWWUSER} ${USER}
 
-RUN mkdir -p /var/log/supervisor /var/run/supervisor \
-    && chown -R ${USER}:${USER} ${ROOT} /var/log /var/run \
-    && chmod -R a+rw ${ROOT} /var/log /var/run
+RUN chown -R ${USER}:${USER} ${ROOT} /var/{log,run} \
+    && chmod -R a+rw ${ROOT} /var/{log,run}
 
 RUN cp ${PHP_INI_DIR}/php.ini-production ${PHP_INI_DIR}/php.ini
 
@@ -161,13 +207,11 @@ RUN composer install \
 RUN mv vendor /tmp/vendor
 
 COPY --link --chown=${USER}:${USER} apps/api ./
-# COPY --link --chown=${USER}:${USER} --from=build ${ROOT}/public public
+COPY --from=installer /app/apps/api/public/build ./public/build
+COPY --from=installer /tmp/node_modules ./node_modules
 
 RUN mkdir -p \
-    storage/framework/sessions \
-    storage/framework/views \
-    storage/framework/cache \
-    storage/framework/testing \
+    storage/framework/{sessions,views,cache,testing} \
     storage/logs \
     bootstrap/cache && chmod -R a+rw storage
 
@@ -185,13 +229,12 @@ RUN composer install \
     --no-dev \
     && composer clear-cache
 
-# Make the start-container script executable
 RUN chmod +x /usr/local/bin/start-container
 
-# Expose port 8000 for the application
-EXPOSE 8000
+EXPOSE 8001
 
 RUN mv /tmp/vendor vendor
 
-# Set the entrypoint to the start-container script
+RUN node node_modules/puppeteer/install.mjs
+
 ENTRYPOINT ["start-container"]

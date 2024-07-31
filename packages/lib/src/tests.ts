@@ -133,6 +133,7 @@ export function generateShow(show: Partial<Show> = {}): Show {
     address: generateAddress(show.address),
     enabled: true,
     description: generateString(50),
+    email_description: generateString(50),
     guests: [generateString(10), generateString(10)],
     created_at: "2021-06-01T00:00:00",
     updated_at: "2021-06-01T00:00:00",
