@@ -29,11 +29,11 @@ services:
       - api
     ports:
       - "3000:3000"
-    # healthcheck:
-    #   test: ["CMD-SHELL", "curl -f ${DASHBOARD_DOMAIN:-dashboard.test.local} || exit 1"]
-    #   interval: 30s
-    #   timeout: 10s
-    #   retries: 3
+    healthcheck:
+      test: ["CMD-SHELL", "wget --spider -q http://dashboard:3000 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
   frontend:
     build:
@@ -46,11 +46,11 @@ services:
       - api
     ports:
       - "3001:3000"
-    # healthcheck:
-    #   test: ["CMD-SHELL", "curl -f ${FRONTEND_DOMAIN:-frontend.test.local} || exit 1"]
-    #   interval: 30s
-    #   timeout: 10s
-    #   retries: 3
+    healthcheck:
+      test: ["CMD-SHELL", "wget --spider -q http://frontend:3001 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
   api:
     <<: [*api-service-build, *common-environment-networks, *common-logging]
@@ -140,11 +140,11 @@ services:
       - typesense_data:/data
     ports:
       - "${TYPESENSE_PORT:-8108}:8108"
-    # healthcheck:
-    #   test: ["CMD-SHELL", "curl -f http://127.0.0.1:8108/health || exit 1"]
-    #   interval: 30s
-    #   timeout: 10s
-    #   retries: 3
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://typesense:8108/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
 volumes:
   mysql_data:
