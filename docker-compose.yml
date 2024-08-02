@@ -163,7 +163,7 @@ services:
       - cubestore_router
       - cubestore_worker_1
     networks:
-      - dev-network
+      - app-network
 
   cube_refresh_worker:
     restart: always
@@ -181,7 +181,7 @@ services:
     volumes:
       - ./cube:/cube/conf
     networks:
-      - dev-network
+      - app-network
  
   cubestore_router:
     restart: always
@@ -194,7 +194,7 @@ services:
     volumes:
       - ./cube/.cubestore:/cube/data
     networks:
-      - dev-network
+      - app-network
  
   cubestore_worker_1:
     restart: always
@@ -210,7 +210,7 @@ services:
     depends_on:
       - cubestore_router
     networks:
-      - dev-network
+      - app-network
 
 volumes:
   mysql_data:
