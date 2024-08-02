@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 
-
 type TimeType = 'hour' | 'minute';
 
 export function useTimeInput(

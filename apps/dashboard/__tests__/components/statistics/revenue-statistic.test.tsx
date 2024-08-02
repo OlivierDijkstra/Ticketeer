@@ -49,10 +49,7 @@ describe('RevenueStatistic', () => {
   });
 
   test('renders statistic with fetched data', async () => {
-    const mockData = [
-      { value: 8000 },
-      { value: 10000 },
-    ];
+    const mockData = [{ value: 8000 }, { value: 10000 }];
     (fetchData as Mock).mockResolvedValue(mockData);
 
     const Comp = await resolvedComponent(RevenueStatistic, {
@@ -69,10 +66,7 @@ describe('RevenueStatistic', () => {
   });
 
   test('renders statistic with fetched data and down percentage', async () => {
-    const mockData = [
-      { value: 6000 },
-      { value: 5000 },
-    ];
+    const mockData = [{ value: 6000 }, { value: 5000 }];
     (fetchData as Mock).mockResolvedValue(mockData);
 
     const Comp = await resolvedComponent(RevenueStatistic, {
@@ -89,10 +83,7 @@ describe('RevenueStatistic', () => {
   });
 
   test('renders statistic with filters', async () => {
-    const mockData = [
-      { value: 6000 },
-      { value: 7000 },
-    ];
+    const mockData = [{ value: 6000 }, { value: 7000 }];
     (fetchData as Mock).mockResolvedValue(mockData);
 
     const filters = { status: 'completed' };
@@ -108,19 +99,21 @@ describe('RevenueStatistic', () => {
       expect(screen.getByText('+17% from last month')).toBeInTheDocument();
     });
 
-    expect(fetchData).toHaveBeenCalledWith(expect.objectContaining({
-      measures: ['orders.total'],
-      timeDimensions: [
-        expect.objectContaining({
-          dimension: 'orders.created_at',
-          granularity: 'week',
-          dateRange: expect.any(Array),
-        }),
-      ],
-      order: {
-        'orders.created_at': 'asc',
-      },
-      filters,
-    }));
+    expect(fetchData).toHaveBeenCalledWith(
+      expect.objectContaining({
+        measures: ['orders.total'],
+        timeDimensions: [
+          expect.objectContaining({
+            dimension: 'orders.created_at',
+            granularity: 'week',
+            dateRange: expect.any(Array),
+          }),
+        ],
+        order: {
+          'orders.created_at': 'asc',
+        },
+        filters,
+      })
+    );
   });
 });

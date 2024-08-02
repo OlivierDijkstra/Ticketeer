@@ -213,7 +213,7 @@ class HandlesPaginationAndFilteringTest extends TestCase
 
     public function test_get_show_relation()
     {
-        $product = new Product();
+        $product = new Product;
 
         $relation = $this->getShowRelation($product);
 
@@ -257,7 +257,7 @@ class HandlesPaginationAndFilteringTest extends TestCase
 
     public function test_paginate_with_default_per_page()
     {
-        $request = new Request();
+        $request = new Request;
 
         $query = Show::query();
 
@@ -283,7 +283,7 @@ class HandlesPaginationAndFilteringTest extends TestCase
 
     public function test_flatten_pivot_fields_without_show_id()
     {
-        $request = new Request();
+        $request = new Request;
 
         $query = Product::query();
         $query = $this->applyFilters($request, $query);
@@ -366,7 +366,7 @@ class HandlesPaginationAndFilteringTest extends TestCase
         ]);
 
         $query = m::mock(Builder::class);
-        $query->shouldReceive('getModel')->andReturn(new Customer());
+        $query->shouldReceive('getModel')->andReturn(new Customer);
         $query->shouldReceive('get')->andReturn(collect());
 
         $result = $this->search($request, $query, 'John');
@@ -462,21 +462,21 @@ class HandlesPaginationAndFilteringTest extends TestCase
 
     public function test_determine_query_by_for_customer()
     {
-        $model = new Customer();
+        $model = new Customer;
         $result = $this->determineQueryBy($model);
         $this->assertEquals('first_name, last_name', $result);
     }
 
     public function test_determine_query_by_for_show()
     {
-        $model = new Show();
+        $model = new Show;
         $result = $this->determineQueryBy($model);
         $this->assertEquals('start', $result);
     }
 
     public function test_determine_query_by_for_default()
     {
-        $model = new Event();
+        $model = new Event;
         $result = $this->determineQueryBy($model);
         $this->assertEquals('name', $result);
     }

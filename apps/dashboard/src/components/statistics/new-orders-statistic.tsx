@@ -42,7 +42,7 @@ export default async function NewOrdersStatistic({
 
   const ordersThisWeek = resultSet[resultSet.length - 1]?.value || 0;
   const ordersLastWeek = resultSet[0]?.value || 0;
-  
+
   return (
     <StatisticCard
       name='New Orders This Week'

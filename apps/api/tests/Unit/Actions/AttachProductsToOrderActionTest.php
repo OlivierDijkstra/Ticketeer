@@ -18,7 +18,7 @@ class AttachProductsToOrderActionTest extends TestCase
 
         $show->products()->attach($products->pluck('id'), ['amount' => 10]);
 
-        $action = new AttachProductsToOrderAction();
+        $action = new AttachProductsToOrderAction;
         $decrementedProducts = $action->handle($order, $products->map(fn ($product) => ['id' => $product->id, 'amount' => 1])->toArray(), $show->id);
 
         $this->assertDatabaseHas('order_product', ['order_id' => $order->id]);

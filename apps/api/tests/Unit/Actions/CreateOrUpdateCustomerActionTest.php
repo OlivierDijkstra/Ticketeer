@@ -21,7 +21,7 @@ class CreateOrUpdateCustomerActionTest extends TestCase
             'state' => 'IL',
         ];
 
-        $action = new CreateOrUpdateCustomerAction();
+        $action = new CreateOrUpdateCustomerAction;
         $customer = $action->handle($customerData);
 
         $this->assertInstanceOf(Customer::class, $customer);

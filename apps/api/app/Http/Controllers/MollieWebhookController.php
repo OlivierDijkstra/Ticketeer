@@ -16,7 +16,7 @@ class MollieWebhookController extends Controller
 {
     public function __invoke(Request $request)
     {
-        if (!$request->has('id')) {
+        if (! $request->has('id')) {
             return;
         }
 
@@ -42,7 +42,7 @@ class MollieWebhookController extends Controller
                             new HandlePaymentRefundedJob($payment, $mollie),
                             new RestoreProductStockJob($payment),
                         ])->dispatch();
-                        
+
                         break;
                     }
 

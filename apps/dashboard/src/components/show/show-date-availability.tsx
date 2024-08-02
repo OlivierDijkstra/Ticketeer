@@ -77,7 +77,7 @@ export default function ShowTitleCard({ show }: { show: Show }) {
         <div className='space-y-2'>
           <div>
             <p className='text-sm font-medium'>Description</p>
-            
+
             <EditableField
               type='textarea'
               minLength={0}
@@ -91,7 +91,7 @@ export default function ShowTitleCard({ show }: { show: Show }) {
 
           <div>
             <p className='text-sm font-medium'>Email Description</p>
-            <p className='text-xs text-muted-foreground mb-2'>
+            <p className='mb-2 text-xs text-muted-foreground'>
               This description will be on the email confirmation sent to
               customers.
             </p>

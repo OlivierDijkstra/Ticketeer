@@ -20,7 +20,7 @@ class EventTest extends TestCase
 
     public function test_get_route_key_name()
     {
-        $event = new Event();
+        $event = new Event;
         $this->assertEquals('slug', $event->getRouteKeyName());
     }
 

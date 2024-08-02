@@ -92,7 +92,9 @@ describe('ShowDateAvailablity', () => {
     await userEvent.click(saveButton);
 
     await waitFor(() => {
-      expect(toast.success).toHaveBeenCalledWith('Show email description updated successfully');
+      expect(toast.success).toHaveBeenCalledWith(
+        'Show email description updated successfully'
+      );
       expect(updateShowAction).toHaveBeenCalledWith({
         show_id: mockShow.id,
         data: { email_description: 'Updated Email Description' },

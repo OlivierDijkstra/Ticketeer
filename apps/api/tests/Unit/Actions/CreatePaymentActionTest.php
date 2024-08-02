@@ -11,7 +11,7 @@ class CreatePaymentActionTest extends TestCase
     public function test_create_payment()
     {
         $order = Order::factory()->create(['total' => 100.00]);
-        $action = new CreatePaymentAction();
+        $action = new CreatePaymentAction;
 
         $paymentUrl = $action->handle($order, $order->total, 'http://example.com');
 

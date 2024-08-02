@@ -138,10 +138,10 @@ export default function Combobox({
                       }}
                       disabled={
                         item.disabled ||
-                        required &&
-                        (async
-                          ? (value as { value: Value })?.value === item.value
-                          : value === item.value)
+                        (required &&
+                          (async
+                            ? (value as { value: Value })?.value === item.value
+                            : value === item.value))
                       }
                     >
                       <div>

@@ -32,7 +32,7 @@ class RestoreProductStockJob implements ShouldQueue
         // Load the order with its products and the show_id
         $order = $this->payment->order()->with(['products', 'show:id'])->first();
 
-        if (!$order) {
+        if (! $order) {
             return;
         }
 

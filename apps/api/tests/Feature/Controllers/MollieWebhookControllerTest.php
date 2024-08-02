@@ -189,12 +189,12 @@ class MollieWebhookControllerTest extends TestCase
         $paymentsMock = Mockery::mock();
         $apiMock->payments = $paymentsMock;
 
-        $response = new \Mollie\Api\Resources\Payment(new MollieApiClient());
+        $response = new \Mollie\Api\Resources\Payment(new MollieApiClient);
         $response->id = $transaction_id;
         $response->status = $status;
-        $response->amount = new \stdClass();
+        $response->amount = new \stdClass;
         $response->amount->value = $amount;
-        $response->amountRefunded = new \stdClass();
+        $response->amountRefunded = new \stdClass;
         $response->amountRefunded->value = $refunded_amount;
         $paymentsMock->shouldReceive('get')->andReturn($response);
 

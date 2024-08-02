@@ -22,7 +22,7 @@ class ProductShowObserverTest extends TestCase
 
     public function test_product_show_updated_adjusts_stock()
     {
-        $attachProductsToOrderAction = new AttachProductsToOrderAction();
+        $attachProductsToOrderAction = new AttachProductsToOrderAction;
 
         $product = Product::factory()->create();
         $show = Show::factory()->create();

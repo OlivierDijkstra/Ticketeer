@@ -16,7 +16,7 @@ class RestoreProductStockActionTest extends TestCase
 
         $show->products()->attach($products->pluck('id'), ['amount' => 10]);
 
-        $action = new RestoreProductStockAction();
+        $action = new RestoreProductStockAction;
         $action->handle($products->map(fn ($product) => ['id' => $product->id, 'amount' => 1])->toArray(), $show->id);
 
         foreach ($products as $product) {
