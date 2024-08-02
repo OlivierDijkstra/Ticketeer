@@ -112,7 +112,7 @@ services:
       retries: 3
 
   db:
-    image: mysql:8.4
+    image: mysql:8.2
     <<: *common-environment-networks
     <<: *common-logging
     restart: unless-stopped
@@ -124,6 +124,7 @@ services:
       - mysql_data:/var/lib/mysql
     ports:
       - "3306:3306"
+    command: --default-authentication-plugin=mysql_native_password
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-uroot", "-p${MYSQL_ROOT_PASSWORD}"]
       interval: 30s
@@ -140,6 +141,76 @@ services:
       - typesense_data:/data
     ports:
       - "${TYPESENSE_PORT:-8108}:8108"
+
+  cube_api:
+    restart: always
+    image: cubejs/cube:latest
+    ports:
+      - 4000:4000
+    environment:
+      - CUBEJS_DB_TYPE=mysql
+      - CUBEJS_DB_HOST=db
+      - CUBEJS_DB_NAME=${MYSQL_DATABASE}
+      - CUBEJS_DB_USER=${MYSQL_USER}
+      - CUBEJS_DB_PASS=${MYSQL_PASSWORD}
+      - CUBEJS_DB_EXPORT_BUCKET=cubestore
+      - CUBEJS_CUBESTORE_HOST=cubestore_router
+      - CUBEJS_API_SECRET=secret
+    volumes:
+      - ./cube:/cube/conf
+    depends_on:
+      - cube_refresh_worker
+      - cubestore_router
+      - cubestore_worker_1
+    networks:
+      - dev-network
+
+  cube_refresh_worker:
+    restart: always
+    image: cubejs/cube:latest
+    environment:
+      - CUBEJS_DB_TYPE=mysql
+      - CUBEJS_DB_HOST=db
+      - CUBEJS_DB_NAME=${MYSQL_DATABASE}
+      - CUBEJS_DB_USER=${MYSQL_USER}
+      - CUBEJS_DB_PASS=${MYSQL_PASSWORD}
+      - CUBEJS_DB_EXPORT_BUCKET=cubestore
+      - CUBEJS_CUBESTORE_HOST=cubestore_router
+      - CUBEJS_API_SECRET=secret
+      - CUBEJS_REFRESH_WORKER=true
+    volumes:
+      - ./cube:/cube/conf
+    networks:
+      - dev-network
+ 
+  cubestore_router:
+    restart: always
+    image: cubejs/cubestore:latest
+    environment:
+      - CUBESTORE_WORKERS=cubestore_worker_1:10001
+      - CUBESTORE_REMOTE_DIR=/cube/data
+      - CUBESTORE_META_PORT=9999
+      - CUBESTORE_SERVER_NAME=cubestore_router:9999
+    volumes:
+      - ./cube/.cubestore:/cube/data
+    networks:
+      - dev-network
+ 
+  cubestore_worker_1:
+    restart: always
+    image: cubejs/cubestore:latest
+    environment:
+      - CUBESTORE_WORKERS=cubestore_worker_1:10001
+      - CUBESTORE_SERVER_NAME=cubestore_worker_1:10001
+      - CUBESTORE_WORKER_PORT=10001
+      - CUBESTORE_REMOTE_DIR=/cube/data
+      - CUBESTORE_META_ADDR=cubestore_router:9999
+    volumes:
+      - ./cube/.cubestore:/cube/data
+    depends_on:
+      - cubestore_router
+    networks:
+      - dev-network
 
 volumes:
   mysql_data:

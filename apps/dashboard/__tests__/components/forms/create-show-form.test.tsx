@@ -162,6 +162,7 @@ describe('CreateShowForm', () => {
           event_slug: '1',
           data: {
             description: 'Test Description',
+            email_description: '',
             enabled: true,
             start: format(expectedStart, 'yyyy-MM-dd HH:mm:ss'),
             end: format(expectedEnd, 'yyyy-MM-dd HH:mm:ss'),

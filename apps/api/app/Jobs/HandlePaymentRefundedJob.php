@@ -3,14 +3,12 @@
 namespace App\Jobs;
 
 use App\Models\Payment;
-use App\Stats\RevenueStats;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Mollie\Api\Resources\Payment as MolliePayment;
-use Spatie\Stats\StatsWriter;
 
 class HandlePaymentRefundedJob implements ShouldQueue
 {
@@ -41,10 +39,5 @@ class HandlePaymentRefundedJob implements ShouldQueue
         $order->update([
             'status' => 'refunded',
         ]);
-
-        $event_slug = $order->event()->select('slug')->first();
-
-        $stats = (float) $this->mollie->amountRefunded->value - $current_refunded_amount;
-        StatsWriter::for(RevenueStats::class, ['event' => $event_slug])->decrease($stats);
     }
 }

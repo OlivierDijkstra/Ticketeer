@@ -1,6 +1,7 @@
 import { Suspense } from 'react';
 
-import RevenueChartData from '@/components/charts/revenue-chart/revenue-chart-data';
+import CustomersChart from '@/components/charts/customers-chart';
+import RevenueChart from '@/components/charts/revenue-chart';
 import SkeletonStatistic from '@/components/skeletons/skeleton-statistic';
 import SkeletonTable from '@/components/skeletons/skeleton-table';
 import NewOrdersStatistic from '@/components/statistics/new-orders-statistic';
@@ -25,7 +26,10 @@ export default async function Page({
         </Suspense>
       </div>
 
-      <RevenueChartData />
+      <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
+        <RevenueChart />
+        <CustomersChart />
+      </div>
 
       <Suspense fallback={<SkeletonTable />}>
         <EventsTable page={searchParams?.page_events} />

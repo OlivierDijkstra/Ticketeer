@@ -1,0 +1,53 @@
+cubes:
+  - name: events
+    sql_table: homestead.events
+    data_source: default
+
+    joins: []
+
+    dimensions:
+      - name: id
+        sql: id
+        type: number
+        primary_key: true
+
+      - name: name
+        sql: name
+        type: string
+
+      - name: slug
+        sql: slug
+        type: string
+
+      - name: statistics_slug
+        sql: statistics_slug
+        type: string
+
+      - name: description
+        sql: description
+        type: string
+
+      - name: description_short
+        sql: description_short
+        type: string
+
+      - name: created_at
+        sql: created_at
+        type: time
+
+      - name: updated_at
+        sql: updated_at
+        type: time
+
+      - name: deleted_at
+        sql: deleted_at
+        type: time
+
+    measures:
+      - name: count
+        type: count
+
+    pre_aggregations:
+      # Pre-aggregation definitions go here.
+      # Learn more in the documentation: https://cube.dev/docs/caching/pre-aggregations/getting-started
+

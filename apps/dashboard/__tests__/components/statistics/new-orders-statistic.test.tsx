@@ -3,18 +3,16 @@ import { subDays } from 'date-fns';
 import type { Mock } from 'vitest';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 
+import { fetchData } from '@/components/charts/server';
 import NewOrdersStatistic from '@/components/statistics/new-orders-statistic';
-import { Statistics } from '@/lib/statistics';
 
 vi.mock('date-fns', () => ({
   ...vi.importActual('date-fns'),
   subDays: vi.fn(),
 }));
 
-vi.mock('@/lib/statistics', () => ({
-  Statistics: {
-    fetchStatistics: vi.fn(),
-  },
+vi.mock('@/components/charts/server', () => ({
+  fetchData: vi.fn(),
 }));
 
 async function resolvedComponent(
@@ -26,19 +24,12 @@ async function resolvedComponent(
 }
 
 describe('NewOrdersStatistic', () => {
-  const mockStatistics = {
-    getLastPoint: vi.fn(),
-    getPercentageIncrease: vi.fn(),
-  };
-
   beforeEach(() => {
     (subDays as Mock).mockReturnValue(new Date('2023-05-01'));
   });
 
   test('renders error state when fetch fails', async () => {
-    (Statistics.fetchStatistics as Mock).mockRejectedValue(
-      new Error('Failed to fetch')
-    );
+    (fetchData as Mock).mockRejectedValue(new Error('Failed to fetch'));
 
     const Comp = await resolvedComponent(NewOrdersStatistic, {
       filters: {},
@@ -47,16 +38,17 @@ describe('NewOrdersStatistic', () => {
     render(<Comp />);
 
     await waitFor(() => {
-      expect(screen.getByText('Error fetching new orders')).toBeInTheDocument();
+      expect(screen.getByText('Error fetching orders')).toBeInTheDocument();
       expect(screen.queryByText('%')).not.toBeInTheDocument();
     });
   });
 
   test('renders statistic with fetched data', async () => {
-    mockStatistics.getLastPoint.mockReturnValue({ increments: 100 });
-    mockStatistics.getPercentageIncrease.mockReturnValue(20);
-
-    (Statistics.fetchStatistics as Mock).mockResolvedValue(mockStatistics);
+    const mockData = [
+      { value: 80 },
+      { value: 100 },
+    ];
+    (fetchData as Mock).mockResolvedValue(mockData);
 
     const Comp = await resolvedComponent(NewOrdersStatistic, {
       filters: {},
@@ -67,15 +59,16 @@ describe('NewOrdersStatistic', () => {
     await waitFor(() => {
       expect(screen.getByText('New Orders This Week')).toBeInTheDocument();
       expect(screen.getByText('100')).toBeInTheDocument();
-      expect(screen.getByText('+20% from last week')).toBeInTheDocument();
+      expect(screen.getByText('+25% from last week')).toBeInTheDocument();
     });
   });
 
   test('renders statistic with fetched data and down percentage', async () => {
-    mockStatistics.getLastPoint.mockReturnValue({ increments: 50 });
-    mockStatistics.getPercentageIncrease.mockReturnValue(-10);
-
-    (Statistics.fetchStatistics as Mock).mockResolvedValue(mockStatistics);
+    const mockData = [
+      { value: 60 },
+      { value: 50 },
+    ];
+    (fetchData as Mock).mockResolvedValue(mockData);
 
     const Comp = await resolvedComponent(NewOrdersStatistic, {
       filters: {},
@@ -86,15 +79,16 @@ describe('NewOrdersStatistic', () => {
     await waitFor(() => {
       expect(screen.getByText('New Orders This Week')).toBeInTheDocument();
       expect(screen.getByText('50')).toBeInTheDocument();
-      expect(screen.getByText('-10% from last week')).toBeInTheDocument();
+      expect(screen.getByText('-17% from last week')).toBeInTheDocument();
     });
   });
 
   test('renders statistic with filters', async () => {
-    mockStatistics.getLastPoint.mockReturnValue({ increments: 70 });
-    mockStatistics.getPercentageIncrease.mockReturnValue(15);
-
-    (Statistics.fetchStatistics as Mock).mockResolvedValue(mockStatistics);
+    const mockData = [
+      { value: 60 },
+      { value: 70 },
+    ];
+    (fetchData as Mock).mockResolvedValue(mockData);
 
     const filters = { status: 'completed' };
     const Comp = await resolvedComponent(NewOrdersStatistic, {
@@ -106,15 +100,22 @@ describe('NewOrdersStatistic', () => {
     await waitFor(() => {
       expect(screen.getByText('New Orders This Week')).toBeInTheDocument();
       expect(screen.getByText('70')).toBeInTheDocument();
-      expect(screen.getByText('+15% from last week')).toBeInTheDocument();
+      expect(screen.getByText('+17% from last week')).toBeInTheDocument();
     });
 
-    expect(Statistics.fetchStatistics).toHaveBeenCalledWith({
-      model: 'order',
-      start_date: expect.any(String),
-      end_date: expect.any(String),
-      group_by: 'week',
+    expect(fetchData).toHaveBeenCalledWith(expect.objectContaining({
+      measures: ['orders.total'],
+      timeDimensions: [
+        expect.objectContaining({
+          dimension: 'orders.created_at',
+          granularity: 'week',
+          dateRange: expect.any(Array),
+        }),
+      ],
+      order: {
+        'orders.created_at': 'asc',
+      },
       filters,
-    });
+    }));
   });
 });

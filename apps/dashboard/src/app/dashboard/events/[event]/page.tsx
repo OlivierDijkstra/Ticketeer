@@ -25,16 +25,24 @@ export default async function Page({
       <div className='grid grid-cols-1 gap-4 sm:grid-cols-3'>
         <Suspense fallback={<SkeletonStatistic />}>
           <NewOrdersStatistic
-            filters={{
-              event: event.statistics_slug,
-            }}
+            filters={[
+              {
+                member: 'events.slug',
+                operator: 'equals',
+                values: [event.statistics_slug],
+              },
+            ]}
           />
         </Suspense>
         <Suspense fallback={<SkeletonStatistic />}>
           <RevenueStatistic
-            filters={{
-              event: event.statistics_slug,
-            }}
+            filters={[
+              {
+                member: 'events.slug',
+                operator: 'equals',
+                values: [event.statistics_slug],
+              },
+            ]}
           />
         </Suspense>
       </div>

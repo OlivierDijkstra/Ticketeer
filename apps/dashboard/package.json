@@ -16,6 +16,8 @@
     "test:watch": "vitest --watch"
   },
   "dependencies": {
+    "@cubejs-client/core": "^0.35.23",
+    "@cubejs-client/react": "^0.35.48",
     "@hookform/resolvers": "^3.4.2",
     "@radix-ui/react-alert-dialog": "^1.0.5",
     "@radix-ui/react-checkbox": "^1.0.4",

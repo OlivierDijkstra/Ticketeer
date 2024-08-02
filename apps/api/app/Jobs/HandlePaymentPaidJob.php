@@ -3,14 +3,12 @@
 namespace App\Jobs;
 
 use App\Models\Payment;
-use App\Stats\RevenueStats;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Mollie\Api\Resources\Payment as MolliePayment;
-use Spatie\Stats\StatsWriter;
 
 class HandlePaymentPaidJob implements ShouldQueue
 {
@@ -43,10 +41,5 @@ class HandlePaymentPaidJob implements ShouldQueue
                 'paid_at' => now(),
             ]);
         }
-
-        $event_slug = $order->event()->select('slug')->first();
-
-        $amount = (float) $this->payment->amount;
-        StatsWriter::for(RevenueStats::class, ['event' => $event_slug])->increase($amount);
     }
 }

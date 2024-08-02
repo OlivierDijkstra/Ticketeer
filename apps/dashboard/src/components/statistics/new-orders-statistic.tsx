@@ -1,43 +1,57 @@
+import type { Filter } from '@cubejs-client/core';
 import { subDays } from 'date-fns';
 
-import NumberStatistic from '@/components/statistics/number-statistic';
-import { Statistics } from '@/lib/statistics';
+import type { ResultSet } from '@/components/charts/server';
+import { fetchData } from '@/components/charts/server';
+import StatisticCard from '@/components/statistics/statistic-card';
 
 export default async function NewOrdersStatistic({
   filters,
 }: {
-  filters?: Record<string, string>;
+  filters?: Filter[];
 }) {
-  const start_date = subDays(new Date(), 13).toISOString();
-  const end_date = new Date().toISOString();
+  async function handleDataFetch() {
+    const start_date = subDays(new Date(), 7).toISOString();
+    const end_date = new Date().toISOString();
 
-  let statistics: Statistics;
-
-  try {
-    statistics = await Statistics.fetchStatistics({
-      model: 'order',
-      start_date,
-      end_date,
-      group_by: 'week',
+    return await fetchData({
+      measures: ['orders.total'],
+      timeDimensions: [
+        {
+          dimension: 'orders.created_at',
+          granularity: 'week',
+          dateRange: [start_date, end_date],
+        },
+      ],
+      order: {
+        'orders.created_at': 'asc',
+      },
       filters,
     });
+  }
+
+  let resultSet: ResultSet = [];
+
+  try {
+    resultSet = await handleDataFetch();
   } catch (error) {
     return (
-      <NumberStatistic
-        name='Error fetching new orders'
-        percentage={0}
-        value={0}
-      />
+      <StatisticCard name='Error fetching orders' value={0} percentage={0} />
     );
   }
 
-  const ordersThisWeek = statistics.getLastPoint()?.increments;
-
+  const ordersThisWeek = resultSet[resultSet.length - 1]?.value || 0;
+  const ordersLastWeek = resultSet[0]?.value || 0;
+  
   return (
-    <NumberStatistic
+    <StatisticCard
       name='New Orders This Week'
-      percentage={statistics.getPercentageIncrease()}
-      value={ordersThisWeek || 0}
+      percentage={
+        Math.round(
+          ((ordersThisWeek - ordersLastWeek) / ordersLastWeek) * 100
+        ) || 0
+      }
+      value={ordersThisWeek}
       period='week'
     />
   );

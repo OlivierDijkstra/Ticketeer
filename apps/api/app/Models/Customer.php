@@ -2,14 +2,12 @@
 
 namespace App\Models;
 
-use App\Stats\CustomerStats;
 use App\Traits\Searchable;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
-use Spatie\Stats\StatsWriter;
 
 class Customer extends Model
 {
@@ -35,8 +33,6 @@ class Customer extends Model
 
         static::created(function ($customer) {
             $customer->address()->create();
-
-            StatsWriter::for(CustomerStats::class)->increase();
         });
 
         static::deleting(function ($customer) {

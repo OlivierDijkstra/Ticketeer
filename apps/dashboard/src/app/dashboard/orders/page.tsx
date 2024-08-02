@@ -2,7 +2,7 @@ import { Suspense } from 'react';
 
 import SkeletonGraph from '@/components/skeletons/skeleton-graph';
 import SkeletonStatistic from '@/components/skeletons/skeleton-statistic';
-import TotalOrdersStatistic from '@/components/statistics/total-orders-statistic';
+import NewOrdersStatistic from '@/components/statistics/new-orders-statistic';
 import OrdersTable from '@/components/tables/OrdersTable/orders-table';
 
 export default async function Page({
@@ -16,7 +16,7 @@ export default async function Page({
     <div className='space-y-4'>
       <div className='mb-4 grid grid-cols-1 gap-4 sm:grid-cols-3'>
         <Suspense fallback={<SkeletonStatistic />}>
-          <TotalOrdersStatistic />
+          <NewOrdersStatistic />
         </Suspense>
       </div>
 

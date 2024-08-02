@@ -23,7 +23,7 @@ class SearchableTest extends TestCase
         $this->assertArrayHasKey('id', $searchableArray);
         $this->assertArrayHasKey('created_at', $searchableArray);
         $this->assertEquals($model->created_at->timestamp, $searchableArray['created_at']);
-        $this->assertIsArray($searchableArray['guests']);
+        $this->assertIsString($searchableArray['guests']);
     }
 
     public function test_to_searchable_array_with_database()

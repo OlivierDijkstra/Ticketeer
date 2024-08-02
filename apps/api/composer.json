@@ -24,7 +24,6 @@
         "nunomaduro/collision": "^8.0",
         "spatie/laravel-medialibrary": "^11.4",
         "spatie/laravel-pdf": "^1.5",
-        "spatie/laravel-stats": "^2.3",
         "spatie/temporary-directory": "^2.2",
         "symfony/http-client": "^7.1",
         "symfony/postmark-mailer": "^7.1",

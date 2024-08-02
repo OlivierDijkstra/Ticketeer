@@ -2,11 +2,9 @@
 
 namespace App\Models;
 
-use App\Stats\OrderStats;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Spatie\Stats\StatsWriter;
 
 class Order extends Model
 {
@@ -75,14 +73,5 @@ class Order extends Model
     public static function GenerateOrderNumber()
     {
         return 'ORD-'.now()->format('YmdHis').'-'.rand(1000, 9999);
-    }
-
-    public static function boot()
-    {
-        parent::boot();
-
-        static::created(function ($order) {
-            StatsWriter::for(OrderStats::class, ['event' => $order->event->slug])->increase();
-        });
     }
 }

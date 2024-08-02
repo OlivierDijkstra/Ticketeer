@@ -1,0 +1,40 @@
+cubes:
+  - name: order_product
+    sql_table: homestead.order_product
+    data_source: default
+
+    joins:
+      - name: orders
+        sql: "{CUBE}.order_id = {orders}.id"
+        relationship: many_to_one
+
+      - name: products
+        sql: "{CUBE}.product_id = {products}.id"
+        relationship: many_to_one
+
+    dimensions:
+      - name: id
+        sql: id
+        type: number
+        primary_key: true
+
+      - name: order_id
+        sql: order_id
+        type: string
+
+    measures:
+      - name: count
+        type: count
+
+      - name: amount
+        sql: amount
+        type: sum
+
+      - name: price
+        sql: price
+        type: sum
+
+    pre_aggregations:
+      # Pre-aggregation definitions go here.
+      # Learn more in the documentation: https://cube.dev/docs/caching/pre-aggregations/getting-started
+
