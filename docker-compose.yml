@@ -148,6 +148,7 @@ services:
     ports:
       - 4000:4000
     environment:
+      - PORT=4000
       - CUBEJS_DB_TYPE=mysql
       - CUBEJS_DB_HOST=db
       - CUBEJS_DB_NAME=${MYSQL_DATABASE}
