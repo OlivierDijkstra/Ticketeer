@@ -159,7 +159,7 @@ services:
       - CUBEJS_API_SECRET=${NEXT_PUBLIC_CUBEJS_TOKEN}
       - CUBEJS_DEV_MODE=true
     volumes:
-      - ./cube:/cube/conf
+      - ./cube/conf:/cube/conf
       - ./cube/model:/cube/model
     # depends_on:
       # - cube_refresh_worker
