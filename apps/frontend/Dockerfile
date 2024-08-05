@@ -44,4 +44,4 @@ COPY --from=installer --chown=nextjs:nodejs /app/apps/frontend/.next/standalone 
 COPY --from=installer --chown=nextjs:nodejs /app/apps/frontend/.next/static ./apps/frontend/.next/static
 COPY --from=installer --chown=nextjs:nodejs /app/apps/frontend/public ./apps/frontend/public
 
-CMD PORT=3001 node apps/frontend/server.js
+CMD node apps/frontend/server.js
