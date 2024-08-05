@@ -145,9 +145,10 @@ services:
   cube_api:
     restart: always
     image: cubejs/cube:v0.31.46
-    command: command
     ports:
       - 4000:4000
+    working_dir: /cube
+    command: sh -c "cubejs generate -t orders,customers,shows,products,order_product,product_show && cubejs server"
     environment:
       - PORT=4000
       - CUBEJS_DB_TYPE=mysql
