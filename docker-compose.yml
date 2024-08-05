@@ -160,9 +160,9 @@ services:
       # - CUBEJS_CUBESTORE_HOST=cubestore_router
       - CUBEJS_API_SECRET=${NEXT_PUBLIC_CUBEJS_TOKEN}
       - CUBEJS_DEV_MODE=true
-    volumes:
-      - ./cube/conf:/cube/conf
-      - ./cube/schema:/cube/schema
+    # volumes:
+    #   - ./cube/conf:/cube/conf
+    #   - ./cube/schema:/cube/schema
     # depends_on:
       # - cube_refresh_worker
       # - cubestore_router
