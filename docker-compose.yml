@@ -147,7 +147,7 @@ services:
     image: cubejs/cube:v0.31.46
     ports:
       - 4000:4000
-    command: sh -c "cd /cube && cubejs generate -t orders,customers,shows,products,order_product,product_show && mv /cube/schema /cube/conf/schema && cubejs server"
+    # command: sh -c "cd /cube && cubejs generate -t orders,customers,shows,products,order_product,product_show && mv /cube/schema /cube/conf/schema && cubejs server"
     environment:
       - PORT=4000
       - CUBEJS_DB_TYPE=mysql
