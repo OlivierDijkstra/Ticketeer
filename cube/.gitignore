@@ -1,1 +1,3 @@
 .cubestore
+*
+!.gitignore

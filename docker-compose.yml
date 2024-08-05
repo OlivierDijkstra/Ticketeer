@@ -144,7 +144,7 @@ services:
 
   cube_api:
     restart: always
-    image: cubejs/cube:latest
+    image: cubejs/cube:v0.31.46
     ports:
       - 4000:4000
     environment:
@@ -158,9 +158,8 @@ services:
       # - CUBEJS_CUBESTORE_HOST=cubestore_router
       - CUBEJS_API_SECRET=${NEXT_PUBLIC_CUBEJS_TOKEN}
       - CUBEJS_DEV_MODE=true
-    volumes:
-      - ./cube/conf:/cube/conf
-      - ./cube/model:/test/model
+    # volumes:
+      # - ./cube/conf:/cube/conf
     # depends_on:
       # - cube_refresh_worker
       # - cubestore_router
