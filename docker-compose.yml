@@ -161,7 +161,6 @@ services:
       - CUBEJS_DEV_MODE=true
     volumes:
       - cube_data:/cube/conf
-      - cube_data:/cube/schema
     # depends_on:
       # - cube_refresh_worker
       # - cubestore_router
