@@ -147,7 +147,7 @@ services:
     image: cubejs/cube:v0.31.46
     ports:
       - 4000:4000
-    # command: sh -c "cd /cube && cubejs generate -t orders,customers,shows,products,order_product,product_show"
+    command: sh -c "cd /cube && cubejs generate -t orders,customers,shows,products,order_product,product_show && mv /cube/schema /cube/conf/schema"
     environment:
       - PORT=4000
       - CUBEJS_DB_TYPE=mysql
@@ -159,9 +159,9 @@ services:
       # - CUBEJS_CUBESTORE_HOST=cubestore_router
       - CUBEJS_API_SECRET=${NEXT_PUBLIC_CUBEJS_TOKEN}
       - CUBEJS_DEV_MODE=true
-    # volumes:
-    #   - ./cube/conf:/cube/conf
-    #   - ./cube/schema:/cube/schema
+    volumes:
+      - cube_data:/cube/conf
+      - cube_data:/cube/schema
     # depends_on:
       # - cube_refresh_worker
       # - cubestore_router
@@ -219,6 +219,7 @@ services:
 volumes:
   mysql_data:
   typesense_data:
+  cube_data:
   tmpfiles:
     driver: local
 
