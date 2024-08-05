@@ -161,9 +161,9 @@ services:
     volumes:
       - ./cube:/cube/conf
     depends_on:
-      - cube_refresh_worker
-      - cubestore_router
-      - cubestore_worker_1
+      # - cube_refresh_worker
+      # - cubestore_router
+      # - cubestore_worker_1
     networks:
       - app-network
 
