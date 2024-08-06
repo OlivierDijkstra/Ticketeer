@@ -1,32 +1,19 @@
-import type { Filter } from '@cubejs-client/core';
 import { subDays } from 'date-fns';
 
-import type { ResultSet } from '@/components/charts/server';
-import { fetchData } from '@/components/charts/server';
+import type { ResultSet } from '@/components/charts/lib';
 import StatisticCard from '@/components/statistics/statistic-card';
+import { fetchAggregatedData } from '@/server/actions/aggregated-data';
 
-export default async function NewOrdersStatistic({
-  filters,
-}: {
-  filters?: Filter[];
-}) {
+export default async function NewOrdersStatistic() {
   async function handleDataFetch() {
-    const start_date = subDays(new Date(), 7).toISOString();
-    const end_date = new Date().toISOString();
+    const start_date = subDays(new Date(), 7);
+    const end_date = new Date();
 
-    return await fetchData({
-      measures: ['orders.total'],
-      timeDimensions: [
-        {
-          dimension: 'orders.created_at',
-          granularity: 'week',
-          dateRange: [start_date, end_date],
-        },
-      ],
-      order: {
-        'orders.created_at': 'asc',
-      },
-      filters,
+    return await fetchAggregatedData({
+      modelType: 'Order',
+      aggregationType: 'count',
+      granularity: 'day',
+      dateRange: [start_date, end_date],
     });
   }
 
@@ -40,16 +27,22 @@ export default async function NewOrdersStatistic({
     );
   }
 
-  const ordersThisWeek = resultSet[resultSet.length - 1]?.value || 0;
+  const ordersThisWeek = Math.round(
+    resultSet[resultSet.length - 1]?.value || 0
+  );
   const ordersLastWeek = resultSet[0]?.value || 0;
 
   return (
     <StatisticCard
       name='New Orders This Week'
       percentage={
-        Math.round(
-          ((ordersThisWeek - ordersLastWeek) / ordersLastWeek) * 100
-        ) || 0
+        ordersLastWeek === 0
+          ? ordersThisWeek > 0
+            ? 100
+            : 0
+          : Math.round(
+              ((ordersThisWeek - ordersLastWeek) / ordersLastWeek) * 100
+            )
       }
       value={ordersThisWeek}
       period='week'

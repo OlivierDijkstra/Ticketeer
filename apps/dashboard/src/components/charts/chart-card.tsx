@@ -19,7 +19,7 @@ export default function ChartCard({
   title,
   description,
   onDateRangeChange,
-  dateRange = DATE_RANGES[0] || 'This year',
+  dateRange = DATE_RANGES[0] as DateRanges,
   children,
 }: {
   title: React.ReactNode | string;

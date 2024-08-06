@@ -4,8 +4,8 @@ import { format, subMonths } from 'date-fns';
 import type { Mock } from 'vitest';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 
-import { fetchData } from '@/components/charts/server';
 import RevenueStatistic from '@/components/statistics/revenue-statistic';
+import { fetchAggregatedData } from '@/server/actions/aggregated-data';
 
 vi.mock('date-fns', () => ({
   ...vi.importActual('date-fns'),
@@ -13,20 +13,13 @@ vi.mock('date-fns', () => ({
   subMonths: vi.fn(),
 }));
 
-vi.mock('@/components/charts/server', () => ({
-  fetchData: vi.fn(),
+vi.mock('@/server/actions/aggregated-data', () => ({
+  fetchAggregatedData: vi.fn(),
 }));
-
-async function resolvedComponent(
-  Component: React.FC,
-  props: Record<string, unknown>
-) {
-  const ComponentResolved = await Component(props);
-  return () => ComponentResolved;
-}
 
 describe('RevenueStatistic', () => {
   beforeEach(() => {
+    vi.clearAllMocks();
     (format as Mock).mockImplementation((date, formatString) => {
       return formatString === 'yyyy-MM-01' ? '2023-05-01' : '2023-05-01';
     });
@@ -34,29 +27,24 @@ describe('RevenueStatistic', () => {
   });
 
   test('renders error state when fetch fails', async () => {
-    (fetchData as Mock).mockRejectedValue(new Error('Failed to fetch'));
+    (fetchAggregatedData as Mock).mockRejectedValue(
+      new Error('Failed to fetch')
+    );
 
-    const Comp = await resolvedComponent(RevenueStatistic, {
-      filters: {},
-    });
-
-    render(<Comp />);
+    render(await RevenueStatistic());
 
     await waitFor(() => {
       expect(screen.getByText('Error fetching revenue')).toBeInTheDocument();
-      expect(screen.queryByText('%')).not.toBeInTheDocument();
+      expect(screen.getByText('0')).toBeInTheDocument();
+      expect(screen.getByText('0% from last month')).toBeInTheDocument();
     });
   });
 
-  test('renders statistic with fetched data', async () => {
+  test('renders statistic with fetched data and positive percentage', async () => {
     const mockData = [{ value: 8000 }, { value: 10000 }];
-    (fetchData as Mock).mockResolvedValue(mockData);
+    (fetchAggregatedData as Mock).mockResolvedValue(mockData);
 
-    const Comp = await resolvedComponent(RevenueStatistic, {
-      filters: {},
-    });
-
-    render(<Comp />);
+    render(await RevenueStatistic());
 
     await waitFor(() => {
       expect(screen.getByText('Revenue This Month')).toBeInTheDocument();
@@ -65,55 +53,60 @@ describe('RevenueStatistic', () => {
     });
   });
 
-  test('renders statistic with fetched data and down percentage', async () => {
-    const mockData = [{ value: 6000 }, { value: 5000 }];
-    (fetchData as Mock).mockResolvedValue(mockData);
+  test('renders statistic with fetched data and negative percentage', async () => {
+    const mockData = [{ value: 10000 }, { value: 8000 }];
+    (fetchAggregatedData as Mock).mockResolvedValue(mockData);
 
-    const Comp = await resolvedComponent(RevenueStatistic, {
-      filters: {},
+    render(await RevenueStatistic());
+
+    await waitFor(() => {
+      expect(screen.getByText('Revenue This Month')).toBeInTheDocument();
+      expect(screen.getByText(formatMoney(8000))).toBeInTheDocument();
+      expect(screen.getByText('-20% from last month')).toBeInTheDocument();
     });
+  });
 
-    render(<Comp />);
+  test('handles zero revenue for both months', async () => {
+    const mockData = [{ value: 0 }, { value: 0 }];
+    (fetchAggregatedData as Mock).mockResolvedValue(mockData);
+
+    render(await RevenueStatistic());
+
+    await waitFor(() => {
+      expect(screen.getByText('Revenue This Month')).toBeInTheDocument();
+      expect(screen.getByText(formatMoney(0))).toBeInTheDocument();
+      expect(screen.getByText('0% from last month')).toBeInTheDocument();
+    });
+  });
+
+  test('handles zero revenue for last month', async () => {
+    const mockData = [{ value: 0 }, { value: 5000 }];
+    (fetchAggregatedData as Mock).mockResolvedValue(mockData);
+
+    render(await RevenueStatistic());
 
     await waitFor(() => {
       expect(screen.getByText('Revenue This Month')).toBeInTheDocument();
       expect(screen.getByText(formatMoney(5000))).toBeInTheDocument();
-      expect(screen.getByText('-17% from last month')).toBeInTheDocument();
+      expect(screen.getByText('+100% from last month')).toBeInTheDocument();
     });
   });
 
-  test('renders statistic with filters', async () => {
-    const mockData = [{ value: 6000 }, { value: 7000 }];
-    (fetchData as Mock).mockResolvedValue(mockData);
+  test('calls fetchAggregatedData with correct parameters', async () => {
+    (fetchAggregatedData as Mock).mockResolvedValue([
+      { value: 1000 },
+      { value: 2000 },
+    ]);
 
-    const filters = { status: 'completed' };
-    const Comp = await resolvedComponent(RevenueStatistic, {
-      filters,
-    });
-
-    render(<Comp />);
+    render(await RevenueStatistic());
 
     await waitFor(() => {
-      expect(screen.getByText('Revenue This Month')).toBeInTheDocument();
-      expect(screen.getByText(formatMoney(7000))).toBeInTheDocument();
-      expect(screen.getByText('+17% from last month')).toBeInTheDocument();
+      expect(fetchAggregatedData).toHaveBeenCalledWith({
+        modelType: 'Revenue',
+        aggregationType: 'count',
+        granularity: 'month',
+        dateRange: expect.any(Array),
+      });
     });
-
-    expect(fetchData).toHaveBeenCalledWith(
-      expect.objectContaining({
-        measures: ['orders.total'],
-        timeDimensions: [
-          expect.objectContaining({
-            dimension: 'orders.created_at',
-            granularity: 'week',
-            dateRange: expect.any(Array),
-          }),
-        ],
-        order: {
-          'orders.created_at': 'asc',
-        },
-        filters,
-      })
-    );
   });
 });

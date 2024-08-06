@@ -1,12 +1,23 @@
-import type { TimeDimensionGranularity } from '@cubejs-client/core';
+import type { Granularity } from '@/server/actions/aggregated-data';
 
-import type { DATE_RANGES } from '@/lib/constants';
+export type DateRanges =
+  | 'This day'
+  | 'Last day'
+  | 'This week'
+  | 'Last week'
+  | 'This month'
+  | 'Last month'
+  | 'This year'
+  | 'Last year';
 
-export type DateRanges = (typeof DATE_RANGES)[number];
+export type Result = {
+  x: string;
+  value: number;
+};
 
-export function determineGranularity(
-  dateRange: DateRanges
-): TimeDimensionGranularity {
+export type ResultSet = Result[];
+
+export function determineGranularity(dateRange: DateRanges): Granularity {
   if (dateRange === 'This day' || dateRange === 'Last day') {
     return 'hour';
   }
@@ -19,7 +30,7 @@ export function determineGranularity(
 }
 
 export function determineDateFormat(
-  granularity?: TimeDimensionGranularity
+  granularity?: Granularity
 ): Intl.DateTimeFormatOptions {
   switch (granularity) {
     case 'hour':

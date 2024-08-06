@@ -1,8 +1,7 @@
 'use client';
 
-import type { Query, TimeDimensionGranularity } from '@cubejs-client/core';
 import formatMoney from '@repo/lib';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from 'recharts';
 
 import type { ChartConfig } from '@/components//ui/chart';
@@ -13,14 +12,17 @@ import {
 } from '@/components//ui/chart';
 import ChartCard from '@/components/charts/chart-card';
 import type { DateRanges } from '@/components/charts/lib';
+import type { ResultSet } from '@/components/charts/lib';
 import {
   determineDateFormat,
   determineGranularity,
 } from '@/components/charts/lib';
-import type { ResultSet } from '@/components/charts/server';
-import { fetchData } from '@/components/charts/server';
 import Spinner from '@/components/spinner';
 import { DATE_RANGES, DEFAULT_CHART_ANIMATION_DURATION } from '@/lib/constants';
+import {
+  type AggregatedDataConfig,
+  fetchAggregatedData,
+} from '@/server/actions/aggregated-data';
 
 const chartConfig = {
   value: {
@@ -30,57 +32,41 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export default function RevenueChart() {
-  const defaultDateRange = DATE_RANGES[0] || 'This year';
+  const defaultDateRange = DATE_RANGES[0] as DateRanges;
   const defaultGranularity = determineGranularity(defaultDateRange);
 
-  const [query, setQuery] = useState<Query>({
-    measures: ['orders.total'],
-    timeDimensions: [
-      {
-        dimension: 'orders.created_at',
-        granularity: defaultGranularity,
-        dateRange: defaultDateRange,
-      },
-    ],
-    order: {
-      'orders.created_at': 'asc',
-    },
+  const [query, setQuery] = useState<AggregatedDataConfig>({
+    modelType: 'Revenue',
+    aggregationType: 'count',
+    granularity: defaultGranularity,
+    dateRange: defaultDateRange,
   });
 
-  const [resultSet, setResultSet] = useState<ResultSet>();
   const [isLoading, setIsLoading] = useState(false);
-  const [granularity, setGranularity] =
-    useState<TimeDimensionGranularity>(defaultGranularity);
+  const [resultSet, setResultSet] = useState<ResultSet>([]);
 
   const timeFormat = useMemo(
-    () => determineDateFormat(granularity),
-    [granularity]
+    () => determineDateFormat(query.granularity),
+    [query.granularity]
   );
 
-  useEffect(() => {
-    async function handleDataFetch() {
-      setIsLoading(true);
-      const resultSet = await fetchData(query);
-      setResultSet(resultSet);
-      setIsLoading(false);
-    }
-
-    handleDataFetch();
+  const memoizedHandleDataFetch = useCallback(async () => {
+    setIsLoading(true);
+    const resultSet = await fetchAggregatedData(query);
+    setResultSet(resultSet);
+    setIsLoading(false);
   }, [query]);
+
+  useEffect(() => {
+    memoizedHandleDataFetch();
+  }, [memoizedHandleDataFetch]);
 
   async function handleDateRangeChange(dateRange: DateRanges) {
     const newGranularity = determineGranularity(dateRange);
-    setGranularity(newGranularity);
-
     setQuery({
       ...query,
-      timeDimensions: [
-        {
-          dimension: 'orders.created_at',
-          granularity: newGranularity,
-          dateRange: dateRange,
-        },
-      ],
+      granularity: newGranularity,
+      dateRange: dateRange,
     });
   }
 
