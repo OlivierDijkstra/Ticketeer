@@ -112,7 +112,7 @@ services:
       retries: 3
 
   db:
-    image: mysql:8.2
+    image: mysql:8
     <<: *common-environment-networks
     <<: *common-logging
     restart: unless-stopped
@@ -124,7 +124,6 @@ services:
       - mysql_data:/var/lib/mysql
     ports:
       - "3306:3306"
-    command: --default-authentication-plugin=mysql_native_password
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-uroot", "-p${MYSQL_ROOT_PASSWORD}"]
       interval: 30s
