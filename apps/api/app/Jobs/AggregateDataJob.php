@@ -18,9 +18,14 @@ class AggregateDataJob implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public $tries = 3;
+
     protected $granularity;
+
     protected $modelTypes = ['Order', 'Customer'];
+
     protected $aggregationTypes = ['count', 'sum', 'avg', 'min', 'max'];
+
+    protected $skipAggregations = ['Customer' => ['max', 'min', 'avg', 'sum']];
 
     public function __construct($granularity)
     {
@@ -33,7 +38,12 @@ class AggregateDataJob implements ShouldQueue
         $startDate = $this->getStartDate($endDate);
 
         foreach ($this->modelTypes as $modelType) {
-            foreach ($this->aggregationTypes as $aggregationType) {
+            $aggregationTypesToRun = $this->aggregationTypes;
+            if (isset($this->skipAggregations[$modelType])) {
+                $aggregationTypesToRun = array_diff($aggregationTypesToRun, $this->skipAggregations[$modelType]);
+            }
+
+            foreach ($aggregationTypesToRun as $aggregationType) {
                 try {
                     $this->aggregateData($modelType, $aggregationType, $startDate, $endDate);
                 } catch (Exception $e) {
@@ -119,7 +129,7 @@ class AggregateDataJob implements ShouldQueue
     private function getPeriodExpression()
     {
         $driver = DB::getDriverName();
-        
+
         if ($driver === 'sqlite') {
             return "strftime('%Y-%m-%d %H:00:00', created_at) as period";
         } elseif ($driver === 'mysql') {
