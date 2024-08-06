@@ -3,7 +3,6 @@
 namespace App\Actions;
 
 use App\Models\Order;
-use Illuminate\Support\Facades\URL;
 use Mollie\Laravel\Facades\Mollie;
 
 class CreatePaymentAction
@@ -16,10 +15,7 @@ class CreatePaymentAction
                 'value' => number_format($total, 2, '.', ''),
             ],
             'description' => $order->description ?? $order->order_number,
-            'redirectUrl' => URL::to($redirectUrl, [
-                'order_id' => $order->order_number,
-                'show_id' => $order->show_id,
-            ]),
+            'redirectUrl' => "{$redirectUrl}?order_id={$order->order_number}&show_id={$order->show_id}",
             'webhookUrl' => config('app.url').'/webhooks/mollie',
             'metadata' => [
                 'order_id' => $order->id,
