@@ -1,8 +1,6 @@
 import dns from 'node:dns';
-
 import path from "path";
 import { fileURLToPath } from "url";
-
 
 dns.setDefaultResultOrder('ipv4first');
 
@@ -29,6 +27,9 @@ const nextConfig = {
         pathname: '**',
       }
     ],
+  },
+  env: {
+    NEXT_PUBLIC_BACKEND_API_URL: process.env.NEXT_PUBLIC_BACKEND_API_URL,
   },
 };
 
