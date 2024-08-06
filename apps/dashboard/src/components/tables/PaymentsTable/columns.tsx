@@ -159,7 +159,7 @@ export function columns(_data: ColumnData): ColumnDef<Payment>[] {
         }
 
         function handleCopyPaymentId() {
-          navigator.clipboard.writeText(payment.id);
+          navigator.clipboard.writeText(payment.transaction_id);
           toast.success('Payment ID copied to clipboard');
         }
 
@@ -191,14 +191,16 @@ export function columns(_data: ColumnData): ColumnDef<Payment>[] {
                 <RefundPaymentDialog payment={payment}>
                   <DropdownMenuItem
                     onSelect={(e) => e.preventDefault()}
-                    disabled={[
-                      'open',
-                      'cancelled',
-                      'pending_refund',
-                      'refunded',
-                      'failed',
-                      'chargeback',
-                    ].includes(payment.status)}
+                    disabled={
+                      [
+                        'open',
+                        'cancelled',
+                        'pending_refund',
+                        'refunded',
+                        'failed',
+                        'chargeback',
+                      ].includes(payment.status) || !payment.payment_method
+                    }
                   >
                     <TicketSlashIcon className='mr-2' />
                     Partial refund
@@ -209,14 +211,16 @@ export function columns(_data: ColumnData): ColumnDef<Payment>[] {
 
                 <AlertDialogTrigger asChild>
                   <DropdownMenuItem
-                    disabled={[
-                      'open',
-                      'cancelled',
-                      'pending_refund',
-                      'partially_refunded',
-                      'failed',
-                      'chargeback',
-                    ].includes(payment.status)}
+                    disabled={
+                      [
+                        'open',
+                        'cancelled',
+                        'pending_refund',
+                        'partially_refunded',
+                        'failed',
+                        'chargeback',
+                      ].includes(payment.status) || !payment.payment_method
+                    }
                   >
                     <TicketSlashIcon className='mr-2' />
                     Full refund
