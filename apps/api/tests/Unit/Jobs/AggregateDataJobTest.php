@@ -89,7 +89,6 @@ class AggregateDataJobTest extends TestCase
 
     public function testCustomerAggregation()
     {
-        // Create some test customers
         Customer::factory()->count(3)->create(['created_at' => '2023-01-01 00:00:00']);
         Customer::factory()->count(2)->create(['created_at' => '2023-01-02 00:00:00']);
 
