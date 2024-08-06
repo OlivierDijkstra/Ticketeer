@@ -6,10 +6,6 @@ export async function fetchJson<T>(
 ): Promise<T> {
   let fullUrl = `${API_URL}`;
 
-  if (API_URL?.endsWith('/')) {
-    fullUrl = fullUrl?.slice(0, -1);
-  }
-
   fullUrl = `${fullUrl}${url}`;
 
   const response = await fetch(fullUrl, {
