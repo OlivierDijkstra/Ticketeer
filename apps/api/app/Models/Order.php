@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Order extends Model
 {
@@ -72,6 +73,10 @@ class Order extends Model
 
     public static function GenerateOrderNumber()
     {
-        return 'ORD-'.now()->format('YmdHis').'-'.rand(1000, 9999);
+        do {
+            $number = 'ORD-' . now()->format('YmdHis') . '-' . Str::random(4);
+        } while (self::where('order_number', $number)->exists());
+
+        return $number;
     }
 }
