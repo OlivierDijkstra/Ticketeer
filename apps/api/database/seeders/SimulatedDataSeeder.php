@@ -32,13 +32,27 @@ class SimulatedDataSeeder extends Seeder
 
         $this->command->info("Simulating data from {$startDate->toDateString()} to {$endDate->toDateString()}");
 
+        // Calculate total days for progress bar
+        $totalDays = $startDate->diffInDays($endDate) + 1;
+
+        // Create progress bar
+        $bar = $this->command->getOutput()->createProgressBar($totalDays);
+        $bar->start();
+
         // Simulate data for each day
         $currentDate = $startDate->copy();
         while ($currentDate <= $endDate) {
             $this->simulateDataForDay($currentDate);
             $this->aggregateDataForDay($currentDate);
             $currentDate->addDay();
+            
+            // Advance the progress bar
+            $bar->advance();
         }
+
+        // Finish the progress bar
+        $bar->finish();
+        $this->command->newLine();
 
         $this->command->info('Simulation completed.');
     }
@@ -63,8 +77,6 @@ class SimulatedDataSeeder extends Seeder
         for ($i = 0; $i < $orderCount; $i++) {
             $this->createSimulatedOrder($date);
         }
-
-        $this->command->info("✨ Created {$orderCount} orders for {$date->toDateString()}");
     }
 
     private function createSimulatedOrder($date)
@@ -103,10 +115,7 @@ class SimulatedDataSeeder extends Seeder
         
         // Create a new customer if we didn't find an existing one or if we chose to create a new one
         $newCustomer = Customer::factory()->create(['created_at' => $createdAt]);
-        
-        // Log the creation of a new customer
-        \Illuminate\Support\Facades\Log::info("Created new customer with ID: {$newCustomer->id}");
-        
+    
         return $newCustomer;
     }
 
@@ -171,12 +180,11 @@ class SimulatedDataSeeder extends Seeder
             $this->runAggregation('year', $date);
         }
 
-        $this->command->info("🔍 Aggregated data for {$date->toDateString()} (all appropriate granularities)");
+        // $this->command->info("🔍 Aggregated data for {$date->toDateString()} (all appropriate granularities)");
     }
 
     private function runAggregation($granularity, $date)
     {
-        $this->command->info("🔍 Running {$granularity} aggregation for {$date->format('Y-m-d H:i:s')}");
         $job = new AggregateDataJob($granularity, $date);
         $job->handle();
     }
