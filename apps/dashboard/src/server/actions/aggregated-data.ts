@@ -35,5 +35,8 @@ export async function fetchAggregatedData({
     data: ResultSet;
   }>(url);
 
-  return response.data;
+  return response.data.map((item) => ({
+    ...item,
+    value: parseFloat(`${item.value}`),
+  }));
 }
