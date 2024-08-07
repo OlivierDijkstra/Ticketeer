@@ -10,7 +10,7 @@ class AggregationTest extends TestCase
     public function test_fillable_attributes()
     {
         $fillable = ['model_type', 'aggregation_type', 'granularity', 'period', 'value'];
-        $aggregation = new Aggregation();
+        $aggregation = new Aggregation;
 
         $this->assertEquals($fillable, $aggregation->getFillable());
     }
@@ -22,7 +22,7 @@ class AggregationTest extends TestCase
             'period' => 'datetime',
             'value' => 'decimal:2',
         ];
-        $aggregation = new Aggregation();
+        $aggregation = new Aggregation;
 
         $this->assertEquals($casts, $aggregation->getCasts());
     }

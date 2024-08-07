@@ -5,7 +5,6 @@ namespace Database\Seeders;
 use App\Models\Aggregation;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Collection;
 
 class AggregationsSeeder extends Seeder
 {
@@ -126,7 +125,7 @@ class AggregationsSeeder extends Seeder
                     });
             }
         }
-        
+
         $this->command->getOutput()->progressFinish();
         $this->command->info("\nAggregations data seeded successfully.");
     }

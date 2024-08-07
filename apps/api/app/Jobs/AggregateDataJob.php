@@ -47,7 +47,7 @@ class AggregateDataJob implements ShouldQueue
                 try {
                     $this->aggregateData($modelType, $aggregationType, $startDate, $endDate);
                 } catch (Exception $e) {
-                    Log::error("Error aggregating data for $modelType, $aggregationType, {$this->granularity}: " . $e->getMessage());
+                    Log::error("Error aggregating data for $modelType, $aggregationType, {$this->granularity}: ".$e->getMessage());
                 }
             }
         }
@@ -107,7 +107,7 @@ class AggregateDataJob implements ShouldQueue
 
     private function getTableName($modelType)
     {
-        return strtolower($modelType) . 's';
+        return strtolower($modelType).'s';
     }
 
     private function getColumnName($modelType, $aggregationType)

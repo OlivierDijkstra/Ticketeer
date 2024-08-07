@@ -32,11 +32,11 @@ export default function CustomersChart() {
 
   const [query, setQuery] = useState<AggregatedDataConfig>(defaultQuery);
 
-  const {data, isLoading, refetch} = useQuery({
+  const { data, isLoading, refetch } = useQuery({
     queryKey: ['customersData', query],
     queryFn: () => fetchAggregatedData(query),
     refetchOnWindowFocus: false,
-  })
+  });
 
   const timeFormat = useMemo(
     () => determineDateFormat(query.granularity),

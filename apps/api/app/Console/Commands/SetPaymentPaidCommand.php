@@ -33,13 +33,15 @@ class SetPaymentPaidCommand extends Command
 
         $payment = Payment::where('transaction_id', $transactionId)->first();
 
-        if (!$payment) {
+        if (! $payment) {
             $this->error("Payment with transaction ID {$transactionId} not found.");
+
             return 1;
         }
 
         if ($payment->status === 'paid') {
-            $this->info("Payment is already marked as paid.");
+            $this->info('Payment is already marked as paid.');
+
             return 0;
         }
 
@@ -48,7 +50,8 @@ class SetPaymentPaidCommand extends Command
             new GenerateTicketsJob($payment),
         ])->dispatch();
 
-        $this->info("Payment set to paid and related jobs dispatched.");
+        $this->info('Payment set to paid and related jobs dispatched.');
+
         return 0;
     }
 }

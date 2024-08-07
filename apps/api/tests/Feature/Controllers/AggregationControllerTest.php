@@ -21,7 +21,7 @@ class AggregationControllerTest extends TestCase
             'aggregation_type' => 'count',
             'granularity' => 'day',
             'period' => '2023-01-15 00:00:00',
-            'value' => 10
+            'value' => 10,
         ]);
 
         $response = $this->getJson('/api/aggregations?model_type=Order&aggregation_type=count&granularity=day&date_range=This day');
@@ -30,8 +30,8 @@ class AggregationControllerTest extends TestCase
             ->assertJsonCount(1, 'data')
             ->assertJsonStructure([
                 'data' => [
-                    '*' => ['x', 'value']
-                ]
+                    '*' => ['x', 'value'],
+                ],
             ])
             ->assertJsonPath('data.0.value', '10.00');
     }
@@ -43,7 +43,7 @@ class AggregationControllerTest extends TestCase
             'aggregation_type' => 'count',
             'granularity' => 'day',
             'period' => '2023-01-14 00:00:00',
-            'value' => 5
+            'value' => 5,
         ]);
 
         Aggregation::factory()->create([
@@ -51,7 +51,7 @@ class AggregationControllerTest extends TestCase
             'aggregation_type' => 'count',
             'granularity' => 'day',
             'period' => '2023-01-15 00:00:00',
-            'value' => 10
+            'value' => 10,
         ]);
 
         $response = $this->getJson('/api/aggregations?model_type=Order&aggregation_type=count&granularity=day&date_range=This day');
@@ -63,7 +63,7 @@ class AggregationControllerTest extends TestCase
 
     public function test_parse_date_range_with_predefined_ranges()
     {
-        $controller = new \App\Http\Controllers\AggregationController();
+        $controller = new \App\Http\Controllers\AggregationController;
         $method = new \ReflectionMethod($controller, 'parseDateRange');
         $method->setAccessible(true);
 
@@ -87,7 +87,7 @@ class AggregationControllerTest extends TestCase
 
     public function test_parse_date_range_with_custom_range()
     {
-        $controller = new \App\Http\Controllers\AggregationController();
+        $controller = new \App\Http\Controllers\AggregationController;
         $method = new \ReflectionMethod($controller, 'parseDateRange');
         $method->setAccessible(true);
 
