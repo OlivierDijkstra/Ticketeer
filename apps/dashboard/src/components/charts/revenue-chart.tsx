@@ -107,7 +107,6 @@ export default function RevenueChart() {
           />
           <Line
             dataKey='value'
-            type='monotone'
             animationDuration={DEFAULT_CHART_ANIMATION_DURATION}
             fill='var(--color-value)'
             stroke='var(--color-value)'
