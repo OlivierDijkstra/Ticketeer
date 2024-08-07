@@ -34,7 +34,7 @@ class AggregateDataJob implements ShouldQueue
     public function __construct($granularity, $date = null)
     {
         $this->granularity = $granularity;
-        $this->date = $date ? Carbon::parse($date) : Carbon::now();
+        $this->date = $date ? Carbon::parse($date) : $this->getPreviousPeriodEnd();
     }
 
     public function handle()
@@ -182,6 +182,25 @@ class AggregateDataJob implements ShouldQueue
             return "DATE_TRUNC('{$this->granularity}', created_at) as period";
         } else {
             throw new Exception("Unsupported database driver: $driver");
+        }
+    }
+
+    private function getPreviousPeriodEnd()
+    {
+        $now = Carbon::now();
+        switch ($this->granularity) {
+            case 'hour':
+                return $now->subHour()->endOfHour();
+            case 'day':
+                return $now->subDay()->endOfDay();
+            case 'week':
+                return $now->subWeek()->endOfWeek();
+            case 'month':
+                return $now->subMonth()->endOfMonth();
+            case 'year':
+                return $now->subYear()->endOfYear();
+            default:
+                throw new Exception("Invalid granularity: {$this->granularity}");
         }
     }
 }
