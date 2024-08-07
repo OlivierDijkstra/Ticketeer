@@ -12,8 +12,8 @@ export default async function NewOrdersStatistic() {
     const end_date = new Date();
 
     return await fetchAggregatedData({
-      modelType: 'Revenue',
-      aggregationType: 'count',
+      modelType: 'Order',
+      aggregationType: 'sum',
       granularity: 'month',
       dateRange: [start_date, end_date],
     });
