@@ -14,6 +14,8 @@ export async function fetchJson<T>(
 
   fullUrl = `${fullUrl}${url}`;
 
+  console.log('✈️', fullUrl);
+
   const response = await fetch(fullUrl, {
     ...options,
     cache: 'no-cache',
