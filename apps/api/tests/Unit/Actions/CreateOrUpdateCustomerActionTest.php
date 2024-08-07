@@ -19,6 +19,7 @@ class CreateOrUpdateCustomerActionTest extends TestCase
             'city' => 'Springfield',
             'postal_code' => '62701',
             'state' => 'IL',
+            'country' => 'USA',
         ];
 
         $action = new CreateOrUpdateCustomerAction;
