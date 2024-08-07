@@ -4,17 +4,14 @@ import { Loader } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
-import { API_URL } from '@/lib/constants';
 import { fetchJson } from '@/lib/fetch';
 
 export default function PollOrder({
   order_id,
   show_id,
-  test_url
 }: {
   order_id: string;
   show_id: string;
-  test_url: string | undefined;
 }) {
   const router = useRouter();
 
@@ -22,13 +19,6 @@ export default function PollOrder({
 
   useEffect(() => {
     const checkPaymentStatus = async () => {
-      console.log(
-        '🔥',
-        test_url,
-        process.env,
-        API_URL,
-        process.env.NEXT_PUBLIC_BACKEND_API_URL
-      );
       const response = await fetchJson<{
         is_paid: boolean;
       }>(`/api/orders/${order_id}/is-paid`);
