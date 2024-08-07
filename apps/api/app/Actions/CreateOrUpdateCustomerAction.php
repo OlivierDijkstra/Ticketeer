@@ -22,6 +22,7 @@ class CreateOrUpdateCustomerAction
             'street2' => $customerData['street2'] ?? null,
             'city' => $customerData['city'],
             'postal_code' => $customerData['postal_code'],
+            'country' => $customerData['country'],
             'state' => $customerData['state'],
         ];
 
