@@ -41,20 +41,22 @@ class AggregateDataJob implements ShouldQueue, ShouldBeUnique
     {
         [$startDate, $endDate] = $this->getDateRange();
 
-        foreach ($this->modelTypes as $modelType) {
-            $aggregationTypesToRun = $this->aggregationTypes;
-            if (isset($this->skipAggregations[$modelType])) {
-                $aggregationTypesToRun = array_diff($aggregationTypesToRun, $this->skipAggregations[$modelType]);
-            }
+        DB::transaction(function () use ($startDate, $endDate) {
+            foreach ($this->modelTypes as $modelType) {
+                $aggregationTypesToRun = $this->aggregationTypes;
+                if (isset($this->skipAggregations[$modelType])) {
+                    $aggregationTypesToRun = array_diff($aggregationTypesToRun, $this->skipAggregations[$modelType]);
+                }
 
-            foreach ($aggregationTypesToRun as $aggregationType) {
-                try {
-                    $this->aggregateData($modelType, $aggregationType, $startDate, $endDate);
-                } catch (Exception $e) {
-                    Log::error("Error aggregating data for $modelType, $aggregationType, {$this->granularity}: " . $e->getMessage());
+                foreach ($aggregationTypesToRun as $aggregationType) {
+                    try {
+                        $this->aggregateData($modelType, $aggregationType, $startDate, $endDate);
+                    } catch (Exception $e) {
+                        Log::error("Error aggregating data for $modelType, $aggregationType, {$this->granularity}: " . $e->getMessage());
+                    }
                 }
             }
-        }
+        });
     }
 
     private function aggregateData($modelType, $aggregationType, $startDate, $endDate)
