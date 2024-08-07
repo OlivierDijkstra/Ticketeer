@@ -1,5 +1,6 @@
 import { Suspense } from 'react';
 
+import AddressCard from '@/components/address-card';
 import CustomerCard from '@/components/order/customer-card';
 import EventCard from '@/components/order/event-card';
 import OrderCard from '@/components/order/order-card';
@@ -39,7 +40,13 @@ export default async function Page({
       </div>
 
       <div className='grid gap-4 lg:grid-cols-2'>
-        <CustomerCard customer={order.customer} />
+        <div className='space-y-4'>
+          <CustomerCard customer={order.customer} />
+
+          {order.customer?.address && (
+            <AddressCard address={order.customer.address} />
+          )}
+        </div>
 
         {order.tickets && <TicketsCard order={order} />}
       </div>

@@ -1,6 +1,7 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { useMemo, useState } from 'react';
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from 'recharts';
 
 import {
@@ -10,7 +11,6 @@ import {
 } from '@/components//ui/chart';
 import ChartCard from '@/components/charts/chart-card';
 import type { DateRanges } from '@/components/charts/lib';
-import type { ResultSet } from '@/components/charts/lib';
 import {
   determineDateFormat,
   determineGranularity,
@@ -23,40 +23,36 @@ import { fetchAggregatedData } from '@/server/actions/aggregated-data';
 export default function CustomersChart() {
   const defaultDateRange = DATE_RANGES[2] as DateRanges;
   const defaultGranularity = determineGranularity(defaultDateRange);
-
-  const [query, setQuery] = useState<AggregatedDataConfig>({
+  const defaultQuery: AggregatedDataConfig = {
     modelType: 'Customer',
     aggregationType: 'count',
     granularity: defaultGranularity,
     dateRange: defaultDateRange,
-  });
+  };
 
-  const [isLoading, setIsLoading] = useState(false);
-  const [resultSet, setResultSet] = useState<ResultSet>([]);
+  const [query, setQuery] = useState<AggregatedDataConfig>(defaultQuery);
+
+  const {data, isLoading, refetch} = useQuery({
+    queryKey: ['customersData', query],
+    queryFn: () => fetchAggregatedData(query),
+    refetchOnWindowFocus: false,
+  })
 
   const timeFormat = useMemo(
     () => determineDateFormat(query.granularity),
     [query.granularity]
   );
 
-  const memoizedHandleDataFetch = useCallback(async () => {
-    setIsLoading(true);
-    const resultSet = await fetchAggregatedData(query);
-    setResultSet(resultSet);
-    setIsLoading(false);
-  }, [query]);
-
-  useEffect(() => {
-    memoizedHandleDataFetch();
-  }, [memoizedHandleDataFetch]);
-
   async function handleDateRangeChange(dateRange: DateRanges) {
     const newGranularity = determineGranularity(dateRange);
-    setQuery({
+    const newQuery = {
       ...query,
       granularity: newGranularity,
       dateRange: dateRange,
-    });
+    };
+
+    setQuery(newQuery);
+    refetch();
   }
 
   return (
@@ -87,7 +83,7 @@ export default function CustomersChart() {
             right: 14,
             top: 10,
           }}
-          data={resultSet}
+          data={data}
         >
           <CartesianGrid
             strokeDasharray='4 4'

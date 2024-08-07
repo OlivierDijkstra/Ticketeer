@@ -16,9 +16,9 @@ class HandlePaymentPaidJob implements ShouldQueue
 
     protected Payment $payment;
 
-    protected MolliePayment $mollie;
+    protected ?MolliePayment $mollie;
 
-    public function __construct(Payment $payment, MolliePayment $mollie)
+    public function __construct(Payment $payment, ?MolliePayment $mollie = null)
     {
         $this->payment = $payment;
         $this->mollie = $mollie;
@@ -29,10 +29,9 @@ class HandlePaymentPaidJob implements ShouldQueue
         $this->payment->update([
             'status' => 'paid',
             'paid_at' => now(),
-            'payment_method' => $this->mollie->method,
+            'payment_method' => $this->mollie?->method ?? null,
         ]);
 
-        // Update the order status if the total of the paid payments is equal to the order total
         $order = $this->payment->order;
 
         if ($order->payments->sum('amount') >= $order->total) {
