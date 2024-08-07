@@ -75,14 +75,14 @@ class AggregateDataJob implements ShouldQueue
     private function saveAggregations($modelType, $aggregationType, $results)
     {
         foreach ($results as $result) {
-            Aggregation::updateOrCreate(
+            Aggregation::create(
                 [
                     'model_type' => $modelType,
                     'aggregation_type' => $aggregationType,
                     'granularity' => $this->granularity,
                     'period' => $result->period,
-                ],
-                ['value' => $result->value]
+                    'value' => $result->value,
+                ]
             );
         }
     }
