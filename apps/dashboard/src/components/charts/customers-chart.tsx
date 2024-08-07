@@ -62,7 +62,7 @@ export default function CustomersChart() {
       onDateRangeChange={handleDateRangeChange}
     >
       {isLoading && (
-        <div className='absolute inset-0 z-10 grid h-full w-full place-items-center bg-white/50 dark:bg-black/50'>
+        <div className='absolute inset-0 z-10 grid h-full w-full place-items-center'>
           <Spinner />
         </div>
       )}
