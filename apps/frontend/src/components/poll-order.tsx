@@ -10,9 +10,11 @@ import { fetchJson } from '@/lib/fetch';
 export default function PollOrder({
   order_id,
   show_id,
+  test_url
 }: {
   order_id: string;
   show_id: string;
+  test_url: string | undefined;
 }) {
   const router = useRouter();
 
@@ -22,6 +24,7 @@ export default function PollOrder({
     const checkPaymentStatus = async () => {
       console.log(
         '🔥',
+        test_url,
         process.env,
         API_URL,
         process.env.NEXT_PUBLIC_BACKEND_API_URL
