@@ -6,6 +6,7 @@ use App\Models\Aggregation;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
@@ -13,29 +14,32 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
-class AggregateDataJob implements ShouldQueue
+class AggregateDataJob implements ShouldQueue, ShouldBeUnique
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public $tries = 3;
 
     protected $granularity;
+    protected $date;
 
-    protected $modelTypes = ['Order', 'Customer'];
+    protected $modelTypes = ['Customer', 'Order'];
 
     protected $aggregationTypes = ['count', 'sum', 'avg', 'min', 'max'];
 
-    protected $skipAggregations = ['Customer' => ['max', 'min', 'avg', 'sum']];
+    protected $skipAggregations = [
+        'Customer' => ['sum', 'max', 'min', 'avg'],
+    ];
 
-    public function __construct($granularity)
+    public function __construct($granularity, $date = null)
     {
         $this->granularity = $granularity;
+        $this->date = $date ? Carbon::parse($date) : Carbon::now();
     }
 
     public function handle()
     {
-        $endDate = Carbon::now();
-        $startDate = $this->getStartDate($endDate);
+        [$startDate, $endDate] = $this->getDateRange();
 
         foreach ($this->modelTypes as $modelType) {
             $aggregationTypesToRun = $this->aggregationTypes;
@@ -47,7 +51,7 @@ class AggregateDataJob implements ShouldQueue
                 try {
                     $this->aggregateData($modelType, $aggregationType, $startDate, $endDate);
                 } catch (Exception $e) {
-                    Log::error("Error aggregating data for $modelType, $aggregationType, {$this->granularity}: ".$e->getMessage());
+                    Log::error("Error aggregating data for $modelType, $aggregationType, {$this->granularity}: " . $e->getMessage());
                 }
             }
         }
@@ -61,7 +65,7 @@ class AggregateDataJob implements ShouldQueue
         $query = DB::table($table)
             ->select(
                 DB::raw($this->getPeriodExpression()),
-                DB::raw("$aggregationType($column) as value")
+                DB::raw($this->getAggregationExpression($aggregationType, $column))
             )
             ->whereBetween('created_at', [$startDate, $endDate])
             ->groupBy('period')
@@ -74,32 +78,59 @@ class AggregateDataJob implements ShouldQueue
 
     private function saveAggregations($modelType, $aggregationType, $results)
     {
-        foreach ($results as $result) {
-            Aggregation::create(
-                [
-                    'model_type' => $modelType,
-                    'aggregation_type' => $aggregationType,
-                    'granularity' => $this->granularity,
-                    'period' => $result->period,
-                    'value' => $result->value,
-                ]
-            );
+        if (!$results->count()) {
+            Aggregation::create([
+                'model_type' => $modelType,
+                'aggregation_type' => $aggregationType,
+                'granularity' => $this->granularity,
+                'period' => $this->date,
+                'value' => 0,
+            ]);
+
+            return;
         }
+
+        Aggregation::create(
+            [
+                'model_type' => $modelType,
+                'aggregation_type' => $aggregationType,
+                'granularity' => $this->granularity,
+                'period' => $results->first()->period,
+                'value' => collect($results)->sum('value'),
+            ]
+        );
     }
 
-    private function getStartDate($endDate)
+    private function getDateRange()
     {
+        $date = $this->date;
+
         switch ($this->granularity) {
             case 'hour':
-                return $endDate->copy()->subHour();
+                return [
+                    $date->copy()->startOfHour(),
+                    $date->copy()->endOfHour()
+                ];
             case 'day':
-                return $endDate->copy()->subDay();
+                return [
+                    $date->copy()->startOfDay(),
+                    $date->copy()->endOfDay()
+                ];
             case 'week':
-                return $endDate->copy()->subWeek();
+                return [
+                    $date->copy()->startOfWeek(),
+                    $date->copy()->endOfWeek()
+                ];
             case 'month':
-                return $endDate->copy()->subMonth();
+                return [
+                    $date->copy()->startOfMonth(),
+                    $date->copy()->endOfMonth()
+                ];
             case 'year':
-                return $endDate->copy()->subYear();
+                return [
+                    $date->copy()->startOfYear(),
+                    $date->copy()->endOfYear()
+                ];
             default:
                 throw new Exception("Invalid granularity: {$this->granularity}");
         }
@@ -107,7 +138,7 @@ class AggregateDataJob implements ShouldQueue
 
     private function getTableName($modelType)
     {
-        return strtolower($modelType).'s';
+        return strtolower($modelType) . 's';
     }
 
     private function getColumnName($modelType, $aggregationType)
@@ -122,7 +153,18 @@ class AggregateDataJob implements ShouldQueue
             case 'Customer':
                 return 'id';
             default:
-                throw new Exception("Unknown model type: $modelType");
+                return 'id';
+        }
+    }
+
+    private function getAggregationExpression($aggregationType, $column)
+    {
+        if ($aggregationType === 'count') {
+            return "COUNT(*) as value";
+        } elseif (in_array($aggregationType, ['sum', 'avg', 'min', 'max'])) {
+            return "COALESCE($aggregationType($column), 0) as value";
+        } else {
+            throw new Exception("Unknown aggregation type: $aggregationType");
         }
     }
 
