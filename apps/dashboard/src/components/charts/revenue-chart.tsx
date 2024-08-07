@@ -3,7 +3,7 @@
 import formatMoney from '@repo/lib';
 import { useQuery } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
-import { CartesianGrid, Line, LineChart, XAxis, YAxis } from 'recharts';
+import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from 'recharts';
 
 import type { ChartConfig } from '@/components//ui/chart';
 import {
@@ -71,13 +71,13 @@ export default function RevenueChart() {
       onDateRangeChange={handleDateRangeChange}
     >
       {isLoading && (
-        <div className='absolute inset-0 z-10 grid h-full w-full place-items-center bg-white/50 dark:bg-black/50'>
+        <div className='absolute inset-0 z-10 grid h-full w-full place-items-center'>
           <Spinner />
         </div>
       )}
 
       <ChartContainer config={chartConfig} className='w-full'>
-        <LineChart
+        <AreaChart
           accessibilityLayer
           margin={{
             left: 14,
@@ -105,18 +105,30 @@ export default function RevenueChart() {
               );
             }}
           />
-          <Line
+
+          <defs>
+            <linearGradient id='fillValue' x1='0' y1='0' x2='0' y2='1'>
+              <stop
+                offset='5%'
+                stopColor='var(--color-value)'
+                stopOpacity={0.8}
+              />
+              <stop
+                offset='95%'
+                stopColor='var(--color-value)'
+                stopOpacity={0.1}
+              />
+            </linearGradient>
+          </defs>
+
+          <Area
             dataKey='value'
+            type='natural'
             animationDuration={DEFAULT_CHART_ANIMATION_DURATION}
-            fill='var(--color-value)'
+            fill='url(#fillValue)'
+            fillOpacity={0.4}
             stroke='var(--color-value)'
             strokeWidth={2}
-            dot={false}
-            activeDot={{
-              fill: 'var(--color-value)',
-              stroke: 'var(--color-value)',
-              r: 4,
-            }}
           />
           <ChartTooltip
             content={
@@ -140,7 +152,7 @@ export default function RevenueChart() {
             }
             cursor={false}
           />
-        </LineChart>
+        </AreaChart>
       </ChartContainer>
     </ChartCard>
   );
