@@ -33,8 +33,8 @@ export default function RevenueChart() {
   const defaultDateRange = DATE_RANGES[0] as DateRanges;
   const defaultGranularity = determineGranularity(defaultDateRange);
   const defaultQuery: AggregatedDataConfig = {
-    modelType: 'Revenue',
-    aggregationType: 'count',
+    modelType: 'Order',
+    aggregationType: 'sum',
     granularity: defaultGranularity,
     dateRange: defaultDateRange,
   };
