@@ -1,7 +1,7 @@
 import dns from 'node:dns';
 
-import path from "path";
-import { fileURLToPath } from "url";
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 dns.setDefaultResultOrder('ipv4first');
 
@@ -11,9 +11,9 @@ const __dirname = path.dirname(__filename);
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   // transpilePackages: ["@repo/ui"],
-  output: "standalone",
+  output: 'standalone',
   experimental: {
-    outputFileTracingRoot: path.join(__dirname, "../../"),
+    outputFileTracingRoot: path.join(__dirname, '../../'),
   },
   images: {
     remotePatterns: [
@@ -26,11 +26,8 @@ const nextConfig = {
         protocol: 'http',
         hostname: 'api.test.local',
         pathname: '**',
-      }
+      },
     ],
-  },
-  env: {
-    NEXT_PUBLIC_BACKEND_API_URL: process.env.NEXT_PUBLIC_BACKEND_API_URL,
   },
 };
 
