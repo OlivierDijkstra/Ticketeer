@@ -35,6 +35,11 @@ class AggregateDataJob implements ShouldQueue
     {
         $this->granularity = $granularity;
         $this->date = $date ? Carbon::parse($date) : $this->getPreviousPeriodEnd();
+
+        // Normalize the date for granularities other than 'hour'
+        if ($this->granularity !== 'hour') {
+            $this->date = $this->date->startOfDay();
+        }
     }
 
     public function handle()
@@ -81,26 +86,51 @@ class AggregateDataJob implements ShouldQueue
     private function saveAggregations($modelType, $aggregationType, $results)
     {
         if (!$results->count()) {
-            Aggregation::create([
+            Aggregation::updateOrCreate([
                 'model_type' => $modelType,
                 'aggregation_type' => $aggregationType,
                 'granularity' => $this->granularity,
                 'period' => $this->date,
+            ], [
                 'value' => 0,
             ]);
 
             return;
         }
 
-        Aggregation::create(
+        $value = $this->calculateAggregationValue($aggregationType, $results);
+
+        Aggregation::updateOrCreate(
             [
                 'model_type' => $modelType,
                 'aggregation_type' => $aggregationType,
                 'granularity' => $this->granularity,
-                'period' => $results->first()->period,
-                'value' => collect($results)->sum('value'),
+                'period' => $this->date,
+            ],
+            [
+                'value' => $value,
             ]
         );
+    }
+
+    private function calculateAggregationValue($aggregationType, $results)
+    {
+        $values = collect($results)->pluck('value');
+
+        switch ($aggregationType) {
+            case 'count':
+                return $values->sum();
+            case 'sum':
+                return $values->sum();
+            case 'avg':
+                return $values->avg();
+            case 'min':
+                return $values->min();
+            case 'max':
+                return $values->max();
+            default:
+                throw new \Exception("Unknown aggregation type: $aggregationType");
+        }
     }
 
     private function getDateRange()
