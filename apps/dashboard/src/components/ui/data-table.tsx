@@ -122,8 +122,7 @@ export function DataTable<TData, TValue>({
       const urlParams = new URLSearchParams(searchParams);
       Object.keys(newParams).forEach((key) => {
         if (newParams[key]) {
-          // @ts-expect-error: newParams is not defined
-          urlParams.set(key, newParams[key]);
+          urlParams.set(key, newParams[key] || '');
         } else {
           urlParams.delete(key);
         }
