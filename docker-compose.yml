@@ -141,7 +141,7 @@ services:
     ports:
       - "${TYPESENSE_PORT:-8108}:8108"
     healthcheck:
-      test: ["CMD-SHELL", "echo > /dev/tcp/localhost/8108"]
+      test: ["CMD-SHELL", "bash -c 'echo > /dev/tcp/localhost/8108'"]
       interval: 30s
       timeout: 10s
       retries: 5
