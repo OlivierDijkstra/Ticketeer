@@ -10,8 +10,8 @@ services:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     volumes:
       - mysql_data:/var/lib/mysql
-    ports:
-      - "${DB_PORT:-3306}:3306"
+    expose:
+      - 3306
     networks:
       - dev-network
 

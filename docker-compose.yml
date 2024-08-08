@@ -27,8 +27,8 @@ services:
     restart: unless-stopped
     depends_on:
       - api
-    ports:
-      - "3000:3000"
+    expose:
+      - 3000
     healthcheck:
       test: ["CMD-SHELL", "wget --spider -q http://dashboard:3000 || exit 1"]
       interval: 30s
@@ -44,8 +44,8 @@ services:
     restart: unless-stopped
     depends_on:
       - api
-    ports:
-      - "3001:3001"
+    expose:
+      - 3001
     healthcheck:
       test: ["CMD-SHELL", "wget --spider -q http://frontend:3001 || exit 1"]
       interval: 30s
@@ -55,8 +55,8 @@ services:
   api:
     <<: [*api-service-build, *common-environment-networks, *common-logging]
     restart: unless-stopped
-    ports:
-      - "${API_PORT:-8000}:8000"
+    expose:
+      - 8000
     depends_on:
       - db
       - redis
@@ -103,8 +103,8 @@ services:
     environment:
       REDIS_PASSWORD: ${REDIS_PASSWORD}
     command: redis-server --requirepass ${REDIS_PASSWORD}
-    ports:
-      - "${REDIS_PORT:-6379}:6379"
+    expose:
+      - 6379
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 30s
@@ -122,8 +122,8 @@ services:
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     volumes:
       - mysql_data:/var/lib/mysql
-    ports:
-      - "3306:3306"
+    expose:
+      - 3306
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-uroot", "-p${MYSQL_ROOT_PASSWORD}"]
       interval: 30s
@@ -135,11 +135,11 @@ services:
     <<: *common-environment-networks
     <<: *common-logging
     restart: unless-stopped
-    command: --data-dir /data --api-key=${TYPESENSE_API_KEY} --listen-port ${TYPESENSE_PORT} --enable-cors
+    command: --data-dir /data --api-key=${TYPESENSE_API_KEY} --listen-port 8108 --enable-cors
     volumes:
       - typesense_data:/data
-    ports:
-      - "${TYPESENSE_PORT:-8108}:8108"
+    expose:
+      - 8108
     healthcheck:
       test: ["CMD-SHELL", "bash -c 'echo > /dev/tcp/localhost/8108'"]
       interval: 30s
