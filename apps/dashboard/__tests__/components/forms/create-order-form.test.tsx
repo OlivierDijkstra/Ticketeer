@@ -299,15 +299,19 @@ describe('CreateOrderForm', () => {
   test('pre-selects show when show param is provided', async () => {
     (useParams as Mock).mockReturnValue({ show: '1' });
 
-    render(
-      <TooltipProvider>
-        <CreateOrderForm callback={mockCallback} />
-      </TooltipProvider>
-    );
+    await act(async () => {
+      render(
+        <TooltipProvider>
+          <CreateOrderForm callback={mockCallback} />
+        </TooltipProvider>
+      );
+    });
 
-    expect(
-      screen.getByRole('button', { name: /add product/i })
-    ).toBeInTheDocument();
+    await waitFor(() => {
+      expect(
+        screen.getByRole('button', { name: /add product/i })
+      ).toBeInTheDocument();
+    });
   });
 
   test('handles form submission error', async () => {
