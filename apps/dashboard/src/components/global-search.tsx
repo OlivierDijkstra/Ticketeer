@@ -1,5 +1,7 @@
 'use client';
 
+import { DialogDescription, DialogTitle } from '@radix-ui/react-dialog';
+import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import type { Customer, Event, Product, Show } from '@repo/lib';
 import { format } from 'date-fns';
 import {
@@ -123,6 +125,13 @@ const GlobalSearch: React.FC = () => {
       </Button>
 
       <CommandDialog modal={true} open={open} onOpenChange={setOpen}>
+        <VisuallyHidden>
+          <DialogTitle>Search</DialogTitle>
+          <DialogDescription>
+            Search for events, products, customers, and orders.
+          </DialogDescription>
+        </VisuallyHidden>
+
         <CommandInput
           onValueChange={debouncedQuery}
           placeholder='Type a command or search...'
