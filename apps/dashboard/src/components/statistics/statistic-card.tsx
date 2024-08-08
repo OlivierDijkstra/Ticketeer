@@ -24,8 +24,8 @@ export default function StatisticCard({
       </CardHeader>
       {up != null && (
         <CardContent>
-          <div className='text-2xl font-bold font-mono'>{value}</div>
-          <p className='text-xs text-muted-foreground mt-1'>{`${up ? '+' : ''}${percentage}% from last ${period}`}</p>
+          <div className='font-mono text-2xl font-bold'>{value}</div>
+          <p className='mt-1 text-xs text-muted-foreground'>{`${up ? '+' : ''}${percentage}% from last ${period}`}</p>
         </CardContent>
       )}
     </Card>

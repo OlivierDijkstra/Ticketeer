@@ -45,7 +45,7 @@ class SimulatedDataSeeder extends Seeder
             $this->simulateDataForDay($currentDate);
             $this->aggregateDataForDay($currentDate);
             $currentDate->addDay();
-            
+
             // Advance the progress bar
             $bar->advance();
         }
@@ -83,11 +83,11 @@ class SimulatedDataSeeder extends Seeder
             $orders[] = $orderData['order'];
             $orderProducts = array_merge($orderProducts, $orderData['orderProducts']);
             $payments[] = $orderData['payment'];
-            
+
             // Collect stock updates
             foreach ($orderData['orderProducts'] as $product) {
-                $key = $product['product_id'] . '-' . $orderData['order']['show_id'];
-                if (!isset($stockUpdates[$key])) {
+                $key = $product['product_id'].'-'.$orderData['order']['show_id'];
+                if (! isset($stockUpdates[$key])) {
                     $stockUpdates[$key] = ['amount' => 0];
                 }
                 $stockUpdates[$key]['amount'] += $product['amount'];
@@ -164,7 +164,7 @@ class SimulatedDataSeeder extends Seeder
         return [
             'id' => \Illuminate\Support\Str::uuid()->toString(), // Assuming Payment uses UUID
             'order_id' => $orderId,
-            'transaction_id' => 'tr_' . \Illuminate\Support\Str::random(16),
+            'transaction_id' => 'tr_'.\Illuminate\Support\Str::random(16),
             'status' => 'paid',
             'amount' => $total,
             'payment_method' => ['credit_card', 'paypal', 'bank_transfer'][rand(0, 2)],
@@ -177,7 +177,7 @@ class SimulatedDataSeeder extends Seeder
     private function batchUpdateProductStock($stockUpdates)
     {
         foreach ($stockUpdates as $key => $update) {
-            list($productId, $showId) = explode('-', $key);
+            [$productId, $showId] = explode('-', $key);
             DB::table('product_show')
                 ->where('product_id', $productId)
                 ->where('show_id', $showId)
@@ -195,10 +195,10 @@ class SimulatedDataSeeder extends Seeder
                 return $customer;
             }
         }
-        
+
         // Create a new customer if we didn't find an existing one or if we chose to create a new one
         $newCustomer = Customer::factory()->create(['created_at' => $createdAt]);
-    
+
         return $newCustomer;
     }
 
@@ -206,7 +206,7 @@ class SimulatedDataSeeder extends Seeder
     {
         $payment = Payment::create([
             'order_id' => $order->id,
-            'transaction_id' => 'tr_' . \Illuminate\Support\Str::random(16),
+            'transaction_id' => 'tr_'.\Illuminate\Support\Str::random(16),
             'status' => 'paid',
             'amount' => $order->total,
             'payment_method' => ['credit_card', 'paypal', 'bank_transfer'][rand(0, 2)],

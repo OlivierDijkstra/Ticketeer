@@ -175,7 +175,7 @@ class AggregateDataJobTest extends TestCase
             'total' => 200,
             'created_at' => '2023-01-01 12:00:00',
         ]);
-        
+
         $job = new AggregateDataJob('day', '2023-01-01 00:00:00');
         $job->handle();
 

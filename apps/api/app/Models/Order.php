@@ -74,7 +74,7 @@ class Order extends Model
     public static function GenerateOrderNumber()
     {
         do {
-            $number = 'ORD-' . now()->format('YmdHis') . '-' . Str::random(4);
+            $number = 'ORD-'.now()->format('YmdHis').'-'.Str::random(4);
         } while (self::where('order_number', $number)->exists());
 
         return $number;

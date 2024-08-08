@@ -6,7 +6,6 @@ use App\Models\Aggregation;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
@@ -21,6 +20,7 @@ class AggregateDataJob implements ShouldQueue
     public $tries = 3;
 
     protected $granularity;
+
     protected $date;
 
     protected $modelTypes = ['Customer', 'Order'];
@@ -57,7 +57,7 @@ class AggregateDataJob implements ShouldQueue
                     try {
                         $this->aggregateData($modelType, $aggregationType, $startDate, $endDate);
                     } catch (Exception $e) {
-                        Log::error("Error aggregating data for $modelType, $aggregationType, {$this->granularity}: " . $e->getMessage());
+                        Log::error("Error aggregating data for $modelType, $aggregationType, {$this->granularity}: ".$e->getMessage());
                     }
                 }
             }
@@ -85,7 +85,7 @@ class AggregateDataJob implements ShouldQueue
 
     private function saveAggregations($modelType, $aggregationType, $results)
     {
-        if (!$results->count()) {
+        if (! $results->count()) {
             Aggregation::updateOrCreate([
                 'model_type' => $modelType,
                 'aggregation_type' => $aggregationType,
@@ -141,27 +141,27 @@ class AggregateDataJob implements ShouldQueue
             case 'hour':
                 return [
                     $date->copy()->startOfHour(),
-                    $date->copy()->endOfHour()
+                    $date->copy()->endOfHour(),
                 ];
             case 'day':
                 return [
                     $date->copy()->startOfDay(),
-                    $date->copy()->endOfDay()
+                    $date->copy()->endOfDay(),
                 ];
             case 'week':
                 return [
                     $date->copy()->startOfWeek(),
-                    $date->copy()->endOfWeek()
+                    $date->copy()->endOfWeek(),
                 ];
             case 'month':
                 return [
                     $date->copy()->startOfMonth(),
-                    $date->copy()->endOfMonth()
+                    $date->copy()->endOfMonth(),
                 ];
             case 'year':
                 return [
                     $date->copy()->startOfYear(),
-                    $date->copy()->endOfYear()
+                    $date->copy()->endOfYear(),
                 ];
             default:
                 throw new Exception("Invalid granularity: {$this->granularity}");
@@ -170,7 +170,7 @@ class AggregateDataJob implements ShouldQueue
 
     private function getTableName($modelType)
     {
-        return strtolower($modelType) . 's';
+        return strtolower($modelType).'s';
     }
 
     private function getColumnName($modelType, $aggregationType)
@@ -192,7 +192,7 @@ class AggregateDataJob implements ShouldQueue
     private function getAggregationExpression($aggregationType, $column)
     {
         if ($aggregationType === 'count') {
-            return "COUNT(*) as value";
+            return 'COUNT(*) as value';
         } elseif (in_array($aggregationType, ['sum', 'avg', 'min', 'max'])) {
             return "COALESCE($aggregationType($column), 0) as value";
         } else {
