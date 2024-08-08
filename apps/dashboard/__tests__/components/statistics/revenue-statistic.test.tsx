@@ -102,8 +102,8 @@ describe('RevenueStatistic', () => {
 
     await waitFor(() => {
       expect(fetchAggregatedData).toHaveBeenCalledWith({
-        modelType: 'Revenue',
-        aggregationType: 'count',
+        modelType: 'Order',
+        aggregationType: 'sum',
         granularity: 'month',
         dateRange: expect.any(Array),
       });
