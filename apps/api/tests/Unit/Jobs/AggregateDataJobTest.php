@@ -39,7 +39,7 @@ class AggregateDataJobTest extends TestCase
             'created_at' => '2023-01-02 00:30:00',
         ]);
 
-        Carbon::setTestNow('2022-12-31 00:00:00');
+        Carbon::setTestNow('2022-12-31 01:00:00');
         $job = new AggregateDataJob('hour');
         $job->handle();
 
@@ -57,7 +57,7 @@ class AggregateDataJobTest extends TestCase
             'value' => 100,
         ]);
 
-        Carbon::setTestNow('2023-01-01 00:00:00');
+        Carbon::setTestNow('2023-01-01 01:00:00');
         $job = new AggregateDataJob('hour');
         $job->handle();
 
@@ -102,6 +102,12 @@ class AggregateDataJobTest extends TestCase
             'granularity' => 'day',
             'value' => 2,
         ]);
+
+        $this->assertDatabaseMissing('aggregations', [
+            'model_type' => 'Customer',
+            'aggregation_type' => 'sum',
+            'granularity' => 'day',
+        ]);
     }
 
     public function testDifferentGranularities()
@@ -110,23 +116,14 @@ class AggregateDataJobTest extends TestCase
         Order::factory()->create(['total' => 200, 'created_at' => '2023-01-01 00:30:00']);
 
         $jobs = [
-            'hour' => new AggregateDataJob('hour'),
-            'day' => new AggregateDataJob('day'),
-            'week' => new AggregateDataJob('week'),
-            'month' => new AggregateDataJob('month'),
-            'year' => new AggregateDataJob('year'),
+            'hour' => new AggregateDataJob('hour', '2023-01-01 00:00:00'),
+            'day' => new AggregateDataJob('day', '2023-01-01 00:00:00'),
+            'week' => new AggregateDataJob('week', '2023-01-01 00:00:00'),
+            'month' => new AggregateDataJob('month', '2023-01-01 00:00:00'),
+            'year' => new AggregateDataJob('year', '2023-01-01 00:00:00'),
         ];
 
         foreach ($jobs as $granularity => $job) {
-            switch ($granularity) {
-                case 'hour':
-                    Carbon::setTestNow('2023-01-01 01:00:00');
-                    break;
-                default:
-                    Carbon::setTestNow('2023-01-02 00:00:00');
-                    break;
-            }
-
             $job->handle();
 
             $this->assertDatabaseHas('aggregations', [
@@ -178,6 +175,105 @@ class AggregateDataJobTest extends TestCase
             'total' => 200,
             'created_at' => '2023-01-01 12:00:00',
         ]);
+        
+        $job = new AggregateDataJob('day', '2023-01-01 00:00:00');
+        $job->handle();
+
+        $this->assertDatabaseHas('aggregations', [
+            'model_type' => 'Order',
+            'aggregation_type' => 'sum',
+            'granularity' => 'day',
+            'period' => '2023-01-01 00:00:00',
+            'value' => 200,
+        ]);
+    }
+
+    public function testGetPreviousPeriodEnd()
+    {
+        $method = new \ReflectionMethod(AggregateDataJob::class, 'getPreviousPeriodEnd');
+        $method->setAccessible(true);
+
+        $testCases = [
+            'hour' => Carbon::now()->subHour()->endOfHour(),
+            'day' => Carbon::now()->subDay()->endOfDay(),
+            'week' => Carbon::now()->subWeek()->endOfWeek(),
+            'month' => Carbon::now()->subMonth()->endOfMonth(),
+            'year' => Carbon::now()->subYear()->endOfYear(),
+        ];
+
+        foreach ($testCases as $granularity => $expectedDate) {
+            $job = new AggregateDataJob($granularity);
+            $this->assertEquals($expectedDate, $method->invoke($job));
+        }
+    }
+
+    public function testInvalidGranularityThrowsException()
+    {
+        $this->expectException(\Exception::class);
+        new AggregateDataJob('invalid');
+    }
+
+    public function testAggregationWithNoData()
+    {
+        Carbon::setTestNow('2023-01-01 00:00:00');
+        $job = new AggregateDataJob('day', '2023-01-01 00:00:00');
+        $job->handle();
+
+        $this->assertDatabaseHas('aggregations', [
+            'model_type' => 'Order',
+            'aggregation_type' => 'count',
+            'granularity' => 'day',
+            'period' => '2023-01-01 00:00:00',
+            'value' => 0,
+        ]);
+
+        $this->assertDatabaseHas('aggregations', [
+            'model_type' => 'Order',
+            'aggregation_type' => 'sum',
+            'granularity' => 'day',
+            'period' => '2023-01-01 00:00:00',
+            'value' => 0,
+        ]);
+    }
+
+    public function testAggregationWithDataAtPeriodBoundaries()
+    {
+        Order::factory()->create([
+            'total' => 100,
+            'created_at' => '2023-01-01 00:00:00', // Start of day
+        ]);
+
+        Order::factory()->create([
+            'total' => 200,
+            'created_at' => '2023-01-01 23:59:59', // End of day
+        ]);
+
+        Carbon::setTestNow('2023-01-02 00:00:00');
+        $job = new AggregateDataJob('day', '2023-01-01 00:00:00');
+        $job->handle();
+
+        $this->assertDatabaseHas('aggregations', [
+            'model_type' => 'Order',
+            'aggregation_type' => 'count',
+            'granularity' => 'day',
+            'period' => '2023-01-01 00:00:00',
+            'value' => 2,
+        ]);
+
+        $this->assertDatabaseHas('aggregations', [
+            'model_type' => 'Order',
+            'aggregation_type' => 'sum',
+            'granularity' => 'day',
+            'period' => '2023-01-01 00:00:00',
+            'value' => 300,
+        ]);
+    }
+
+    public function testAverageAggregation()
+    {
+        Order::factory()->create(['total' => 100, 'created_at' => '2023-01-01 00:00:00']);
+        Order::factory()->create(['total' => 200, 'created_at' => '2023-01-01 01:00:00']);
+        Order::factory()->create(['total' => 300, 'created_at' => '2023-01-01 02:00:00']);
 
         Carbon::setTestNow('2023-01-02 00:00:00');
         $job = new AggregateDataJob('day');
@@ -185,32 +281,169 @@ class AggregateDataJobTest extends TestCase
 
         $this->assertDatabaseHas('aggregations', [
             'model_type' => 'Order',
-            'aggregation_type' => 'sum',
+            'aggregation_type' => 'avg',
             'granularity' => 'day',
-            'period' => '2023-01-01 12:00:00',
+            'period' => '2023-01-01 00:00:00',
+            'value' => 200, // (100 + 200 + 300) / 3 = 200
+        ]);
+    }
+
+    public function testMinimumAggregation()
+    {
+        Order::factory()->create(['total' => 150, 'created_at' => '2023-01-01 00:00:00']);
+        Order::factory()->create(['total' => 100, 'created_at' => '2023-01-01 01:00:00']);
+        Order::factory()->create(['total' => 200, 'created_at' => '2023-01-01 02:00:00']);
+
+        Carbon::setTestNow('2023-01-02 00:00:00');
+        $job = new AggregateDataJob('day', '2023-01-01 00:00:00');
+        $job->handle();
+
+        $this->assertDatabaseHas('aggregations', [
+            'model_type' => 'Order',
+            'aggregation_type' => 'min',
+            'granularity' => 'day',
+            'period' => '2023-01-01 00:00:00',
+            'value' => 100,
+        ]);
+    }
+
+    public function testMaximumAggregation()
+    {
+        Order::factory()->create(['total' => 150, 'created_at' => '2023-01-01 00:00:00']);
+        Order::factory()->create(['total' => 100, 'created_at' => '2023-01-01 01:00:00']);
+        Order::factory()->create(['total' => 200, 'created_at' => '2023-01-01 02:00:00']);
+
+        Carbon::setTestNow('2023-01-02 00:00:00');
+        $job = new AggregateDataJob('day', '2023-01-01 00:00:00');
+        $job->handle();
+
+        $this->assertDatabaseHas('aggregations', [
+            'model_type' => 'Order',
+            'aggregation_type' => 'max',
+            'granularity' => 'day',
+            'period' => '2023-01-01 00:00:00',
             'value' => 200,
         ]);
     }
 
-    public function testGetStartDate()
+    public function testAllAggregationTypesForSingleDay()
     {
-        $job = new AggregateDataJob('day');
-        $method = new \ReflectionMethod($job, 'getStartDate');
-        $method->setAccessible(true);
+        Order::factory()->create(['total' => 100, 'created_at' => '2023-01-01 00:00:00']);
+        Order::factory()->create(['total' => 200, 'created_at' => '2023-01-01 12:00:00']);
+        Order::factory()->create(['total' => 300, 'created_at' => '2023-01-01 23:59:59']);
 
-        $endDate = Carbon::now();
-        $startDate = $method->invoke($job, $endDate);
+        Carbon::setTestNow('2023-01-02 00:00:00');
+        $job = new AggregateDataJob('day', '2023-01-01 00:00:00');
+        $job->handle();
 
-        $this->assertEquals($endDate->copy()->subDay(), $startDate);
+        $this->assertDatabaseHas('aggregations', [
+            'model_type' => 'Order',
+            'aggregation_type' => 'count',
+            'granularity' => 'day',
+            'period' => '2023-01-01 00:00:00',
+            'value' => 3,
+        ]);
+
+        $this->assertDatabaseHas('aggregations', [
+            'model_type' => 'Order',
+            'aggregation_type' => 'sum',
+            'granularity' => 'day',
+            'period' => '2023-01-01 00:00:00',
+            'value' => 600,
+        ]);
+
+        $this->assertDatabaseHas('aggregations', [
+            'model_type' => 'Order',
+            'aggregation_type' => 'avg',
+            'granularity' => 'day',
+            'period' => '2023-01-01 00:00:00',
+            'value' => 200,
+        ]);
+
+        $this->assertDatabaseHas('aggregations', [
+            'model_type' => 'Order',
+            'aggregation_type' => 'min',
+            'granularity' => 'day',
+            'period' => '2023-01-01 00:00:00',
+            'value' => 100,
+        ]);
+
+        $this->assertDatabaseHas('aggregations', [
+            'model_type' => 'Order',
+            'aggregation_type' => 'max',
+            'granularity' => 'day',
+            'period' => '2023-01-01 00:00:00',
+            'value' => 300,
+        ]);
     }
 
-    public function testInvalidGranularityThrowsException()
+    public function testSkipAggregationsFunctionality()
     {
-        $this->expectException(\Exception::class);
+        // Create some customer data
+        Customer::factory()->count(3)->create(['created_at' => '2023-01-01 00:00:00']);
+        Customer::factory()->count(2)->create(['created_at' => '2023-01-02 00:00:00']);
 
-        $job = new AggregateDataJob('invalid');
-        $method = new \ReflectionMethod($job, 'getStartDate');
-        $method->setAccessible(true);
-        $method->invoke($job, Carbon::now());
+        // Create some order data (to ensure other aggregations are still working)
+        Order::factory()->create(['total' => 100, 'created_at' => '2023-01-01 00:00:00']);
+        Order::factory()->create(['total' => 200, 'created_at' => '2023-01-02 00:00:00']);
+
+        Carbon::setTestNow('2023-01-03 00:00:00');
+        $job = new AggregateDataJob('day', '2023-01-02 00:00:00');
+        $job->handle();
+
+        // Assert that Customer count aggregation exists
+        $this->assertDatabaseHas('aggregations', [
+            'model_type' => 'Customer',
+            'aggregation_type' => 'count',
+            'granularity' => 'day',
+            'period' => '2023-01-02 00:00:00',
+            'value' => 2,
+        ]);
+
+        // Assert that skipped Customer aggregations do not exist
+        $this->assertDatabaseMissing('aggregations', [
+            'model_type' => 'Customer',
+            'aggregation_type' => 'sum',
+            'granularity' => 'day',
+            'period' => '2023-01-02 00:00:00',
+        ]);
+
+        $this->assertDatabaseMissing('aggregations', [
+            'model_type' => 'Customer',
+            'aggregation_type' => 'avg',
+            'granularity' => 'day',
+            'period' => '2023-01-02 00:00:00',
+        ]);
+
+        $this->assertDatabaseMissing('aggregations', [
+            'model_type' => 'Customer',
+            'aggregation_type' => 'min',
+            'granularity' => 'day',
+            'period' => '2023-01-02 00:00:00',
+        ]);
+
+        $this->assertDatabaseMissing('aggregations', [
+            'model_type' => 'Customer',
+            'aggregation_type' => 'max',
+            'granularity' => 'day',
+            'period' => '2023-01-02 00:00:00',
+        ]);
+
+        // Assert that Order aggregations still exist (to ensure other aggregations are not affected)
+        $this->assertDatabaseHas('aggregations', [
+            'model_type' => 'Order',
+            'aggregation_type' => 'sum',
+            'granularity' => 'day',
+            'period' => '2023-01-02 00:00:00',
+            'value' => 200,
+        ]);
+
+        $this->assertDatabaseHas('aggregations', [
+            'model_type' => 'Order',
+            'aggregation_type' => 'count',
+            'granularity' => 'day',
+            'period' => '2023-01-02 00:00:00',
+            'value' => 1,
+        ]);
     }
 }
