@@ -1,5 +1,6 @@
 'use client';
 
+import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import {
   CalendarDays,
   Home,
@@ -13,7 +14,7 @@ import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetDescription, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 
 export default function NavigationSheet() {
   const [open, setOpen] = useState(false);
@@ -44,6 +45,13 @@ export default function NavigationSheet() {
         </Button>
       </SheetTrigger>
       <SheetContent side='left' className='sm:max-w-xs'>
+        <VisuallyHidden>
+          <SheetTitle>Menu</SheetTitle>
+          <SheetDescription>
+            Navigate to different sections of the dashboard.
+          </SheetDescription>
+        </VisuallyHidden>
+
         <nav className='grid gap-6 text-lg font-medium'>
           <Link href='/dashboard' className={getClassesForPath(undefined)}>
             <Home className='h-5 w-5' />
