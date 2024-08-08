@@ -94,9 +94,6 @@ export function debugLog(
   // eslint-disable-next-line no-undef
   if (process.env.NODE_ENV === "production") return;
 
-  // eslint-disable-next-line no-undef
-  if (!process.env.NEXT_PUBLIC_DEBUG) return;
-
   console[severity](...message);
 }
 
