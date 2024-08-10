@@ -1,7 +1,6 @@
 import { notFound } from 'next/navigation';
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 
-import { API_URL } from '@/lib/constants';
 import { fetchWithAuth } from '@/lib/fetch';
 
 vi.stubEnv('BACKEND_API_URL', 'http://localhost:3000');
@@ -52,7 +51,7 @@ describe('fetchWithAuth', () => {
       },
     });
 
-    expect(fetchMock).toHaveBeenCalledWith(`${API_URL}/api/test`, {
+    expect(fetchMock).toHaveBeenCalledWith(`${process.env.BACKEND_API_URL}/api/test`, {
       headers: fetchMock.mock.calls[0][1].headers,
       referrer: 'http://localhost:3000',
       credentials: 'include',
@@ -179,7 +178,7 @@ describe('fetchWithAuth', () => {
       },
     });
 
-    expect(fetchMock).toHaveBeenCalledWith(`${API_URL}/api/test`, {
+    expect(fetchMock).toHaveBeenCalledWith(`${process.env.BACKEND_API_URL}/api/test`, {
       headers: fetchMock.mock.calls[0][1].headers,
       referrer: 'http://localhost:3000',
       credentials: 'include',
@@ -200,7 +199,7 @@ describe('fetchWithAuth', () => {
       body: { foo: 'bar' },
     });
 
-    expect(fetchMock).toHaveBeenCalledWith(`${API_URL}/api/test`, {
+    expect(fetchMock).toHaveBeenCalledWith(`${process.env.BACKEND_API_URL}/api/test`, {
       headers: fetchMock.mock.calls[0][1].headers,
       referrer: 'http://localhost:3000',
       credentials: 'include',

@@ -2,8 +2,6 @@
 
 import type { Order } from '@repo/lib';
 
-import { API_URL } from '@/lib/constants';
-
 export async function createOrder(data: {
   show_id: number;
   customer?: {
@@ -25,9 +23,9 @@ export async function createOrder(data: {
   tos: boolean;
   redirect_url?: string;
 }) {
-  let fullUrl = `${API_URL}`;
+  let fullUrl = `${process.env.BACKEND_API_URL}`;
 
-  if (API_URL?.endsWith('/')) {
+  if (process.env.BACKEND_API_URL?.endsWith('/')) {
     fullUrl = fullUrl?.slice(0, -1);
   }
 
@@ -35,7 +33,7 @@ export async function createOrder(data: {
 
   fullUrl = `${fullUrl}${url}`;
 
-  const csrfUrl = `${API_URL}/sanctum/csrf-cookie`;
+  const csrfUrl = `${process.env.BACKEND_API_URL}/sanctum/csrf-cookie`;
 
   const res = await fetch(csrfUrl, {
     method: 'GET',
