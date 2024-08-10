@@ -130,8 +130,8 @@ export function createUrl(
 
 export default function formatMoney(
   amount?: number | string | null,
-  locale: string = 'en-US',
-  currency: string = 'USD'
+  locale: string = "en-US",
+  currency: string = "USD",
 ) {
   if (amount === null || amount === undefined) return "0";
 

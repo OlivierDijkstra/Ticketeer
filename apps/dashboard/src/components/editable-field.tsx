@@ -153,7 +153,11 @@ export default function EditableField({
           ) : (
             <p className='line-clamp-6'>
               {type === 'currency'
-                ? formatMoney(stateValue, config.APP_LOCALE, config.APP_CURRENCY)
+                ? formatMoney(
+                    stateValue,
+                    config.APP_LOCALE,
+                    config.APP_CURRENCY
+                  )
                 : stateValue || placeholder}
             </p>
           )}

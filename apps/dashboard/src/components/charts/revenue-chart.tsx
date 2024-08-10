@@ -140,7 +140,11 @@ export default function RevenueChart() {
                     {chartConfig[name as keyof typeof chartConfig]?.label ||
                       name}
                     <div className='ml-1 flex items-baseline gap-0.5 font-mono font-medium tabular-nums text-foreground'>
-                      {formatMoney(value as string, config.APP_LOCALE, config.APP_CURRENCY)}
+                      {formatMoney(
+                        value as string,
+                        config.APP_LOCALE,
+                        config.APP_CURRENCY
+                      )}
                     </div>
                   </div>
                 )}

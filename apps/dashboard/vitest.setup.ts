@@ -16,7 +16,7 @@ window.HTMLElement.prototype.releasePointerCapture = vi.fn();
 
 vi.mock('@tanstack/react-query', async () => {
   const actual = await vi.importActual('@tanstack/react-query');
-  
+
   return {
     ...actual,
     useQuery: vi.fn().mockResolvedValue({

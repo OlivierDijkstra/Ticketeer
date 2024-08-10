@@ -108,12 +108,20 @@ export default function OrderCard({
                         </span>
 
                         <span>
-                          {formatMoney(product.price, config.APP_LOCALE, config.APP_CURRENCY)}
+                          {formatMoney(
+                            product.price,
+                            config.APP_LOCALE,
+                            config.APP_CURRENCY
+                          )}
                         </span>
                         <span>to</span>
 
                         <span>
-                          {formatMoney(product.pivot?.adjusted_price, config.APP_LOCALE, config.APP_CURRENCY)}
+                          {formatMoney(
+                            product.pivot?.adjusted_price,
+                            config.APP_LOCALE,
+                            config.APP_CURRENCY
+                          )}
                         </span>
                       </p>
                     </TooltipContent>
@@ -152,7 +160,11 @@ export default function OrderCard({
           <li className='flex items-center justify-between'>
             <span className='text-muted-foreground'>Service Fee</span>
             <span>
-              {formatMoney(order.service_fee, config.APP_LOCALE, config.APP_CURRENCY)}
+              {formatMoney(
+                order.service_fee,
+                config.APP_LOCALE,
+                config.APP_CURRENCY
+              )}
             </span>
           </li>
           <li className='flex items-center justify-between font-semibold'>

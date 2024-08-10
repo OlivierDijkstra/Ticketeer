@@ -80,7 +80,11 @@ export function columns(_data: ColumnData): ColumnDef<Payment>[] {
 
         return (
           <span>
-            {formatMoney(row.original.amount, config.APP_LOCALE, config.APP_CURRENCY)}
+            {formatMoney(
+              row.original.amount,
+              config.APP_LOCALE,
+              config.APP_CURRENCY
+            )}
           </span>
         );
       },

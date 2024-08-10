@@ -80,7 +80,9 @@ describe('RevenueStatistic', () => {
 
     await waitFor(() => {
       expect(screen.getByText('Revenue This Month')).toBeInTheDocument();
-      expect(screen.getByText(formatMoney(10000, 'en-US', 'USD'))).toBeInTheDocument();
+      expect(
+        screen.getByText(formatMoney(10000, 'en-US', 'USD'))
+      ).toBeInTheDocument();
       expect(screen.getByText('+25% from last month')).toBeInTheDocument();
     });
   });
@@ -93,7 +95,9 @@ describe('RevenueStatistic', () => {
 
     await waitFor(() => {
       expect(screen.getByText('Revenue This Month')).toBeInTheDocument();
-      expect(screen.getByText(formatMoney(8000, 'en-US', 'USD'))).toBeInTheDocument();
+      expect(
+        screen.getByText(formatMoney(8000, 'en-US', 'USD'))
+      ).toBeInTheDocument();
       expect(screen.getByText('-20% from last month')).toBeInTheDocument();
     });
   });
@@ -106,7 +110,9 @@ describe('RevenueStatistic', () => {
 
     await waitFor(() => {
       expect(screen.getByText('Revenue This Month')).toBeInTheDocument();
-      expect(screen.getByText(formatMoney(0, 'en-US', 'USD'))).toBeInTheDocument();
+      expect(
+        screen.getByText(formatMoney(0, 'en-US', 'USD'))
+      ).toBeInTheDocument();
       expect(screen.getByText('0% from last month')).toBeInTheDocument();
     });
   });
@@ -119,7 +125,9 @@ describe('RevenueStatistic', () => {
 
     await waitFor(() => {
       expect(screen.getByText('Revenue This Month')).toBeInTheDocument();
-      expect(screen.getByText(formatMoney(5000, 'en-US', 'USD'))).toBeInTheDocument();
+      expect(
+        screen.getByText(formatMoney(5000, 'en-US', 'USD'))
+      ).toBeInTheDocument();
       expect(screen.getByText('+100% from last month')).toBeInTheDocument();
     });
   });

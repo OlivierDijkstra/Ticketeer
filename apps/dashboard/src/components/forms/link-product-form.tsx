@@ -32,7 +32,7 @@ export default function LinkProductForm({
 }: {
   callback?: () => void;
 }) {
-const { config } = useConfig();
+  const { config } = useConfig();
 
   const params = useParams<{
     show: string;
@@ -121,7 +121,11 @@ const { config } = useConfig();
     }
 
     if (selectedProduct) {
-      const formatted = formatMoney(selectedProduct.price, config.APP_LOCALE, config.APP_CURRENCY);
+      const formatted = formatMoney(
+        selectedProduct.price,
+        config.APP_LOCALE,
+        config.APP_CURRENCY
+      );
 
       label += ` - Original: ${formatted}`;
     }
