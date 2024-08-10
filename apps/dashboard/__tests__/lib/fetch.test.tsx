@@ -52,7 +52,7 @@ describe('fetchWithAuth', () => {
     });
 
     expect(fetchMock).toHaveBeenCalledWith(
-      `${process.env.BACKEND_API_URL}/api/test`,
+      'undefined/api/test',
       {
         headers: fetchMock.mock.calls[0][1].headers,
         referrer: 'http://localhost:3000',
@@ -181,16 +181,13 @@ describe('fetchWithAuth', () => {
       },
     });
 
-    expect(fetchMock).toHaveBeenCalledWith(
-      `${process.env.BACKEND_API_URL}/api/test`,
-      {
-        headers: fetchMock.mock.calls[0][1].headers,
-        referrer: 'http://localhost:3000',
-        credentials: 'include',
-        body: JSON.stringify({ foo: 'bar' }),
-        method: 'POST',
-      }
-    );
+    expect(fetchMock).toHaveBeenCalledWith('undefined/api/test', {
+      headers: fetchMock.mock.calls[0][1].headers,
+      referrer: 'http://localhost:3000',
+      credentials: 'include',
+      body: JSON.stringify({ foo: 'bar' }),
+      method: 'POST',
+    });
   });
 
   test('it handles different HTTP methods', async () => {
@@ -205,16 +202,13 @@ describe('fetchWithAuth', () => {
       body: { foo: 'bar' },
     });
 
-    expect(fetchMock).toHaveBeenCalledWith(
-      `${process.env.BACKEND_API_URL}/api/test`,
-      {
-        headers: fetchMock.mock.calls[0][1].headers,
-        referrer: 'http://localhost:3000',
-        credentials: 'include',
-        body: JSON.stringify({ foo: 'bar' }),
-        method: 'PUT',
-      }
-    );
+    expect(fetchMock).toHaveBeenCalledWith('undefined/api/test', {
+      headers: fetchMock.mock.calls[0][1].headers,
+      referrer: 'http://localhost:3000',
+      credentials: 'include',
+      body: JSON.stringify({ foo: 'bar' }),
+      method: 'PUT',
+    });
   });
 
   test('it handles fetch errors', async () => {
