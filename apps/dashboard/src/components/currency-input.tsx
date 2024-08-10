@@ -2,6 +2,7 @@ import formatMoney, { cn } from '@repo/lib';
 import * as React from 'react';
 
 import { Input } from '@/components/ui/input';
+import { useConfig } from '@/lib/hooks';
 
 export interface CurrencyInputProps
   extends Omit<
@@ -16,8 +17,10 @@ export interface CurrencyInputProps
 
 const CurrencyInput = React.forwardRef<HTMLInputElement, CurrencyInputProps>(
   ({ defaultValue = '', onChange, className, max, ...props }, ref) => {
+    const { config } = useConfig();
+
     const [value, setValue] = React.useState<string>(
-      formatMoney(defaultValue || props.value || '0')
+      formatMoney(defaultValue || props.value || '0', config.APP_LOCALE, config.APP_CURRENCY)
     );
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -27,7 +30,7 @@ const CurrencyInput = React.forwardRef<HTMLInputElement, CurrencyInputProps>(
       if (max !== undefined && numericValue > max) {
         numericValue = max;
       }
-      const formattedValue = formatMoney(numericValue.toFixed(2));
+      const formattedValue = formatMoney(numericValue.toFixed(2), config.APP_LOCALE, config.APP_CURRENCY);
       setValue(formattedValue);
       if (onChange) {
         onChange(numericValue);
@@ -36,13 +39,13 @@ const CurrencyInput = React.forwardRef<HTMLInputElement, CurrencyInputProps>(
 
     React.useEffect(() => {
       if (!props.value) return;
-      setValue(formatMoney(props.value));
-    }, [props.value]);
+      setValue(formatMoney(props.value, config.APP_LOCALE, config.APP_CURRENCY));
+    }, [props.value, config.APP_LOCALE, config.APP_CURRENCY]);
 
     React.useEffect(() => {
       if (!defaultValue) return;
-      setValue(formatMoney(defaultValue));
-    }, [defaultValue]);
+      setValue(formatMoney(defaultValue, config.APP_LOCALE, config.APP_CURRENCY));
+    }, [defaultValue, config.APP_LOCALE, config.APP_CURRENCY]);
 
     return (
       <Input

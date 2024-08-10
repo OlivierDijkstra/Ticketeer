@@ -128,13 +128,15 @@ export function createUrl(
   return `${base}?${queryString}`;
 }
 
-export default function formatMoney(amount?: number | string | null) {
+export default function formatMoney(
+  amount?: number | string | null,
+  locale: string = 'en-US',
+  currency: string = 'USD'
+) {
   if (amount === null || amount === undefined) return "0";
 
-  // eslint-disable-next-line no-undef
-  return new Intl.NumberFormat(process.env.NEXT_PUBLIC_LOCALE || "en-US", {
+  return new Intl.NumberFormat(locale, {
     style: "currency",
-    // eslint-disable-next-line no-undef
-    currency: process.env.NEXT_PUBLIC_CURRENCY || "USD",
+    currency: currency,
   }).format(parseFloat((amount as string) || "0"));
 }

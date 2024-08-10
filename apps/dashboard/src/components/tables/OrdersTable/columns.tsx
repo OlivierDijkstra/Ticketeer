@@ -10,6 +10,7 @@ import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { DEFAULT_DATE_FORMAT } from '@/lib/constants';
+import { useConfig } from '@/lib/hooks';
 
 export function columns(_data: ColumnData): ColumnDef<Order>[] {
   const baseColumns: ColumnDef<Order>[] = [
@@ -44,7 +45,14 @@ export function columns(_data: ColumnData): ColumnDef<Order>[] {
       cell: ({ row }) => {
         if (!row.original.total) return 'Free';
 
-        return formatMoney(row.original.total);
+        // eslint-disable-next-line react-hooks/rules-of-hooks
+        const { config } = useConfig();
+
+        return formatMoney(
+          row.original.total,
+          config.APP_LOCALE,
+          config.APP_CURRENCY
+        );
       },
     },
     {

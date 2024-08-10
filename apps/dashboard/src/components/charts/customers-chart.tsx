@@ -17,10 +17,12 @@ import {
 } from '@/components/charts/lib';
 import Spinner from '@/components/spinner';
 import { DATE_RANGES, DEFAULT_CHART_ANIMATION_DURATION } from '@/lib/constants';
+import { useConfig } from '@/lib/hooks';
 import type { AggregatedDataConfig } from '@/server/actions/aggregated-data';
 import { fetchAggregatedData } from '@/server/actions/aggregated-data';
 
 export default function CustomersChart() {
+  const { config } = useConfig();
   const defaultDateRange = DATE_RANGES[2] as DateRanges;
   const defaultGranularity = determineGranularity(defaultDateRange);
   const defaultQuery: AggregatedDataConfig = {
@@ -42,7 +44,6 @@ export default function CustomersChart() {
     () => determineDateFormat(query.granularity),
     [query.granularity]
   );
-
   async function handleDateRangeChange(dateRange: DateRanges) {
     const newGranularity = determineGranularity(dateRange);
     const newQuery = {
@@ -99,7 +100,7 @@ export default function CustomersChart() {
             tickMargin={8}
             tickFormatter={(value) => {
               return new Date(value).toLocaleDateString(
-                process.env.NEXT_PUBLIC_LOCALE,
+                config?.APP_LOCALE || 'en-US',
                 timeFormat
               );
             }}
@@ -116,7 +117,7 @@ export default function CustomersChart() {
               <ChartTooltipContent
                 labelFormatter={(value) => {
                   return new Date(value).toLocaleDateString(
-                    process.env.NEXT_PUBLIC_LOCALE,
+                    config?.APP_LOCALE || 'en-US',
                     timeFormat
                   );
                 }}

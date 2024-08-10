@@ -5,8 +5,9 @@ import type { ResponseCookie } from 'next/dist/compiled/@edge-runtime/cookies';
 import { cookies } from 'next/headers';
 import { notFound } from 'next/navigation';
 
-import { API_URL } from '@/lib/constants';
 dns.setDefaultResultOrder('ipv4first');
+
+const API_URL = process.env.BACKEND_API_URL;
 
 interface FetchOptions extends Omit<RequestInit, 'body'> {
   xsrfToken?: string;
@@ -54,7 +55,7 @@ export async function fetchWithAuth<T>(
   const fetchConfig: FetchConfig = {
     headers,
     method: options.method || 'GET',
-    referrer: process.env.NEXT_PUBLIC_REFERRER_URL || 'http://localhost:3000',
+    referrer: process.env.REFERRER_URL || 'http://localhost:3000',
     credentials: 'include',
   };
 

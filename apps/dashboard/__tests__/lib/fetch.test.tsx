@@ -4,7 +4,7 @@ import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 import { API_URL } from '@/lib/constants';
 import { fetchWithAuth } from '@/lib/fetch';
 
-vi.stubEnv('NEXT_PUBLIC_BACKEND_API_URL', 'http://localhost:3000');
+vi.stubEnv('BACKEND_API_URL', 'http://localhost:3000');
 
 const getAllCookiesMock = vi.fn();
 const setCookieMock = vi.fn();

@@ -2,11 +2,11 @@
   "globalEnv": [
     "NODE_ENV",
     "NEXTAUTH_URL",
-    "NEXT_PUBLIC_REFERRER_URL",
-    "NEXT_PUBLIC_BACKEND_API_URL",
-    "NEXT_PUBLIC_APP_NAME",
-    "NEXT_PUBLIC_LOCALE",
-    "NEXT_PUBLIC_CURRENCY"
+    "REFERRER_URL",
+    "BACKEND_API_URL",
+    "APP_NAME",
+    "APP_LOCALE",
+    "APP_CURRENCY"
   ],
   "$schema": "https://turbo.build/schema.json",
   "tasks": {

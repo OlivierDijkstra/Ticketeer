@@ -18,6 +18,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
+import { useConfig } from '@/lib/hooks';
 import { refundPaymentAction } from '@/server/actions/payments';
 
 export default function RefundPaymentForm({
@@ -27,6 +28,8 @@ export default function RefundPaymentForm({
   payment: Payment;
   callback?: () => void;
 }) {
+  const { config } = useConfig();
+
   const maxAmount = useMemo(() => {
     return (
       parseFloat(payment.amount) -
@@ -74,7 +77,8 @@ export default function RefundPaymentForm({
             <FormItem>
               <FormLabel>Amount</FormLabel>
               <p className='text-sm text-muted-foreground'>
-                Maximum amount: {formatMoney(maxAmount)}
+                Maximum amount:{' '}
+                {formatMoney(maxAmount, config.APP_LOCALE, config.APP_CURRENCY)}
               </p>
               <FormControl>
                 <CurrencyInput max={maxAmount} {...field} />

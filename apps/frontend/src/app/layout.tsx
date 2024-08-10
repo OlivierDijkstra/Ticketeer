@@ -23,11 +23,11 @@ export default function RootLayout({
       <body className={inter.className}>
         <nav className=' mb-2 h-12 bg-primary-foreground'>
           <div className='container flex h-full items-center justify-center gap-2'>
-            <span className='sr-only'>{process.env.NEXT_PUBLIC_APP_NAME}</span>
+            <span className='sr-only'>{process.env.APP_NAME}</span>
             <Link href='/' className='flex items-center justify-center'>
               <Image
                 src='/logo.svg'
-                alt={`${process.env.NEXT_PUBLIC_APP_NAME}`}
+                alt={`${process.env.APP_NAME}`}
                 width={120}
                 height={100}
               />

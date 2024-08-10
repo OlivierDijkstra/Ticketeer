@@ -23,6 +23,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { useConfig } from '@/lib/hooks';
 import { getProductsAction } from '@/server/actions/products';
 import { linkProductToShowAction } from '@/server/actions/shows';
 
@@ -31,6 +32,8 @@ export default function LinkProductForm({
 }: {
   callback?: () => void;
 }) {
+const { config } = useConfig();
+
   const params = useParams<{
     show: string;
   }>();
@@ -118,13 +121,13 @@ export default function LinkProductForm({
     }
 
     if (selectedProduct) {
-      const formatted = formatMoney(selectedProduct.price);
+      const formatted = formatMoney(selectedProduct.price, config.APP_LOCALE, config.APP_CURRENCY);
 
       label += ` - Original: ${formatted}`;
     }
 
     return label;
-  }, [form, selectedProduct]);
+  }, [form, selectedProduct, config.APP_LOCALE, config.APP_CURRENCY]);
 
   return (
     <Form {...form}>

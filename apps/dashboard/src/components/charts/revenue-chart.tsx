@@ -19,6 +19,7 @@ import {
 } from '@/components/charts/lib';
 import Spinner from '@/components/spinner';
 import { DATE_RANGES, DEFAULT_CHART_ANIMATION_DURATION } from '@/lib/constants';
+import { useConfig } from '@/lib/hooks';
 import type { AggregatedDataConfig } from '@/server/actions/aggregated-data';
 import { fetchAggregatedData } from '@/server/actions/aggregated-data';
 
@@ -30,6 +31,7 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export default function RevenueChart() {
+  const { config } = useConfig();
   const defaultDateRange = DATE_RANGES[0] as DateRanges;
   const defaultGranularity = determineGranularity(defaultDateRange);
   const defaultQuery: AggregatedDataConfig = {
@@ -100,7 +102,7 @@ export default function RevenueChart() {
             tickMargin={8}
             tickFormatter={(value) => {
               return new Date(value).toLocaleDateString(
-                process.env.NEXT_PUBLIC_LOCALE,
+                config?.APP_LOCALE || 'en-US',
                 timeFormat
               );
             }}
@@ -137,14 +139,14 @@ export default function RevenueChart() {
                   <div className='flex min-w-[130px] items-center text-xs text-muted-foreground'>
                     {chartConfig[name as keyof typeof chartConfig]?.label ||
                       name}
-                    <div className='ml-auto flex items-baseline gap-0.5 font-mono font-medium tabular-nums text-foreground'>
-                      {formatMoney(value as string)}
+                    <div className='ml-1 flex items-baseline gap-0.5 font-mono font-medium tabular-nums text-foreground'>
+                      {formatMoney(value as string, config.APP_LOCALE, config.APP_CURRENCY)}
                     </div>
                   </div>
                 )}
                 labelFormatter={(value) => {
                   return new Date(value).toLocaleDateString(
-                    process.env.NEXT_PUBLIC_LOCALE,
+                    config.APP_LOCALE,
                     timeFormat
                   );
                 }}

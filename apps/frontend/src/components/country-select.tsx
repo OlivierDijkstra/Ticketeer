@@ -24,7 +24,7 @@ export default function CountrySelect(props: SelectProps) {
         return;
       }
 
-      const fullLocale = process.env.NEXT_PUBLIC_LOCALE || 'en';
+      const fullLocale = process.env.APP_LOCALE || 'en';
       const locale = fullLocale.slice(0, 2);
       let localeData;
 

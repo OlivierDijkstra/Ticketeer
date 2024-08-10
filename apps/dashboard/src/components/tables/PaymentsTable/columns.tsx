@@ -41,6 +41,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { DEFAULT_DATE_FORMAT } from '@/lib/constants';
+import { useConfig } from '@/lib/hooks';
 import { refundPaymentAction } from '@/server/actions/payments';
 import { revalidate } from '@/server/helpers';
 
@@ -74,7 +75,14 @@ export function columns(_data: ColumnData): ColumnDef<Payment>[] {
       accessorKey: 'amount',
       header: 'Amount',
       cell: ({ row }) => {
-        return <span>{formatMoney(row.original.amount)}</span>;
+        // eslint-disable-next-line react-hooks/rules-of-hooks
+        const { config } = useConfig();
+
+        return (
+          <span>
+            {formatMoney(row.original.amount, config.APP_LOCALE, config.APP_CURRENCY)}
+          </span>
+        );
       },
     },
     {
@@ -88,10 +96,17 @@ export function columns(_data: ColumnData): ColumnDef<Payment>[] {
       accessorKey: 'amount_refunded',
       header: 'Amount Refunded',
       cell: ({ row }) => {
+        // eslint-disable-next-line react-hooks/rules-of-hooks
+        const { config } = useConfig();
+
         return (
           <span>
             {row.original.amount_refunded
-              ? formatMoney(row.original.amount_refunded)
+              ? formatMoney(
+                  row.original.amount_refunded,
+                  config.APP_LOCALE,
+                  config.APP_CURRENCY
+                )
               : 'N/A'}
           </span>
         );

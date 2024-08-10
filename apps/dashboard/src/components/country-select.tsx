@@ -12,21 +12,23 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { useConfig } from '@/lib/hooks';
 
 type SelectProps = {
   onChange?: (value: string) => void;
 } & React.ComponentPropsWithoutRef<typeof Select>;
 
 export default function CountrySelect(props: SelectProps) {
+  const { config } = useConfig();
   const [localesLoaded, setLocalesLoaded] = useState(false);
 
   useEffect(() => {
     const loadLocale = async () => {
-      if (localesLoaded) {
+      if (localesLoaded || !config) {
         return;
       }
 
-      const fullLocale = process.env.NEXT_PUBLIC_LOCALE || 'en';
+      const fullLocale = config.APP_LOCALE || 'en';
       const locale = fullLocale.slice(0, 2);
       let localeData;
 
@@ -44,17 +46,20 @@ export default function CountrySelect(props: SelectProps) {
     };
 
     loadLocale();
-  }, [localesLoaded]);
+  }, [localesLoaded, config]);
 
   const countryList = useMemo(
     () =>
       localesLoaded
         ? Object.entries(countries.getAlpha2Codes()).map(([key]) => ({
             key,
-            name: countries.getName(key, 'en', { select: 'official' }) || '',
+            name:
+              countries.getName(key, config.APP_LOCALE?.split('-')[0] || 'en', {
+                select: 'official',
+              }) || '',
           }))
         : [],
-    [localesLoaded]
+    [localesLoaded, config]
   );
 
   return (

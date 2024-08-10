@@ -15,6 +15,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { DEFAULT_PRETTY_DATE_FORMAT } from '@/lib/constants';
+import { useConfig } from '@/lib/hooks';
 import { handleFieldUpdate } from '@/lib/utils';
 import { updateOrderAction } from '@/server/actions/orders';
 
@@ -25,6 +26,8 @@ export default function OrderCard({
   order: Order;
   className?: string;
 }) {
+  const { config } = useConfig();
+
   const [description, setDescription] = useState(order.description);
   const [loading, setLoading] = useState(false);
 
@@ -104,11 +107,13 @@ export default function OrderCard({
                           The price was adjusted from the default price of
                         </span>
 
-                        <span>{formatMoney(product.price)}</span>
+                        <span>
+                          {formatMoney(product.price, config.APP_LOCALE, config.APP_CURRENCY)}
+                        </span>
                         <span>to</span>
 
                         <span>
-                          {formatMoney(product.pivot?.adjusted_price)}
+                          {formatMoney(product.pivot?.adjusted_price, config.APP_LOCALE, config.APP_CURRENCY)}
                         </span>
                       </p>
                     </TooltipContent>
@@ -117,7 +122,9 @@ export default function OrderCard({
 
                 <span>
                   {formatMoney(
-                    product.pivot?.adjusted_price || product.pivot?.price || 0
+                    product.pivot?.adjusted_price || product.pivot?.price || 0,
+                    config.APP_LOCALE,
+                    config.APP_CURRENCY
                   )}
                 </span>
               </div>
@@ -136,17 +143,23 @@ export default function OrderCard({
             <span className='text-muted-foreground'>Subtotal</span>
             <span>
               {formatMoney(
-                parseFloat(order.total) - parseFloat(order.service_fee)
+                parseFloat(order.total) - parseFloat(order.service_fee),
+                config.APP_LOCALE,
+                config.APP_CURRENCY
               )}
             </span>
           </li>
           <li className='flex items-center justify-between'>
             <span className='text-muted-foreground'>Service Fee</span>
-            <span>{formatMoney(order.service_fee)}</span>
+            <span>
+              {formatMoney(order.service_fee, config.APP_LOCALE, config.APP_CURRENCY)}
+            </span>
           </li>
           <li className='flex items-center justify-between font-semibold'>
             <span className='text-muted-foreground'>Total</span>
-            <span>{formatMoney(order.total)}</span>
+            <span>
+              {formatMoney(order.total, config.APP_LOCALE, config.APP_CURRENCY)}
+            </span>
           </li>
         </ul>
       </CardContent>

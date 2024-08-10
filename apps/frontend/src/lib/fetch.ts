@@ -1,14 +1,12 @@
 'use server';
 
-import { API_URL } from '@/lib/constants';
-
 export async function fetchJson<T>(
   url: string,
   options?: RequestInit
 ): Promise<T> {
-  let fullUrl = `${API_URL}`;
+  let fullUrl = `${process.env.BACKEND_API_URL}`;
 
-  if (API_URL?.endsWith('/')) {
+  if (process.env.BACKEND_API_URL?.endsWith('/')) {
     fullUrl = fullUrl?.slice(0, -1);
   }
 

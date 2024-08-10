@@ -23,6 +23,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+import { useConfig } from '@/lib/hooks';
 
 export default function EditableField({
   value,
@@ -47,6 +48,7 @@ export default function EditableField({
   placeholder?: string;
   required?: boolean;
 }) {
+  const { config } = useConfig();
   const [stateValue, setStateValue] = useState<
     string | number | null | undefined
   >(value);
@@ -151,7 +153,7 @@ export default function EditableField({
           ) : (
             <p className='line-clamp-6'>
               {type === 'currency'
-                ? formatMoney(stateValue)
+                ? formatMoney(stateValue, config.APP_LOCALE, config.APP_CURRENCY)
                 : stateValue || placeholder}
             </p>
           )}

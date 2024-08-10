@@ -1,3 +1,4 @@
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen, waitFor } from '@testing-library/react';
 import { subDays } from 'date-fns';
 import type { Mock } from 'vitest';
@@ -15,18 +16,41 @@ vi.mock('@/server/actions/aggregated-data', () => ({
   fetchAggregatedData: vi.fn(),
 }));
 
+vi.mock('@tanstack/react-query', async () => {
+  const actual = await vi.importActual('@tanstack/react-query');
+  return actual;
+});
+
 describe('NewOrdersStatistic', () => {
+  let queryClient: QueryClient;
+
   beforeEach(() => {
     vi.clearAllMocks();
     (subDays as Mock).mockReturnValue(new Date('2023-05-01'));
+
+    queryClient = new QueryClient({
+      defaultOptions: {
+        queries: {
+          retry: false,
+        },
+      },
+    });
   });
+
+  const renderComponent = () => {
+    return render(
+      <QueryClientProvider client={queryClient}>
+        <NewOrdersStatistic />
+      </QueryClientProvider>
+    );
+  };
 
   test('renders error state when fetch fails', async () => {
     (fetchAggregatedData as Mock).mockRejectedValue(
       new Error('Failed to fetch')
     );
 
-    render(await NewOrdersStatistic());
+    renderComponent();
 
     await waitFor(() => {
       expect(screen.getByText('Error fetching orders')).toBeInTheDocument();
@@ -39,7 +63,7 @@ describe('NewOrdersStatistic', () => {
     const mockData = [{ value: 80 }, { value: 100 }];
     (fetchAggregatedData as Mock).mockResolvedValue(mockData);
 
-    render(await NewOrdersStatistic());
+    renderComponent();
 
     await waitFor(() => {
       expect(screen.getByText('New Orders This Week')).toBeInTheDocument();
@@ -52,7 +76,7 @@ describe('NewOrdersStatistic', () => {
     const mockData = [{ value: 60 }, { value: 50 }];
     (fetchAggregatedData as Mock).mockResolvedValue(mockData);
 
-    render(await NewOrdersStatistic());
+    renderComponent();
 
     await waitFor(() => {
       expect(screen.getByText('New Orders This Week')).toBeInTheDocument();
@@ -67,7 +91,7 @@ describe('NewOrdersStatistic', () => {
       { value: 60 },
     ]);
 
-    render(await NewOrdersStatistic());
+    renderComponent();
 
     await waitFor(() => {
       expect(fetchAggregatedData).toHaveBeenCalledWith({
@@ -83,7 +107,7 @@ describe('NewOrdersStatistic', () => {
     const mockData = [{ value: 0 }, { value: 0 }];
     (fetchAggregatedData as Mock).mockResolvedValue(mockData);
 
-    render(await NewOrdersStatistic());
+    renderComponent();
 
     await waitFor(() => {
       expect(screen.getByText('New Orders This Week')).toBeInTheDocument();
@@ -96,7 +120,7 @@ describe('NewOrdersStatistic', () => {
     const mockData = [{ value: 0 }, { value: 50 }];
     (fetchAggregatedData as Mock).mockResolvedValue(mockData);
 
-    render(await NewOrdersStatistic());
+    renderComponent();
 
     await waitFor(() => {
       expect(screen.getByText('New Orders This Week')).toBeInTheDocument();

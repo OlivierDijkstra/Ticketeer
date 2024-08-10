@@ -1,4 +1,9 @@
+'use client';
+
+import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
+
+import { getConfig } from '@/server/actions/config';
 
 type TimeType = 'hour' | 'minute';
 
@@ -65,4 +70,36 @@ function formatTime(value: string, type: TimeType): string {
   }
 
   return cleanedValue;
+}
+
+export interface AppConfig {
+  APP_LOCALE: string;
+  APP_CURRENCY: string;
+  // Add other configuration variables here
+}
+
+export const DEFAULT_CONFIG: AppConfig = {
+  APP_LOCALE: 'en-US',
+  APP_CURRENCY: 'USD',
+};
+
+export function useConfig() {
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['config'],
+    queryFn: () => getConfig(),
+  });
+
+  if (!data) {
+    return {
+      config: DEFAULT_CONFIG,
+      isLoading,
+      error,
+    };
+  }
+
+  return {
+    config: data,
+    isLoading,
+    error,
+  };
 }

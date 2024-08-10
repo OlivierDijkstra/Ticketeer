@@ -30,6 +30,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { useConfig } from '@/lib/hooks';
 import { deleteProductAction } from '@/server/actions/products';
 import {
   unlinkProductFromShowAction,
@@ -57,7 +58,14 @@ export function columns(data: ColumnData): ColumnDef<Product>[] {
       accessorKey: 'price',
       header: data.params.show ? 'Base Price' : 'Price',
       cell: ({ row }) => {
-        return formatMoney(row.original.price);
+        // eslint-disable-next-line react-hooks/rules-of-hooks
+        const { config } = useConfig();
+
+        return formatMoney(
+          row.original.price,
+          config.APP_LOCALE,
+          config.APP_CURRENCY
+        );
       },
     },
     {
@@ -108,7 +116,14 @@ export function columns(data: ColumnData): ColumnDef<Product>[] {
             return '-';
           }
 
-          return formatMoney(row.original.pivot?.adjusted_price);
+          // eslint-disable-next-line react-hooks/rules-of-hooks
+          const { config } = useConfig();
+
+          return formatMoney(
+            row.original.pivot?.adjusted_price,
+            config.APP_LOCALE,
+            config.APP_CURRENCY
+          );
         },
       },
     ];
