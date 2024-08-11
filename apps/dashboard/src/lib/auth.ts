@@ -41,7 +41,7 @@ export const authOptions: NextAuthOptions = {
             automaticallySetCookies: true,
             parseJson: false,
           }).catch((error) => {
-            if (error.response.status === 422) {
+            if (error.response?.status === 422) {
               throw new Error('Invalid credentials');
             }
 
