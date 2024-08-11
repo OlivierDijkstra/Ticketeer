@@ -14,7 +14,7 @@ RUN turbo prune dashboard --docker
 # Add lockfile and package.json's of isolated subworkspace
 FROM base AS installer
 RUN apk update
-RUN apk add --no-cache libc6-compat curl
+RUN apk add --no-cache libc6-compat
 WORKDIR /app
  
 # First install the dependencies (as they change less often)
@@ -29,6 +29,9 @@ RUN yarn turbo run build --filter=dashboard...
  
 FROM base AS runner
 WORKDIR /app
+ 
+# Install curl in the final image
+RUN apk update && apk add --no-cache curl
  
 # Don't run production as root
 RUN addgroup --system --gid 1001 nodejs
