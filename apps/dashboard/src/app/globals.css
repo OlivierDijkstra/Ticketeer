@@ -73,8 +73,8 @@
   .auto-cols-small {
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   }
+}
 
-  .lucide {
-    @apply size-4;
-  }
+.lucide {
+  @apply size-4;
 }
