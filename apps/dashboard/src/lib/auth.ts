@@ -93,6 +93,7 @@ export const authOptions: NextAuthOptions = {
     signOut: async () => {
       await fetchWithAuth('logout', {
         method: 'POST',
+        parseJson: false,
       });
 
       cookies().delete('laravel_session');
