@@ -30,8 +30,8 @@ RUN yarn turbo run build --filter=dashboard...
 FROM base AS runner
 WORKDIR /app
  
-# Install curl in the final image
-RUN apk update && apk add --no-cache curl
+# Install curl and wget in the final image
+RUN apk update && apk add --no-cache curl wget
  
 # Don't run production as root
 RUN addgroup --system --gid 1001 nodejs
