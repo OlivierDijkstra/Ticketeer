@@ -1,38 +1,28 @@
-'use client';
+'use server';
 
-import { useQuery } from '@tanstack/react-query';
 import { subDays } from 'date-fns';
 
-import type { ResultSet } from '@/components/charts/lib';
 import StatisticCard from '@/components/statistics/statistic-card';
+import type { AggregatedDataConfig } from '@/server/actions/aggregated-data';
 import { fetchAggregatedData } from '@/server/actions/aggregated-data';
 
-export default function NewOrdersStatistic() {
-  const { data: resultSet, isError } = useQuery<ResultSet>({
-    queryKey: ['newOrdersStatistic'],
-    queryFn: async () => {
-      const start_date = subDays(new Date(), 7);
-      const end_date = new Date();
+export default async function NewOrdersStatistic(
+  props: React.HTMLAttributes<HTMLDivElement>
+) {
+  const start_date = subDays(new Date(), 7);
+  const end_date = new Date();
 
-      return await fetchAggregatedData({
-        modelType: 'Order',
-        aggregationType: 'count',
-        granularity: 'day',
-        dateRange: [start_date, end_date],
-      });
-    },
-  });
+  const initialQuery: AggregatedDataConfig = {
+    modelType: 'Order',
+    aggregationType: 'sum',
+    granularity: 'month',
+    dateRange: [start_date, end_date],
+  };
 
-  if (isError) {
-    return (
-      <StatisticCard name='Error fetching orders' value={0} percentage={0} />
-    );
-  }
+  const data = await fetchAggregatedData(initialQuery);
 
-  const ordersThisWeek = Math.round(
-    resultSet?.[resultSet.length - 1]?.value || 0
-  );
-  const ordersLastWeek = resultSet?.[0]?.value || 0;
+  const ordersThisWeek = Math.round(data?.[data.length - 1]?.value || 0);
+  const ordersLastWeek = data?.[0]?.value || 0;
 
   const percentage =
     ordersLastWeek === 0
@@ -47,6 +37,7 @@ export default function NewOrdersStatistic() {
       percentage={percentage}
       value={ordersThisWeek}
       period='week'
+      {...props}
     />
   );
 }
