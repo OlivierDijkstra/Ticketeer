@@ -58,6 +58,7 @@ function toCamelCase(key: string): CookieAttributeKey {
   }
 }
 
+// TODO: Move this to dashboard
 export function parseSetCookie(setCookieHeaders: string[]): ResponseCookie[] {
   return setCookieHeaders.map((header) => {
     const parts = header.split(";").map((part) => part.trim());

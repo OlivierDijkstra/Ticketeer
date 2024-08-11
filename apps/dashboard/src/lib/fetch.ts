@@ -1,6 +1,6 @@
 import dns from 'node:dns';
 
-import { debugLog, parseSetCookie } from '@repo/lib';
+import { parseSetCookie } from '@repo/lib';
 import type { ResponseCookie } from 'next/dist/compiled/@edge-runtime/cookies';
 import { cookies } from 'next/headers';
 import { notFound } from 'next/navigation';
@@ -33,8 +33,6 @@ export async function fetchWithAuth<T>(
     parseJson: true,
   }
 ): Promise<T> {
-  debugLog('log', '✈️ Fetching', url);
-
   const allCookies = cookies().getAll();
   const headers = createHeaders(allCookies, options);
 
@@ -71,25 +69,18 @@ export async function fetchWithAuth<T>(
     fetchConfig.cache = options.cache;
   }
 
-  debugLog('log', '🔗 Fetching', `${API_URL}/${url}`, fetchConfig);
+  const response = await fetch(`${API_URL}/${url}`, fetchConfig);
+  await handleCookies(response, options);
 
-  try {
-    const response = await fetch(`${API_URL}/${url}`, fetchConfig);
-    await handleCookies(response, options);
-
-    if (!response.ok) {
-      await handleHttpError(response);
-    }
-
-    const shouldParseJson = options.parseJson ?? true;
-
-    return shouldParseJson
-      ? ((await response.json()) as T)
-      : (response as unknown as T);
-  } catch (error) {
-    debugLog('error', '🚨 Fetch error', error);
-    throw error;
+  if (!response.ok) {
+    await handleHttpError(response);
   }
+
+  const shouldParseJson = options.parseJson ?? true;
+
+  return shouldParseJson
+    ? ((await response.json()) as T)
+    : (response as unknown as T);
 }
 
 /**
@@ -131,7 +122,6 @@ function setXsrfToken(
   if (options.xsrfToken) {
     headers.set('X-XSRF-TOKEN', options.xsrfToken);
   } else if (xsrfCookie) {
-    debugLog('log', '→ Setting XSRF-TOKEN header from cookie');
     headers.set('X-XSRF-TOKEN', decodeURIComponent(xsrfCookie.value));
   }
 }
@@ -147,7 +137,6 @@ async function handleCookies(response: Response, options: FetchOptions) {
       response.headers.getSetCookie() ?? []
     );
     for (const cookie of cookiesFromResponse) {
-      debugLog('log', '🍪 Setting cookie', cookie.name, cookie.value);
       cookies().set(cookie);
     }
   }
@@ -177,7 +166,6 @@ async function handleHttpError(response: Response) {
  * Handles unauthorized errors by deleting relevant cookies.
  */
 function handleUnauthorizedError() {
-  debugLog('log', '🔐 Deleting cookies');
   cookies().delete('laravel_session');
   cookies().delete('XSRF-TOKEN');
 }
