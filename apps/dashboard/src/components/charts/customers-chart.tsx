@@ -1,6 +1,5 @@
 'use client';
 
-import { useQuery } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from 'recharts';
 
@@ -16,45 +15,46 @@ import {
   determineGranularity,
 } from '@/components/charts/lib';
 import Spinner from '@/components/spinner';
-import { DATE_RANGES, DEFAULT_CHART_ANIMATION_DURATION } from '@/lib/constants';
+import { DEFAULT_CHART_ANIMATION_DURATION } from '@/lib/constants';
 import { useConfig } from '@/lib/hooks';
-import type { AggregatedDataConfig } from '@/server/actions/aggregated-data';
-import { fetchAggregatedData } from '@/server/actions/aggregated-data';
+import type { AggregatedData, AggregatedDataConfig } from '@/server/actions/aggregated-data';
 
-export default function CustomersChart() {
+export default function CustomersChart({
+  refetch,
+  initialData,
+  initialQuery,
+}: {
+  refetch: (config: AggregatedDataConfig) => Promise<AggregatedData>;
+  initialData: AggregatedData;
+  initialQuery: AggregatedDataConfig;
+}) {
   const { config } = useConfig();
-  const defaultDateRange = DATE_RANGES[2] as DateRanges;
-  const defaultGranularity = determineGranularity(defaultDateRange);
-  const defaultQuery: AggregatedDataConfig = {
-    modelType: 'Customer',
-    aggregationType: 'count',
-    granularity: defaultGranularity,
-    dateRange: defaultDateRange,
-  };
 
-  const [query, setQuery] = useState<AggregatedDataConfig>(defaultQuery);
+  const [granularity, setGranularity] = useState(initialQuery.granularity);
+  const [data, setData] = useState(initialData);
+  const [isLoading, setIsLoading] = useState(false);  
 
-  const { data, isLoading, refetch } = useQuery({
-    queryKey: ['customersData', query],
-    queryFn: () => fetchAggregatedData(query),
-    refetchOnWindowFocus: false,
-  });
+  const defaultDateRange = initialQuery.dateRange as DateRanges;
+
+  async function handleDateRangeChange(dateRange: DateRanges) {
+    setIsLoading(true);
+    const newGranularity = determineGranularity(dateRange);
+    setGranularity(newGranularity);
+
+    const newData = await refetch({
+      ...initialQuery,
+      dateRange: dateRange,
+      granularity: newGranularity,
+    });
+
+    setData(newData);
+    setIsLoading(false);
+  }
 
   const timeFormat = useMemo(
-    () => determineDateFormat(query.granularity),
-    [query.granularity]
+    () => determineDateFormat(granularity),
+    [granularity]
   );
-  async function handleDateRangeChange(dateRange: DateRanges) {
-    const newGranularity = determineGranularity(dateRange);
-    const newQuery = {
-      ...query,
-      granularity: newGranularity,
-      dateRange: dateRange,
-    };
-
-    setQuery(newQuery);
-    refetch();
-  }
 
   return (
     <ChartCard
