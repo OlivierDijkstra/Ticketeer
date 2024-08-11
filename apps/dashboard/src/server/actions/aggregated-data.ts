@@ -2,7 +2,7 @@
 
 import { createUrl } from '@repo/lib';
 
-import type { DateRanges, ResultSet } from '@/components/charts/lib';
+import type { DateRanges } from '@/components/charts/lib';
 import { fetchWithAuth } from '@/lib/fetch';
 
 export type AggregationType = 'count' | 'sum' | 'avg' | 'min' | 'max';
@@ -14,6 +14,11 @@ export type AggregatedDataConfig = {
   granularity: Granularity;
   dateRange: DateRanges | [Date, Date];
 };
+
+export type AggregatedData = {
+  x: string;
+  value: number;
+}[];
 
 export async function fetchAggregatedData({
   modelType,
@@ -32,7 +37,7 @@ export async function fetchAggregatedData({
   });
 
   const response = await fetchWithAuth<{
-    data: ResultSet;
+    data: AggregatedData;
   }>(url);
 
   return response.data.map((item) => ({
