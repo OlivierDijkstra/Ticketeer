@@ -6,7 +6,7 @@ export default function Loading() {
     <div className='space-y-4'>
       <div className='mb-4 flex flex-col gap-2 md:flex-row'>
         <div className='flex md:w-2/3'>
-          <SkeletonCard />
+          <SkeletonTable />
         </div>
 
         <div className='space-y-4 md:w-1/3'>

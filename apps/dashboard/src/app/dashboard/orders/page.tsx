@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
 
-import SkeletonGraph from '@/components/skeletons/skeleton-chart';
 import SkeletonStatistic from '@/components/skeletons/skeleton-statistic';
+import SkeletonTable from '@/components/skeletons/skeleton-table';
 import NewOrdersStatistic from '@/components/statistics/new-orders-statistic';
 import OrdersTable from '@/components/tables/OrdersTable/orders-table';
 
@@ -20,7 +20,7 @@ export default async function Page({
         </Suspense>
       </div>
 
-      <Suspense fallback={<SkeletonGraph />}>
+      <Suspense fallback={<SkeletonTable />}>
         <OrdersTable page={searchParams?.page_orders} />
       </Suspense>
     </div>

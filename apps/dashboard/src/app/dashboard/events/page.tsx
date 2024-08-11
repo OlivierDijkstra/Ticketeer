@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 
-import SkeletonGraph from '@/components/skeletons/skeleton-chart';
+import SkeletonTable from '@/components/skeletons/skeleton-table';
 import EventsTable from '@/components/tables/EventsTable/events-table';
 
 export default async function Page({
@@ -11,7 +11,7 @@ export default async function Page({
   };
 }) {
   return (
-    <Suspense fallback={<SkeletonGraph />}>
+    <Suspense fallback={<SkeletonTable />}>
       <EventsTable page={searchParams?.page_events} />
     </Suspense>
   );

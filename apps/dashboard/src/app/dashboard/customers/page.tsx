@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 
-import SkeletonGraph from '@/components/skeletons/skeleton-chart';
+import SkeletonTable from '@/components/skeletons/skeleton-table';
 import CustomersTable from '@/components/tables/CustomersTable/customers-table';
 
 export default async function Page({
@@ -13,7 +13,7 @@ export default async function Page({
 }) {
   return (
     <div className='space-y-4'>
-      <Suspense fallback={<SkeletonGraph />}>
+      <Suspense fallback={<SkeletonTable />}>
         <CustomersTable
           page={searchParams?.page_customers}
           sort={JSON.parse(searchParams?.sort_customers || '[]')}
