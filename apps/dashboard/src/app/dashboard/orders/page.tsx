@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 
-import SkeletonGraph from '@/components/skeletons/skeleton-graph';
+import SkeletonGraph from '@/components/skeletons/skeleton-chart';
 import SkeletonStatistic from '@/components/skeletons/skeleton-statistic';
 import NewOrdersStatistic from '@/components/statistics/new-orders-statistic';
 import OrdersTable from '@/components/tables/OrdersTable/orders-table';

@@ -3,7 +3,7 @@ import { Suspense } from 'react';
 import AddressCard from '@/components/address-card';
 import ShowGuestsForm from '@/components/forms/show-guests-form';
 import ShowDateAvailablity from '@/components/show/show-date-availability';
-import SkeletonGraph from '@/components/skeletons/skeleton-graph';
+import SkeletonGraph from '@/components/skeletons/skeleton-chart';
 import OrdersTable from '@/components/tables/OrdersTable/orders-table';
 import ProductsTable from '@/components/tables/ProductsTable/products-table';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';

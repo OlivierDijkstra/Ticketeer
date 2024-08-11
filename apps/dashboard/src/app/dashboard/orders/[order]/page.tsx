@@ -5,7 +5,7 @@ import CustomerCard from '@/components/order/customer-card';
 import EventCard from '@/components/order/event-card';
 import OrderCard from '@/components/order/order-card';
 import TicketsCard from '@/components/order/tickets-card';
-import SkeletonGraph from '@/components/skeletons/skeleton-graph';
+import SkeletonGraph from '@/components/skeletons/skeleton-chart';
 import PaymentsTable from '@/components/tables/PaymentsTable/payments-table';
 import { getOrderAction } from '@/server/actions/orders';
 

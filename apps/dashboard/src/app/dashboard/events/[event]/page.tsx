@@ -2,7 +2,7 @@ import { Suspense } from 'react';
 
 import EventMediaZone from '@/components/event/event-media-zone';
 import EventSettingsCard from '@/components/event/event-settings-card';
-import SkeletonGraph from '@/components/skeletons/skeleton-graph';
+import SkeletonGraph from '@/components/skeletons/skeleton-chart';
 import ShowsTable from '@/components/tables/ShowsTable/shows-table';
 import { getEventAction } from '@/server/actions/events';
 
