@@ -58,7 +58,7 @@ export const authOptions: NextAuthOptions = {
 
           if (rememberMeCookie) cookies().set(rememberMeCookie);
 
-          const user = await fetchWithAuth<User>('api/user', {
+          const user = await fetchWithAuth<User>('api/users/me', {
             method: 'GET',
           }).catch(() => {
             throw new Error('User fetch failed');
@@ -101,8 +101,8 @@ export const authOptions: NextAuthOptions = {
     },
   },
   pages: {
-    signIn: '/auth/login',
-    error: '/auth/login',
+    signIn: '/',
+    error: '/',
   },
 };
 

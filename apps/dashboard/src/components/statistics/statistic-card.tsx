@@ -4,8 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 type Period = 'week' | 'month';
 
-interface StatisticCardProps
-  extends React.HTMLAttributes<HTMLDivElement> {
+interface StatisticCardProps extends React.HTMLAttributes<HTMLDivElement> {
   name: string;
   value: number | string;
   percentage: number;

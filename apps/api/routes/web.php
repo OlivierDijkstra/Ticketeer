@@ -4,7 +4,9 @@ use App\Http\Controllers\MollieWebhookController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return response()->json([], 200);
+    return ['Laravel' => app()->version()];
 });
 
 Route::post('/webhooks/mollie', MollieWebhookController::class)->name('webhooks.mollie');
+
+require __DIR__.'/auth.php';

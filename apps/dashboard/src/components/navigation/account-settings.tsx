@@ -22,7 +22,7 @@ export default function AccountSettings({
 }) {
   function logout() {
     signOut({
-      callbackUrl: '/auth/login',
+      callbackUrl: '/',
       redirect: true,
     });
   }

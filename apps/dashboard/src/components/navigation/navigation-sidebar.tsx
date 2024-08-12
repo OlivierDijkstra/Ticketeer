@@ -1,6 +1,13 @@
 'use client';
 
-import { CalendarDays, Home, Shirt, ShoppingCart, Users } from 'lucide-react';
+import {
+  CalendarDays,
+  Home,
+  SettingsIcon,
+  Shirt,
+  ShoppingCart,
+  Users,
+} from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
@@ -89,6 +96,21 @@ export default function NavigationSidebar() {
             </Link>
           </TooltipTrigger>
           <TooltipContent side='right'>Customers</TooltipContent>
+        </Tooltip>
+      </nav>
+
+      <nav className='mt-auto flex flex-col items-center gap-4 px-2 py-4'>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Link
+              href='/dashboard/settings'
+              className={getClassesForPath('settings')}
+            >
+              <SettingsIcon className='h-5 w-5' />
+              <span className='sr-only'>Settings</span>
+            </Link>
+          </TooltipTrigger>
+          <TooltipContent side='right'>Settings</TooltipContent>
         </Tooltip>
       </nav>
     </aside>

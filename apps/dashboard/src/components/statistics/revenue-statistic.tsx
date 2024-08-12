@@ -4,11 +4,8 @@ import formatMoney from '@repo/lib';
 import { format, subMonths } from 'date-fns';
 
 import StatisticCard from '@/components/statistics/statistic-card';
-import type {
-  AggregatedDataConfig} from '@/server/actions/aggregated-data';
-import {
-  fetchAggregatedData,
-} from '@/server/actions/aggregated-data';
+import type { AggregatedDataConfig } from '@/server/actions/aggregated-data';
+import { fetchAggregatedData } from '@/server/actions/aggregated-data';
 
 export default async function RevenueStatistic(
   props: React.HTMLAttributes<HTMLDivElement>

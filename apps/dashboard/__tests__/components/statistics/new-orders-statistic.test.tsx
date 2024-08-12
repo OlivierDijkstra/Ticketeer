@@ -66,7 +66,10 @@ describe('NewOrdersStatistic', () => {
   });
 
   test('calls fetchAggregatedData with correct parameters', async () => {
-    (fetchAggregatedData as Mock).mockResolvedValue([{ value: 50 }, { value: 60 }]);
+    (fetchAggregatedData as Mock).mockResolvedValue([
+      { value: 50 },
+      { value: 60 },
+    ]);
 
     await NewOrdersStatistic({});
 

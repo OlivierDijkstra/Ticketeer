@@ -33,7 +33,9 @@ describe('RevenueStatistic', () => {
     const { findByText } = render(await RevenueStatistic({}));
 
     expect(await findByText('Revenue This Month')).toBeInTheDocument();
-    expect(await findByText(formatMoney(10000, 'en-US', 'USD'))).toBeInTheDocument();
+    expect(
+      await findByText(formatMoney(10000, 'en-US', 'USD'))
+    ).toBeInTheDocument();
     expect(await findByText('+25% from last month')).toBeInTheDocument();
   });
 
@@ -44,7 +46,9 @@ describe('RevenueStatistic', () => {
     const { findByText } = render(await RevenueStatistic({}));
 
     expect(await findByText('Revenue This Month')).toBeInTheDocument();
-    expect(await findByText(formatMoney(8000, 'en-US', 'USD'))).toBeInTheDocument();
+    expect(
+      await findByText(formatMoney(8000, 'en-US', 'USD'))
+    ).toBeInTheDocument();
     expect(await findByText('-20% from last month')).toBeInTheDocument();
   });
 
@@ -55,12 +59,17 @@ describe('RevenueStatistic', () => {
     const { findByText } = render(await RevenueStatistic({}));
 
     expect(await findByText('Revenue This Month')).toBeInTheDocument();
-    expect(await findByText(formatMoney(0, 'en-US', 'USD'))).toBeInTheDocument();
+    expect(
+      await findByText(formatMoney(0, 'en-US', 'USD'))
+    ).toBeInTheDocument();
     expect(await findByText('0% from last month')).toBeInTheDocument();
   });
 
   test('calls fetchAggregatedData with correct parameters', async () => {
-    (fetchAggregatedData as Mock).mockResolvedValue([{ value: 1000 }, { value: 2000 }]);
+    (fetchAggregatedData as Mock).mockResolvedValue([
+      { value: 1000 },
+      { value: 2000 },
+    ]);
 
     await RevenueStatistic({});
 

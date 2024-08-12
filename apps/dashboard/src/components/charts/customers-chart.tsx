@@ -17,7 +17,10 @@ import {
 import Spinner from '@/components/spinner';
 import { DEFAULT_CHART_ANIMATION_DURATION } from '@/lib/constants';
 import { useConfig } from '@/lib/hooks';
-import type { AggregatedData, AggregatedDataConfig } from '@/server/actions/aggregated-data';
+import type {
+  AggregatedData,
+  AggregatedDataConfig,
+} from '@/server/actions/aggregated-data';
 
 export default function CustomersChart({
   refetch,
@@ -32,7 +35,7 @@ export default function CustomersChart({
 
   const [granularity, setGranularity] = useState(initialQuery.granularity);
   const [data, setData] = useState(initialData);
-  const [isLoading, setIsLoading] = useState(false);  
+  const [isLoading, setIsLoading] = useState(false);
 
   const defaultDateRange = initialQuery.dateRange as DateRanges;
 

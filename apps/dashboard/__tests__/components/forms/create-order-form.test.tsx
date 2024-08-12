@@ -346,6 +346,7 @@ describe('CreateOrderForm', () => {
     await user.clear(amountInput);
     await user.type(amountInput, '5');
 
+    // TODO: Fix this test
     // await waitFor(() => {
     //   expect(screen.getByText(`Failed to create order: ${errorMessage}`)).toBeInTheDocument();
     // });

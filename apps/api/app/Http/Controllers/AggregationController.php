@@ -5,9 +5,17 @@ namespace App\Http\Controllers;
 use App\Http\Requests\GetAggregationsRequest;
 use App\Models\Aggregation;
 use Carbon\Carbon;
+use Illuminate\Routing\Controllers\Middleware;
 
 class AggregationController extends Controller
 {
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('auth:sanctum'),
+        ];
+    }
+
     public function index(GetAggregationsRequest $request)
     {
         $dateRange = $this->parseDateRange($request->date_range);

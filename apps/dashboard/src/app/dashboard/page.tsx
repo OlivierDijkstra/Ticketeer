@@ -37,7 +37,6 @@ export default async function Page({
             defaultDateRange='This year'
             defaultGranularity='month'
             aggregationType='sum'
-            queryKey='revenueChart'
           />
         </Suspense>
 
@@ -48,7 +47,6 @@ export default async function Page({
             aggregationType='count'
             defaultDateRange='This month'
             defaultGranularity='day'
-            queryKey='customersChart'
           />
         </Suspense>
       </div>

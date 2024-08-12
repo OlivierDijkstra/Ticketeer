@@ -68,14 +68,4 @@ describe('LoginForm', () => {
       });
     });
   });
-
-  test('displays error message when error query param is present', () => {
-    (useSearchParams as Mock).mockReturnValue({
-      get: vi.fn().mockReturnValue('Invalid credentials'),
-    });
-
-    render(<LoginForm />);
-
-    expect(screen.getByRole('alert')).toHaveTextContent('Invalid credentials');
-  });
 });

@@ -1,9 +1,11 @@
 'use server';
 
-
 import type { DateRanges } from '@/components/charts/lib';
 import { determineGranularity } from '@/components/charts/lib';
-import type { AggregatedDataConfig, Granularity } from '@/server/actions/aggregated-data';
+import type {
+  AggregatedDataConfig,
+  Granularity,
+} from '@/server/actions/aggregated-data';
 import { fetchAggregatedData } from '@/server/actions/aggregated-data';
 
 interface ChartWrapperProps {
@@ -13,7 +15,6 @@ interface ChartWrapperProps {
   defaultGranularity: Granularity;
   modelType: string;
   aggregationType: 'count' | 'sum';
-  queryKey: string;
 }
 
 export default async function ChartWrapper({
@@ -22,12 +23,15 @@ export default async function ChartWrapper({
   defaultGranularity,
   modelType,
   aggregationType,
-  queryKey,
 }: ChartWrapperProps) {
   const initialQuery: AggregatedDataConfig = {
     modelType,
     aggregationType,
-    granularity: defaultGranularity || (typeof defaultDateRange === 'string' ? determineGranularity(defaultDateRange) : 'day'),
+    granularity:
+      defaultGranularity ||
+      (typeof defaultDateRange === 'string'
+        ? determineGranularity(defaultDateRange)
+        : 'day'),
     dateRange: defaultDateRange,
   };
 

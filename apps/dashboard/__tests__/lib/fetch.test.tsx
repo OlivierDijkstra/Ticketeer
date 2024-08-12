@@ -51,16 +51,13 @@ describe('fetchWithAuth', () => {
       },
     });
 
-    expect(fetchMock).toHaveBeenCalledWith(
-      'undefined/api/test',
-      {
-        headers: fetchMock.mock.calls[0][1].headers,
-        referrer: 'http://localhost:3000',
-        credentials: 'include',
-        method: 'GET',
-        body: JSON.stringify({ foo: 'bar' }),
-      }
-    );
+    expect(fetchMock).toHaveBeenCalledWith('undefined/api/test', {
+      headers: fetchMock.mock.calls[0][1].headers,
+      referrer: 'http://localhost:3000',
+      credentials: 'include',
+      method: 'GET',
+      body: JSON.stringify({ foo: 'bar' }),
+    });
 
     expect(result).toEqual(mockResponse);
   });

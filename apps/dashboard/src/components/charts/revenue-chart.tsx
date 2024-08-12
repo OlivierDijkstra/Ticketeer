@@ -19,7 +19,10 @@ import {
 import Spinner from '@/components/spinner';
 import { DEFAULT_CHART_ANIMATION_DURATION } from '@/lib/constants';
 import { useConfig } from '@/lib/hooks';
-import type { AggregatedData, AggregatedDataConfig } from '@/server/actions/aggregated-data';
+import type {
+  AggregatedData,
+  AggregatedDataConfig,
+} from '@/server/actions/aggregated-data';
 
 const chartConfig = {
   value: {

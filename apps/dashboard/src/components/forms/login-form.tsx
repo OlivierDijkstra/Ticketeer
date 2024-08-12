@@ -1,20 +1,13 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { signIn } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { Button } from '@/components/ui/button';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
   Form,
@@ -60,93 +53,80 @@ export default function LoginForm() {
   }
 
   return (
-    <div className='w-full max-w-sm'>
-      {searchParams.get('error') && (
-        <div
-          className='relative mb-2 rounded border border-red-400 bg-red-100 px-4 py-3 text-sm text-red-700'
-          role='alert'
-        >
-          {searchParams.get('error')}
-        </div>
-      )}
-
-      <Card>
-        <CardHeader>
-          <CardTitle className='text-2xl'>Login</CardTitle>
-          <CardDescription>
-            Enter your email below to login to your account.
-          </CardDescription>
-        </CardHeader>
-
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)}>
-            <CardContent className='space-y-2'>
-              <FormField
-                name='email'
-                control={form.control}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email</FormLabel>
-                    <Input
-                      {...field}
-                      aria-label='email'
-                      inputMode='email'
-                      type='email'
-                    />
-                    <FormMessage />
-                  </FormItem>
-                )}
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
+        <FormField
+          name='email'
+          control={form.control}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Email</FormLabel>
+              <Input
+                {...field}
+                aria-label='email'
+                inputMode='email'
+                type='email'
               />
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-              <FormField
-                name='password'
-                control={form.control}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Password</FormLabel>
-                    <Input {...field} aria-label='password' type='password' />
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <div className='items-top flex space-x-2'>
-                <FormField
-                  name='remember'
-                  control={form.control}
-                  render={({ field }) => (
-                    <Checkbox
-                      aria-label='remember me'
-                      name={field.name}
-                      checked={field.value || false}
-                      onCheckedChange={field.onChange}
-                    />
-                  )}
-                />
-                <div className='grid gap-1.5 leading-none'>
-                  <label
-                    htmlFor='remember'
-                    className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
-                  >
-                    Remember me
-                  </label>
-                </div>
+        <FormField
+          name='password'
+          control={form.control}
+          render={({ field }) => (
+            <FormItem>
+              <div className='flex items-center'>
+                <FormLabel>Password</FormLabel>
+                <Link
+                  href='/password-reset'
+                  className='ml-auto inline-block text-sm underline'
+                >
+                  Forgot your password?
+                </Link>
               </div>
-            </CardContent>
 
-            <CardFooter>
-              <Button
-                loading={form.formState.isSubmitting}
-                disabled={form.formState.isSubmitting}
-                type='submit'
-                className='w-full'
-              >
-                Sign in
-              </Button>
-            </CardFooter>
-          </form>
-        </Form>
-      </Card>
-    </div>
+              <Input {...field} aria-label='password' type='password' />
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <div className='items-top flex space-x-2'>
+          <FormField
+            name='remember'
+            control={form.control}
+            render={({ field }) => (
+              <Checkbox
+                aria-label='remember me'
+                name={field.name}
+                checked={field.value || false}
+                onCheckedChange={field.onChange}
+              />
+            )}
+          />
+          <div className='grid gap-1.5 leading-none'>
+            <label
+              htmlFor='remember'
+              className='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
+            >
+              Remember me
+            </label>
+          </div>
+        </div>
+
+        <div>
+          <Button
+            loading={form.formState.isSubmitting}
+            disabled={form.formState.isSubmitting}
+            type='submit'
+            className='mt-4 w-full'
+          >
+            Sign in
+          </Button>
+        </div>
+      </form>
+    </Form>
   );
 }

@@ -8,6 +8,7 @@ use App\Models\Order;
 use App\Models\Product;
 use App\Models\Show;
 use Illuminate\Support\Facades\Queue;
+use Mockery;
 use Mockery\MockInterface;
 use Tests\TestCase;
 
@@ -20,6 +21,18 @@ class OrderControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
+
+        $paymentMock = Mockery::mock();
+        $paymentMock->shouldReceive('getCheckoutUrl')->andReturn('https://www.mollie.com/payscreen/select-method/123456');
+        $paymentMock->id = 'tr_123456';
+        $paymentMock->status = 'open';
+
+        $mollieMock = Mockery::mock('overload:Mollie\Laravel\Facades\Mollie');
+        $apiMock = Mockery::mock();
+        $paymentsMock = Mockery::mock();
+        $mollieMock->shouldReceive('api')->andReturn($apiMock);
+        $apiMock->payments = $paymentsMock;
+        $paymentsMock->shouldReceive('create')->andReturn($paymentMock);
 
         $this->show = Show::factory()->create();
         $this->products = Product::factory()->count(2)->create();
