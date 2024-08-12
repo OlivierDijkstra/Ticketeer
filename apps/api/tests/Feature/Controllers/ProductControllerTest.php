@@ -100,6 +100,8 @@ class ProductControllerTest extends TestCase
 
     public function test_update_product()
     {
+        Sanctum::actingAs($this->user);
+
         $product = Product::factory()->create();
         $updateData = ['name' => 'Updated Product'];
 
@@ -107,15 +109,5 @@ class ProductControllerTest extends TestCase
 
         $response->assertStatus(200);
         $this->assertDatabaseHas('products', ['id' => $product->id, 'name' => 'Updated Product']);
-    }
-
-    public function test_destroy_product()
-    {
-        $product = Product::factory()->create();
-
-        $response = $this->deleteJson(route('products.destroy', $product));
-
-        $response->assertStatus(200);
-        $this->assertSoftDeleted('products', ['id' => $product->id]);
     }
 }

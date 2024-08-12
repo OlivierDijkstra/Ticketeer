@@ -7,8 +7,9 @@ use App\Models\Event;
 use App\Models\Product;
 use App\Models\Show;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
 
-class SearchController extends Controller
+class SearchController extends Controller implements HasMiddleware
 {
     public static function middleware(): array
     {

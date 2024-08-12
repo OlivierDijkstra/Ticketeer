@@ -8,10 +8,11 @@ use App\Http\Requests\StoreEventRequest;
 use App\Http\Requests\UpdateEventRequest;
 use App\Models\Event;
 use App\Traits\HandlesPaginationAndFiltering;
+use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Str;
 
-class EventController extends Controller
+class EventController extends Controller implements HasMiddleware
 {
     use HandlesPaginationAndFiltering;
 

@@ -13,9 +13,10 @@ use App\Models\Order;
 use App\Models\Show;
 use App\Traits\HandlesPaginationAndFiltering;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 
-class OrderController extends Controller
+class OrderController extends Controller implements HasMiddleware
 {
     use HandlesPaginationAndFiltering;
 

@@ -4,9 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UpdateAddressRequest;
 use App\Models\Address;
+use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 
-class AddressController extends Controller
+class AddressController extends Controller implements HasMiddleware
 {
     public static function middleware(): array
     {

@@ -8,6 +8,7 @@ use App\Models\Order;
 use App\Models\Product;
 use App\Models\Show;
 use Illuminate\Support\Facades\Queue;
+use Laravel\Sanctum\Sanctum;
 use Mockery;
 use Mockery\MockInterface;
 use Tests\TestCase;
@@ -115,6 +116,8 @@ class OrderControllerTest extends TestCase
 
     public function test_create_payment_link_successfully()
     {
+        Sanctum::actingAs($this->user);
+
         $order = Order::factory()->create([
             'total' => '10.00',
         ]);
@@ -129,6 +132,8 @@ class OrderControllerTest extends TestCase
 
     public function test_create_payment_link_handles_exception()
     {
+        Sanctum::actingAs($this->user);
+
         $order = Order::factory()->create();
         $requestData = ['redirect_url' => 'http://example.com'];
 
@@ -143,6 +148,8 @@ class OrderControllerTest extends TestCase
 
     public function test_is_paid_returns_true_for_paid_order()
     {
+        Sanctum::actingAs($this->user);
+
         $order = Order::factory()->create(['status' => 'paid']);
 
         $response = $this->getJson(route('orders.is-paid', $order));
@@ -153,6 +160,8 @@ class OrderControllerTest extends TestCase
 
     public function test_is_paid_returns_false_for_unpaid_order()
     {
+        Sanctum::actingAs($this->user);
+
         $order = Order::factory()->create(['status' => 'pending']);
 
         $response = $this->getJson(route('orders.is-paid', $order));
@@ -163,6 +172,8 @@ class OrderControllerTest extends TestCase
 
     public function test_index_returns_orders()
     {
+        Sanctum::actingAs($this->user);
+
         Order::factory()->count(3)->create();
 
         $response = $this->getJson(route('orders.index'));
@@ -173,6 +184,8 @@ class OrderControllerTest extends TestCase
 
     public function test_show_returns_order()
     {
+        Sanctum::actingAs($this->user);
+
         $order = Order::factory()->create();
 
         $response = $this->getJson(route('orders.show', ['show' => $order->show_id, 'order' => $order->id]));
@@ -183,6 +196,8 @@ class OrderControllerTest extends TestCase
 
     public function test_update_order()
     {
+        Sanctum::actingAs($this->user);
+
         $order = Order::factory()->create();
         $updateData = ['status' => 'paid'];
 
@@ -194,6 +209,8 @@ class OrderControllerTest extends TestCase
 
     public function test_destroy_order()
     {
+        Sanctum::actingAs($this->user);
+        
         $order = Order::factory()->create();
 
         $response = $this->deleteJson(route('orders.destroy', $order));

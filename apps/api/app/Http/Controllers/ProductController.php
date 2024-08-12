@@ -8,9 +8,10 @@ use App\Models\Product;
 use App\Models\Show;
 use App\Traits\HandlesPaginationAndFiltering;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 
-class ProductController extends Controller
+class ProductController extends Controller implements HasMiddleware
 {
     use HandlesPaginationAndFiltering;
 

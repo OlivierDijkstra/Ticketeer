@@ -5,9 +5,18 @@ namespace App\Http\Controllers;
 use App\Http\Requests\TicketsNotificationRequest;
 use App\Models\Order;
 use App\Notifications\TicketsNotification;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class NotificationController extends Controller
+class NotificationController extends Controller implements HasMiddleware
 {
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('auth:sanctum'),
+        ];
+    }
+
     /**
      * Display a listing of the resource.
      */

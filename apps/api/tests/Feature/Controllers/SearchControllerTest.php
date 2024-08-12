@@ -3,6 +3,7 @@
 namespace Tests\Feature\Controllers;
 
 use App\Models\Event;
+use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 
 class SearchControllerTest extends TestCase
@@ -16,6 +17,8 @@ class SearchControllerTest extends TestCase
         Event::factory()->create([
             'name' => 'test',
         ]);
+
+        Sanctum::actingAs($this->user);
     }
 
     public function test_search()

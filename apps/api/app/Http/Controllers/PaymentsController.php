@@ -6,9 +6,10 @@ use App\Http\Requests\RefundPaymentRequest;
 use App\Jobs\CreateRefundJob;
 use App\Models\Order;
 use App\Models\Payment;
+use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 
-class PaymentsController extends Controller
+class PaymentsController extends Controller implements HasMiddleware
 {
     public static function middleware(): array
     {

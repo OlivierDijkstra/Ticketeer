@@ -4,6 +4,7 @@ namespace Tests\Feature\Controllers;
 
 use App\Models\Aggregation;
 use Carbon\Carbon;
+use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 
 class AggregationControllerTest extends TestCase
@@ -12,6 +13,8 @@ class AggregationControllerTest extends TestCase
     {
         parent::setUp();
         Carbon::setTestNow('2023-01-15 12:00:00');
+
+        Sanctum::actingAs($this->user);
     }
 
     public function test_index_returns_correct_data()
