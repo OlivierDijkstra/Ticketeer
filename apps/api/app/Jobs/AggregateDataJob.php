@@ -90,7 +90,7 @@ class AggregateDataJob implements ShouldQueue
                 'model_type' => $modelType,
                 'aggregation_type' => $aggregationType,
                 'granularity' => $this->granularity,
-                'period' => $this->date,
+                'period' => $this->granularity === 'hour' ? $this->date->startOfHour() : $this->date,
             ], [
                 'value' => 0,
             ]);
@@ -105,7 +105,7 @@ class AggregateDataJob implements ShouldQueue
                 'model_type' => $modelType,
                 'aggregation_type' => $aggregationType,
                 'granularity' => $this->granularity,
-                'period' => $this->date,
+                'period' => $this->granularity === 'hour' ? $this->date->startOfHour() : $this->date,
             ],
             [
                 'value' => $value,
