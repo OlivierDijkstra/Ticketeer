@@ -9,13 +9,13 @@ import { fetchAggregatedData } from '@/server/actions/aggregated-data';
 export default async function NewOrdersStatistic(
   props: React.HTMLAttributes<HTMLDivElement>
 ) {
-  const start_date = subDays(new Date(), 7);
+  const start_date = subDays(new Date(), 14);
   const end_date = new Date();
 
   const initialQuery: AggregatedDataConfig = {
     modelType: 'Order',
     aggregationType: 'sum',
-    granularity: 'month',
+    granularity: 'week',
     dateRange: [start_date, end_date],
   };
 
