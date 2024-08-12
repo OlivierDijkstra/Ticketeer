@@ -96,7 +96,7 @@ export default function RevenueChart({
             stroke='hsl(var(--muted-foreground))'
             strokeOpacity={0.5}
           />
-          <YAxis hide domain={['dataMin - 10', 'dataMax + 10']} />
+          <YAxis hide />
           <XAxis
             dataKey='x'
             tickLine={false}
