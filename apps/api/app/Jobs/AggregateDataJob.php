@@ -18,221 +18,169 @@ class AggregateDataJob implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public $tries = 3;
+    protected Carbon $date;
+    protected array $modelTypes = ['Customer', 'Order'];
+    protected array $aggregationTypes = ['count', 'sum', 'avg', 'min', 'max'];
+    protected array $skipAggregations = ['Customer' => ['sum', 'max', 'min', 'avg']];
 
-    protected $granularity;
-
-    protected $date;
-
-    protected $modelTypes = ['Customer', 'Order'];
-
-    protected $aggregationTypes = ['count', 'sum', 'avg', 'min', 'max'];
-
-    protected $skipAggregations = [
-        'Customer' => ['sum', 'max', 'min', 'avg'],
-    ];
-
-    public function __construct($granularity, $date = null)
+    public function __construct(protected string $granularity, ?string $date = null)
     {
-        $this->granularity = $granularity;
         $this->date = $date ? Carbon::parse($date) : $this->getPreviousPeriodEnd();
-
-        // Normalize the date for granularities other than 'hour'
-        if ($this->granularity !== 'hour') {
-            $this->date = $this->date->startOfDay();
-        }
+        $this->date = $this->date->startOf($this->granularity);
     }
 
-    public function handle()
+    // Main method to handle the aggregation process
+    public function handle(): void
     {
         [$startDate, $endDate] = $this->getDateRange();
 
         DB::transaction(function () use ($startDate, $endDate) {
             foreach ($this->modelTypes as $modelType) {
-                $aggregationTypesToRun = $this->aggregationTypes;
-                if (isset($this->skipAggregations[$modelType])) {
-                    $aggregationTypesToRun = array_diff($aggregationTypesToRun, $this->skipAggregations[$modelType]);
-                }
+                $aggregationTypesToRun = array_diff($this->aggregationTypes, $this->skipAggregations[$modelType] ?? []);
 
                 foreach ($aggregationTypesToRun as $aggregationType) {
                     try {
-                        $this->aggregateData($modelType, $aggregationType, $startDate, $endDate);
+                        // Use hourly aggregation for 'hour' granularity, otherwise aggregate from smaller granularity
+                        $this->granularity === 'hour'
+                            ? $this->aggregateHourlyData($modelType, $aggregationType, $startDate, $endDate)
+                            : $this->aggregateFromSmallerGranularity($modelType, $aggregationType, $startDate, $endDate);
                     } catch (Exception $e) {
-                        Log::error("Error aggregating data for $modelType, $aggregationType, {$this->granularity}: ".$e->getMessage());
+                        Log::error("Error aggregating data for $modelType, $aggregationType, {$this->granularity}: " . $e->getMessage());
                     }
                 }
             }
         });
     }
 
-    private function aggregateData($modelType, $aggregationType, $startDate, $endDate)
+    // Aggregate data for hourly granularity directly from the database
+    private function aggregateHourlyData(string $modelType, string $aggregationType, Carbon $startDate, Carbon $endDate): void
     {
-        $table = $this->getTableName($modelType);
-        $column = $this->getColumnName($modelType, $aggregationType);
+        // Determine the table name based on the model type
+        $table = strtolower($modelType) . 's';
 
-        $query = DB::table($table)
-            ->select(
-                DB::raw($this->getPeriodExpression()),
-                DB::raw($this->getAggregationExpression($aggregationType, $column))
-            )
+        // Choose the column to aggregate based on the aggregation type and model type
+        $column = $aggregationType === 'count' ? 'id' : ($modelType === 'Order' ? 'total' : 'id');
+
+        // Get the SQL expression for the period (e.g., hour, day, week)
+        $periodExpression = $this->getPeriodExpression();
+
+        // Construct the aggregation expression
+        $aggregationExpression = $aggregationType === 'count'
+            ? 'COUNT(*) as value'
+            : "COALESCE($aggregationType($column), 0) as value";
+
+        $results = DB::table($table)
+            ->select(DB::raw($periodExpression), DB::raw($aggregationExpression))
             ->whereBetween('created_at', [$startDate, $endDate])
             ->groupBy('period')
-            ->orderBy('period');
-
-        $results = $query->get();
+            ->orderBy('period')
+            ->get();
 
         $this->saveAggregations($modelType, $aggregationType, $results);
     }
 
-    private function saveAggregations($modelType, $aggregationType, $results)
+    // Aggregate data from the next smaller granularity level
+    private function aggregateFromSmallerGranularity(string $modelType, string $aggregationType, Carbon $startDate, Carbon $endDate): void
     {
-        if (! $results->count()) {
-            Aggregation::updateOrCreate([
-                'model_type' => $modelType,
-                'aggregation_type' => $aggregationType,
-                'granularity' => $this->granularity,
-                'period' => $this->granularity === 'hour' ? $this->date->startOfHour() : $this->date,
-            ], [
-                'value' => 0,
-            ]);
+        $smallerGranularity = $this->getSmallerGranularity();
+        $aggregations = Aggregation::query()
+            ->where('model_type', $modelType)
+            ->where('aggregation_type', $aggregationType)
+            ->where('granularity', $smallerGranularity)
+            ->whereBetween('period', [$startDate, $endDate])
+            ->get();
 
-            return;
-        }
+        $value = $aggregationType === 'count'
+            ? $aggregations->sum('value')
+            : $this->calculateAggregationValue($aggregationType, $aggregations->pluck('value'));
 
-        $value = $this->calculateAggregationValue($aggregationType, $results);
+        $this->saveAggregation($modelType, $aggregationType, $value ?? 0);
+    }
 
+    // Get the next smaller granularity level
+    private function getSmallerGranularity(): string
+    {
+        $granularities = ['hour', 'day', 'week', 'month', 'year'];
+        return $granularities[array_search($this->granularity, $granularities) - 1];
+    }
+
+    // Save a single aggregation record
+    private function saveAggregation(string $modelType, string $aggregationType, float $value): void
+    {
         Aggregation::updateOrCreate(
             [
                 'model_type' => $modelType,
                 'aggregation_type' => $aggregationType,
                 'granularity' => $this->granularity,
-                'period' => $this->granularity === 'hour' ? $this->date->startOfHour() : $this->date,
+                'period' => $this->date,
             ],
-            [
-                'value' => $value,
-            ]
+            ['value' => $value ?? 0]
         );
     }
 
-    private function calculateAggregationValue($aggregationType, $results)
+    // Calculate aggregation value based on aggregation type
+    private function calculateAggregationValue(string $aggregationType, $values)
     {
-        $values = collect($results)->pluck('value');
+        return match ($aggregationType) {
+            'sum' => $values->sum(),
+            'avg' => $values->avg(),
+            'min' => $values->min(),
+            'max' => $values->max(),
+            default => throw new Exception("Unknown aggregation type: $aggregationType"),
+        };
+    }
 
-        switch ($aggregationType) {
-            case 'count':
-                return $values->sum();
-            case 'sum':
-                return $values->sum();
-            case 'avg':
-                return $values->avg();
-            case 'min':
-                return $values->min();
-            case 'max':
-                return $values->max();
-            default:
-                throw new \Exception("Unknown aggregation type: $aggregationType");
+    // Get the date range for the current aggregation period
+    private function getDateRange(): array
+    {
+        return [
+            $this->date->copy()->startOf($this->granularity),
+            $this->date->copy()->endOf($this->granularity)
+        ];
+    }
+
+    // Get the end of the previous period based on the current granularity
+    private function getPreviousPeriodEnd(): Carbon
+    {
+        $now = now();
+        return match ($this->granularity) {
+            'hour' => $now->subHour()->endOfHour(),
+            'day' => $now->subDay()->endOfDay(),
+            'week' => $now->subWeek()->endOfWeek(),
+            'month' => $now->subMonth()->endOfMonth(),
+            'year' => $now->subYear()->endOfYear(),
+            default => throw new Exception("Invalid granularity: {$this->granularity}"),
+        };
+    }
+
+    // Save multiple aggregation records
+    private function saveAggregations(string $modelType, string $aggregationType, $results): void
+    {
+        foreach ($results as $result) {
+            Aggregation::updateOrCreate(
+                [
+                    'model_type' => $modelType,
+                    'aggregation_type' => $aggregationType,
+                    'granularity' => $this->granularity,
+                    'period' => $result->period,
+                ],
+                ['value' => $result->value ?? 0]
+            );
         }
     }
 
-    private function getDateRange()
+    // Get the appropriate SQL expression for period grouping based on the database driver
+    // This method is necessary to ensure compatibility across different database systems,
+    // as each database may have a different syntax for date/time formatting and truncation.
+    // By using this method, we can write database-agnostic queries that work consistently
+    // across SQLite, MySQL, and PostgreSQL without changing the rest of our application logic.
+    private function getPeriodExpression(): string
     {
-        $date = $this->date;
-
-        switch ($this->granularity) {
-            case 'hour':
-                return [
-                    $date->copy()->startOfHour(),
-                    $date->copy()->endOfHour(),
-                ];
-            case 'day':
-                return [
-                    $date->copy()->startOfDay(),
-                    $date->copy()->endOfDay(),
-                ];
-            case 'week':
-                return [
-                    $date->copy()->startOfWeek(),
-                    $date->copy()->endOfWeek(),
-                ];
-                // TODO: Something is wrong with the month aggregation, seems to be taking the same
-                // period as the last week aggregation.
-            case 'month':
-                return [
-                    $date->copy()->startOfMonth(),
-                    $date->copy()->endOfMonth(),
-                ];
-            case 'year':
-                return [
-                    $date->copy()->startOfYear(),
-                    $date->copy()->endOfYear(),
-                ];
-            default:
-                throw new Exception("Invalid granularity: {$this->granularity}");
-        }
-    }
-
-    private function getTableName($modelType)
-    {
-        return strtolower($modelType).'s';
-    }
-
-    private function getColumnName($modelType, $aggregationType)
-    {
-        if ($aggregationType === 'count') {
-            return 'id';
-        }
-
-        switch ($modelType) {
-            case 'Order':
-                return 'total';
-            case 'Customer':
-                return 'id';
-            default:
-                return 'id';
-        }
-    }
-
-    private function getAggregationExpression($aggregationType, $column)
-    {
-        if ($aggregationType === 'count') {
-            return 'COUNT(*) as value';
-        } elseif (in_array($aggregationType, ['sum', 'avg', 'min', 'max'])) {
-            return "COALESCE($aggregationType($column), 0) as value";
-        } else {
-            throw new Exception("Unknown aggregation type: $aggregationType");
-        }
-    }
-
-    private function getPeriodExpression()
-    {
-        $driver = DB::getDriverName();
-
-        if ($driver === 'sqlite') {
-            return "strftime('%Y-%m-%d %H:00:00', created_at) as period";
-        } elseif ($driver === 'mysql') {
-            return "DATE_FORMAT(created_at, '%Y-%m-%d %H:00:00') as period";
-        } elseif ($driver === 'pgsql') {
-            return "DATE_TRUNC('{$this->granularity}', created_at) as period";
-        } else {
-            throw new Exception("Unsupported database driver: $driver");
-        }
-    }
-
-    private function getPreviousPeriodEnd()
-    {
-        $now = Carbon::now();
-        switch ($this->granularity) {
-            case 'hour':
-                return $now->subHour()->endOfHour();
-            case 'day':
-                return $now->subDay()->endOfDay();
-            case 'week':
-                return $now->subWeek()->endOfWeek();
-            case 'month':
-                return $now->subMonth()->endOfMonth();
-            case 'year':
-                return $now->subYear()->endOfYear();
-            default:
-                throw new Exception("Invalid granularity: {$this->granularity}");
-        }
+        return match (DB::getDriverName()) {
+            'sqlite' => "strftime('%Y-%m-%d %H:00:00', created_at) as period",
+            'mysql' => "DATE_FORMAT(created_at, '%Y-%m-%d %H:00:00') as period",
+            'pgsql' => "DATE_TRUNC('hour', created_at) as period",
+            default => throw new Exception("Unsupported database driver: " . DB::getDriverName()),
+        };
     }
 }
