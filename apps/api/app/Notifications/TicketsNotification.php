@@ -49,18 +49,7 @@ class TicketsNotification extends Notification implements ShouldQueue
 
         $order = $this->order;
 
-        $file_path = public_path('tickets.pdf');
-
-        // Move this to Order model, do a temp save. Refactor like MonthlyReport
-        $pdf = pdf()
-            ->withBrowsershot(function (Browsershot $browsershot) {
-                $browsershot
-                    ->noSandbox()
-                    ->showBackground();
-            })
-            ->format('A4')
-            ->view('pdf.tickets', compact('order'))
-            ->save($file_path);
+        $pdf = $order->getPdf();
 
         return (new MailMessage)
             ->subject('Tickets for '.$event->name)
@@ -68,7 +57,7 @@ class TicketsNotification extends Notification implements ShouldQueue
             ->line('You have purchased '.$this->order->quantity.' tickets for '.$event->name.' on '.$pretty_formatted_start_date.' at '.$pretty_formatted_time)
             ->line('The tickets have been attached to this email.')
             ->line(new HtmlString($show->email_description))
-            ->attach($file_path);
+            ->attach($pdf);
     }
 
     /**

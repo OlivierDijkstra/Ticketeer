@@ -39,6 +39,8 @@ class GenerateTicketsJob implements ShouldQueue
             }
         }
 
+        $order->generatePDF();
+
         // If the user has a customer send a notification
         if ($order->customer) {
             $order->customer->notify(new TicketsNotification($order));
