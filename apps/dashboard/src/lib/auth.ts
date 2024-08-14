@@ -65,7 +65,10 @@ export const authOptions: NextAuthOptions = {
           });
 
           if (user) {
-            return user;
+            return {
+              ...user,
+              cookies: loginCookies.flatMap((cookie) => cookie.name),
+            };
           }
 
           return null;
@@ -85,19 +88,37 @@ export const authOptions: NextAuthOptions = {
       return token;
     },
     async session({ session, token }) {
-      session.user = token.user as User;
+      session.user = token.user as User & {
+        cookies: string[];
+      };
       return session;
     },
   },
   events: {
-    signOut: async () => {
+    signOut: async ({ token }) => {
       await fetchWithAuth('logout', {
         method: 'POST',
         parseJson: false,
       });
 
-      cookies().delete('laravel_session');
-      cookies().delete('XSRF-TOKEN');
+      const cookiesToDelete = (
+        token.user as User & {
+          cookies: string[];
+        }
+      )?.cookies as string[] | undefined;
+
+      if (cookiesToDelete) {
+        const NEXTAUTH_URL = process.env.NEXTAUTH_URL;
+        const domain = new URL(NEXTAUTH_URL ?? '').hostname;
+
+        cookiesToDelete.forEach((cookie) => {
+          cookies().set(cookie, '', {
+            maxAge: 0,
+            httpOnly: true,
+            domain: `.${domain}`,
+          });
+        });
+      }
     },
   },
   pages: {

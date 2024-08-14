@@ -20,11 +20,13 @@ export default function AccountSettings({
 }: {
   session: Session | null;
 }) {
-  function logout() {
-    signOut({
-      callbackUrl: '/',
-      redirect: true,
-    });
+  async function handleLogout() {
+    if (session) {
+      await signOut({
+        callbackUrl: '/',
+        redirect: true,
+      });
+    }
   }
 
   return (
@@ -47,7 +49,7 @@ export default function AccountSettings({
           <ThemeSwitcher />
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={logout}>Logout</DropdownMenuItem>
+        <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
