@@ -19,7 +19,11 @@ export async function deleteApiCookies() {
   const cookiesToDelete = session.user.cookies; 
 
   const NEXTAUTH_URL = process.env.NEXTAUTH_URL;
-  const domain = new URL(NEXTAUTH_URL ?? '').hostname;
+  const url = new URL(NEXTAUTH_URL ?? '');
+  const hostnameParts = url.hostname.split('.');
+  const domain = hostnameParts.length > 2 
+    ? hostnameParts.slice(-2).join('.') 
+    : url.hostname;
 
   console.log('🍪 cookiesToDelete', cookiesToDelete, domain);
 
