@@ -25,8 +25,6 @@ export async function deleteApiCookies() {
     ? hostnameParts.slice(-2).join('.') 
     : url.hostname;
 
-  console.log('🍪 cookiesToDelete', cookiesToDelete, domain);
-
   cookiesToDelete.forEach((cookie) => {
     cookies().set(cookie, '', {
       domain: `.${domain}`,
