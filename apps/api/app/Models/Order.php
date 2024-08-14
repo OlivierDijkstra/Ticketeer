@@ -5,7 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Spatie\Browsershot\Browsershot;
+
+use function Spatie\LaravelPdf\Support\pdf;
 
 class Order extends Model
 {
@@ -24,6 +28,11 @@ class Order extends Model
     ];
 
     protected $with = ['products', 'show', 'customer', 'payments', 'tickets'];
+
+    public function getPdfNameAttribute()
+    {
+        return $this->order_number . '.pdf';
+    }
 
     public function tickets()
     {
@@ -71,6 +80,7 @@ class Order extends Model
         return $this->subTotalFromProducts();
     }
 
+    // TODO: change case to camel
     public static function GenerateOrderNumber()
     {
         do {
@@ -78,5 +88,49 @@ class Order extends Model
         } while (self::where('order_number', $number)->exists());
 
         return $number;
+    }
+
+    private function ensureTmpDirectoryExists()
+    {
+        if (! Storage::exists('tmp')) {
+            Storage::makeDirectory('tmp');
+        }
+    }
+
+    private function getPdfFilePath()
+    {
+        return storage_path("app/tmp/{$this->order_number}.pdf");
+    }
+
+    public function generatePDF()
+    {
+        $this->ensureTmpDirectoryExists();
+
+        $file_path = $this->getPdfFilePath();
+
+        if (Storage::exists($file_path)) {
+            Storage::delete($file_path);
+        }
+
+        pdf()
+            ->withBrowsershot(function (Browsershot $browsershot) {
+                $browsershot
+                    ->noSandbox()
+                    ->showBackground();
+            })
+            ->format('A4')
+            ->view('pdf.tickets', ['order' => $this])
+            ->save($file_path);
+    }
+
+    public function getPdf()
+    {
+        $file_path = $this->getPdfFilePath();
+
+        if (! Storage::exists($file_path)) {
+            $this->generatePDF();
+        }
+
+        return $file_path;
     }
 }
