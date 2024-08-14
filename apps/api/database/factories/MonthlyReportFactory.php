@@ -41,6 +41,7 @@ class MonthlyReportFactory extends Factory
                 'product_id' => fake()->unique()->numberBetween(1, 100),
             ];
         }
+
         return $products;
     }
 
@@ -54,6 +55,7 @@ class MonthlyReportFactory extends Factory
                 'event_id' => fake()->unique()->numberBetween(1, 50),
             ];
         }
+
         return $events;
     }
 
@@ -67,6 +69,7 @@ class MonthlyReportFactory extends Factory
                 'show_name' => fake()->sentence(2),
             ];
         }
+
         return $shows;
     }
 
@@ -82,6 +85,7 @@ class MonthlyReportFactory extends Factory
                 'product_id' => fake()->numberBetween(1, 100),
             ];
         }
+
         return $products;
     }
 }

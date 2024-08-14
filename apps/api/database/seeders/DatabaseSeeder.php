@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Jobs\AggregateDataJob;
 use App\Models\Address;
 use App\Models\Aggregation;
 use App\Models\Customer;
@@ -130,7 +129,7 @@ class DatabaseSeeder extends Seeder
         }
 
         // Insert any remaining aggregations
-        if (!empty($aggregations)) {
+        if (! empty($aggregations)) {
             \App\Models\Aggregation::insert($aggregations);
         }
 
@@ -187,7 +186,7 @@ class DatabaseSeeder extends Seeder
                 if ($modelType === 'Customer' && $aggregationType !== 'count') {
                     continue;
                 }
-                
+
                 $aggregations[] = [
                     'model_type' => $modelType,
                     'aggregation_type' => $aggregationType,
@@ -199,6 +198,7 @@ class DatabaseSeeder extends Seeder
                 ];
             }
         }
+
         return $aggregations;
     }
 }

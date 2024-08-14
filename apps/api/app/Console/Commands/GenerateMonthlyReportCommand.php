@@ -9,6 +9,7 @@ use Illuminate\Console\Command;
 class GenerateMonthlyReportCommand extends Command
 {
     protected $signature = 'report:generate {date? : The date for which to generate the report (format: Y-m-d)}';
+
     protected $description = 'Generate a monthly report for debugging purposes';
 
     public function handle()
@@ -21,9 +22,9 @@ class GenerateMonthlyReportCommand extends Command
         $this->info('Job dispatched successfully.');
 
         if ($date) {
-            $this->info("Report will be generated for the month of: " . $date->format('F Y'));
+            $this->info('Report will be generated for the month of: '.$date->format('F Y'));
         } else {
-            $this->info("Report will be generated for the previous month.");
+            $this->info('Report will be generated for the previous month.');
         }
     }
 }

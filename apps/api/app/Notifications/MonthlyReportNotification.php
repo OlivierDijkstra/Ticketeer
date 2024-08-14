@@ -36,15 +36,15 @@ class MonthlyReportNotification extends Notification implements ShouldQueue
      * Get the mail representation of the notification.
      */
     public function toMail(object $notifiable): MailMessage
-    {   
+    {
         $pdf = $this->report->getPdf();
 
         return (new MailMessage)
-                    ->subject('Monthly report is ready')
-                    ->greeting('Hello '.$notifiable->name)
-                    ->line('A monthly report is ready for you, please find it attached to this email.')
-                    ->line('You can also find it in the reports section of the dashboard.')
-                    ->attach($pdf);
+            ->subject('Monthly report is ready')
+            ->greeting('Hello '.$notifiable->name)
+            ->line('A monthly report is ready for you, please find it attached to this email.')
+            ->line('You can also find it in the reports section of the dashboard.')
+            ->attach($pdf);
     }
 
     /**

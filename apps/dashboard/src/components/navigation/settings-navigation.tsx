@@ -22,7 +22,7 @@ export default function SettingsNavigation() {
         href='/dashboard/settings'
         className={cn(
           'font-semibold',
-          activePath[0] === 'settings' && 'text-primary',
+          activePath[0] === 'settings' && 'text-primary'
         )}
       >
         User management
@@ -31,7 +31,7 @@ export default function SettingsNavigation() {
         href='/dashboard/settings/monthly-reports'
         className={cn(
           'font-semibold',
-          activePath[0] === 'monthly-reports' && 'text-primary',
+          activePath[0] === 'monthly-reports' && 'text-primary'
         )}
       >
         Monthly reports

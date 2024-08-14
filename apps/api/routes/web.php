@@ -9,4 +9,4 @@ Route::get('/', function () {
 
 Route::post('/webhooks/mollie', MollieWebhookController::class)->name('webhooks.mollie');
 
-require __DIR__ . '/auth.php';
+require __DIR__.'/auth.php';

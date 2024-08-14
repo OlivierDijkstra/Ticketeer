@@ -26,7 +26,7 @@ class MonthlyReportTest extends TestCase
 
     public function test_fillable_attributes()
     {
-        $monthlyReport = new MonthlyReport();
+        $monthlyReport = new MonthlyReport;
         $fillable = [
             'month',
             'total_revenue',
@@ -44,7 +44,7 @@ class MonthlyReportTest extends TestCase
 
     public function test_casts_attributes()
     {
-        $monthlyReport = new MonthlyReport();
+        $monthlyReport = new MonthlyReport;
         $casts = [
             'month' => 'date',
             'top_products' => 'array',
@@ -125,7 +125,7 @@ class MonthlyReportTest extends TestCase
         $pdfPath = $monthlyReport->getPdf();
 
         $this->assertStringContainsString('reports/2023-05-monthly-report.pdf', $pdfPath);
-        
+
         Pdf::assertSaved(function (PdfBuilder $pdf, string $path) {
             return $path === storage_path('app/reports/2023-05-monthly-report.pdf');
         });

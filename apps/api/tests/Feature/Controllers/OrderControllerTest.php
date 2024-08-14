@@ -210,7 +210,7 @@ class OrderControllerTest extends TestCase
     public function test_destroy_order()
     {
         Sanctum::actingAs($this->user);
-        
+
         $order = Order::factory()->create();
 
         $response = $this->deleteJson(route('orders.destroy', $order));

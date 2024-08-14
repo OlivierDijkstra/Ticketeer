@@ -12,7 +12,9 @@ use Tests\TestCase;
 class PaymentsControllerTest extends TestCase
 {
     protected $order;
+
     protected $payment;
+
     protected $paymentAmount = 100;
 
     public function setUp(): void
@@ -23,7 +25,7 @@ class PaymentsControllerTest extends TestCase
         $this->payment = Payment::factory()->create([
             'order_id' => $this->order->id,
             'amount' => $this->paymentAmount,
-            'status' => 'paid' // Ensure the payment is in 'paid' status
+            'status' => 'paid', // Ensure the payment is in 'paid' status
         ]);
     }
 

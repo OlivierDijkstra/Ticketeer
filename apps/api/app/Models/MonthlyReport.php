@@ -48,7 +48,7 @@ class MonthlyReport extends Model
 
     public function getPdfNameAttribute()
     {
-        return $this->month->format('Y-m') . '-monthly-report.pdf';
+        return $this->month->format('Y-m').'-monthly-report.pdf';
     }
 
     public function compareWithPreviousMonth()
@@ -56,7 +56,7 @@ class MonthlyReport extends Model
         $previousMonth = $this->month->copy()->subMonth();
         $previousReport = self::forMonth($previousMonth)->first();
 
-        if (!$previousReport) {
+        if (! $previousReport) {
             return null;
         }
 
@@ -72,7 +72,7 @@ class MonthlyReport extends Model
 
     private function ensureReportsDirectoryExists()
     {
-        if (!Storage::exists('reports')) {
+        if (! Storage::exists('reports')) {
             Storage::makeDirectory('reports');
         }
     }
@@ -103,10 +103,11 @@ class MonthlyReport extends Model
             ->save($file_path);
     }
 
-    public function getPdf() {
+    public function getPdf()
+    {
         $file_path = $this->getPdfFilePath();
 
-        if (!Storage::exists($file_path)) {
+        if (! Storage::exists($file_path)) {
             $this->generatePDF();
         }
 

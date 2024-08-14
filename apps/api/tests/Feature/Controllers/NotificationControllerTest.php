@@ -2,12 +2,11 @@
 
 namespace Tests\Feature\Controllers;
 
-use App\Models\Order;
 use App\Models\Customer;
-use App\Models\User;
 use App\Models\MonthlyReport;
-use App\Notifications\TicketsNotification;
+use App\Models\Order;
 use App\Notifications\MonthlyReportNotification;
+use App\Notifications\TicketsNotification;
 use Illuminate\Support\Facades\Notification;
 use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;

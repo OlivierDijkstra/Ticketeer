@@ -2,8 +2,8 @@
 
 namespace App\Jobs;
 
-use App\Models\MonthlyReport;
 use App\Models\Customer;
+use App\Models\MonthlyReport;
 use App\Models\Payment;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
@@ -18,6 +18,7 @@ class GenerateMonthlyReportJob implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     protected Carbon $startDate;
+
     protected Carbon $endDate;
 
     public function __construct(?Carbon $date = null)
@@ -54,7 +55,7 @@ class GenerateMonthlyReportJob implements ShouldQueue
         $totalRefunded = Payment::whereBetween('refunded_at', [$this->startDate, $this->endDate])
             ->sum('amount_refunded');
 
-        return bcsub((string)$totalPaid, (string)$totalRefunded, 2);
+        return bcsub((string) $totalPaid, (string) $totalRefunded, 2);
     }
 
     protected function calculateTotalOrders(): int
@@ -84,10 +85,10 @@ class GenerateMonthlyReportJob implements ShouldQueue
     protected function calculateTopProducts(): array
     {
         return DB::table('order_product')
-        ->join('orders', 'orders.id', '=', 'order_product.order_id')
-        ->join('products', 'products.id', '=', 'order_product.product_id')
-        ->join('payments', 'payments.order_id', '=', 'orders.id')
-        ->whereBetween('payments.paid_at', [$this->startDate, $this->endDate])
+            ->join('orders', 'orders.id', '=', 'order_product.order_id')
+            ->join('products', 'products.id', '=', 'order_product.product_id')
+            ->join('payments', 'payments.order_id', '=', 'orders.id')
+            ->whereBetween('payments.paid_at', [$this->startDate, $this->endDate])
             ->select(
                 'products.id as product_id',
                 'products.name',
@@ -109,10 +110,10 @@ class GenerateMonthlyReportJob implements ShouldQueue
     protected function calculateRevenueByEvent(): array
     {
         return DB::table('orders')
-        ->join('shows', 'shows.id', '=', 'orders.show_id')
-        ->join('events', 'events.id', '=', 'shows.event_id')
-        ->join('payments', 'payments.order_id', '=', 'orders.id')
-        ->whereBetween('payments.paid_at', [$this->startDate, $this->endDate])
+            ->join('shows', 'shows.id', '=', 'orders.show_id')
+            ->join('events', 'events.id', '=', 'shows.event_id')
+            ->join('payments', 'payments.order_id', '=', 'orders.id')
+            ->whereBetween('payments.paid_at', [$this->startDate, $this->endDate])
             ->select(
                 'events.id as event_id',
                 'events.name',
@@ -150,10 +151,10 @@ class GenerateMonthlyReportJob implements ShouldQueue
         $endDate = $this->endDate;
 
         $shows = DB::table('shows')
-        ->join('events', 'events.id', '=', 'shows.event_id')
-        ->join('orders', 'orders.show_id', '=', 'shows.id')
-        ->join('payments', 'payments.order_id', '=', 'orders.id')
-        ->whereBetween('payments.paid_at', [$startDate, $endDate])
+            ->join('events', 'events.id', '=', 'shows.event_id')
+            ->join('orders', 'orders.show_id', '=', 'shows.id')
+            ->join('payments', 'payments.order_id', '=', 'orders.id')
+            ->whereBetween('payments.paid_at', [$startDate, $endDate])
             ->select('shows.id as show_id', 'events.name as show_name')
             ->groupBy('shows.id', 'events.name')
             ->orderByRaw('COUNT(DISTINCT orders.id) DESC')
@@ -163,10 +164,10 @@ class GenerateMonthlyReportJob implements ShouldQueue
         $result = [];
         foreach ($shows as $show) {
             $products = DB::table('order_product')
-            ->join('orders', 'orders.id', '=', 'order_product.order_id')
-            ->join('products', 'products.id', '=', 'order_product.product_id')
-            ->join('payments', 'payments.order_id', '=', 'orders.id')
-            ->where('orders.show_id', $show->show_id)
+                ->join('orders', 'orders.id', '=', 'order_product.order_id')
+                ->join('products', 'products.id', '=', 'order_product.product_id')
+                ->join('payments', 'payments.order_id', '=', 'orders.id')
+                ->where('orders.show_id', $show->show_id)
                 ->whereBetween('payments.paid_at', [$startDate, $endDate])
                 ->select(
                     'products.id as product_id',
