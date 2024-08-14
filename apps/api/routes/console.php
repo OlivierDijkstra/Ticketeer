@@ -8,3 +8,5 @@ Schedule::job(new AggregateDataJob('day'))->dailyAt('00:00');
 Schedule::job(new AggregateDataJob('week'))->weekly();
 Schedule::job(new AggregateDataJob('month'))->monthly();
 Schedule::job(new AggregateDataJob('year'))->yearly();
+
+Schedule::command('app:clean-tmp-directory')->daily();
