@@ -88,7 +88,7 @@ export default function UserTable({
 
                   <DropdownMenuSeparator />
 
-                  <DropdownMenuItem disabled={user.id === currentUser.id}>
+                  <DropdownMenuItem disabled={user.id === currentUser?.id}>
                     <div className='flex items-center gap-2 text-red-500'>
                       <TrashIcon />
                       <span>Delete</span>
