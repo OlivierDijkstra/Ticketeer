@@ -34,13 +34,11 @@ class MonthlyReport extends Model
         'show_product_sales' => 'array',
     ];
 
-    // Scopes
     public function scopeForMonth($query, $month)
     {
         return $query->where('month', Carbon::parse($month)->startOfMonth());
     }
 
-    // Accessors
     public function getMonthNameAttribute()
     {
         return $this->month->format('F Y');
