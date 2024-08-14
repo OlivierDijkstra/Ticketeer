@@ -7,20 +7,28 @@ import { describe, expect, test, vi } from 'vitest';
 
 import AccountSettings from '@/components/navigation/account-settings';
 
-vi.mock('next-auth/react', () => ({
-  signOut: vi.fn(),
-}));
-
-describe('AccountSettings', () => {
+vi.mock('next-auth/react', () => {
   const session: Session = {
-    user: generateUser({
-      name: 'John Doe',
-    }),
+    user: {
+      ...generateUser({
+        name: 'John Doe',
+      }),
+      cookies: ['laravel_session', 'XSRF-TOKEN'],
+    },
     expires: '',
   };
 
+  return {
+    signOut: vi.fn(),
+    useSession: vi.fn().mockReturnValue({
+      data: session,
+    }),
+  };
+});
+
+describe('AccountSettings', () => {
   test('renders user name and ThemeSwitcher', async () => {
-    render(<AccountSettings session={session} />);
+    render(<AccountSettings />);
 
     const user = userEvent.setup();
 
@@ -35,7 +43,7 @@ describe('AccountSettings', () => {
   });
 
   test('calls signOut on logout click', async () => {
-    render(<AccountSettings session={session} />);
+    render(<AccountSettings />);
 
     const user = userEvent.setup();
 

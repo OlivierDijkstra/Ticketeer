@@ -1,8 +1,7 @@
 'use client';
 
 import { User } from 'lucide-react';
-import type { Session } from 'next-auth';
-import { signOut } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
 
 import { ThemeSwitcher } from '@/components/theme-switcher';
 import { Button } from '@/components/ui/button';
@@ -15,11 +14,9 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
-export default function AccountSettings({
-  session,
-}: {
-  session: Session | null;
-}) {
+export default function AccountSettings() {
+  const { data: session } = useSession();
+
   async function handleLogout() {
     if (session) {
       await signOut({
@@ -44,7 +41,7 @@ export default function AccountSettings({
 
       <DropdownMenuContent align='end'>
         <DropdownMenuLabel className='flex items-center gap-12'>
-          <span>{session?.user.name}</span>
+          <span>{session?.user?.name}</span>
 
           <ThemeSwitcher />
         </DropdownMenuLabel>

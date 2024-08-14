@@ -11,6 +11,7 @@ import { getServerSession } from 'next-auth/next';
 import CredentialsProvider from 'next-auth/providers/credentials';
 
 import { fetchWithAuth } from '@/lib/fetch';
+import { deleteApiCookies } from '@/server/helpers';
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -84,41 +85,27 @@ export const authOptions: NextAuthOptions = {
   },
   callbacks: {
     async jwt({ token, user }) {
-      if (user) token.user = user;
+      if (user) {
+        token.user = user;
+      }
       return token;
     },
     async session({ session, token }) {
       session.user = token.user as User & {
         cookies: string[];
       };
+
       return session;
     },
   },
   events: {
-    signOut: async ({ token }) => {
+    signOut: async () => {
       await fetchWithAuth('logout', {
         method: 'POST',
         parseJson: false,
       });
 
-      const cookiesToDelete = (
-        token.user as User & {
-          cookies: string[];
-        }
-      )?.cookies as string[] | undefined;
-
-      if (cookiesToDelete) {
-        const NEXTAUTH_URL = process.env.NEXTAUTH_URL;
-        const domain = new URL(NEXTAUTH_URL ?? '').hostname;
-
-        cookiesToDelete.forEach((cookie) => {
-          cookies().set(cookie, '', {
-            maxAge: 0,
-            httpOnly: true,
-            domain: `.${domain}`,
-          });
-        });
-      }
+      await deleteApiCookies();
     },
   },
   pages: {

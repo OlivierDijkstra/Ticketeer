@@ -5,13 +5,14 @@ import type { ResponseCookie } from 'next/dist/compiled/@edge-runtime/cookies';
 import { cookies } from 'next/headers';
 import { notFound } from 'next/navigation';
 
+import { deleteApiCookies } from '@/server/helpers';
+
 dns.setDefaultResultOrder('ipv4first');
 
 const API_URL = process.env.BACKEND_API_URL;
 
 interface FetchOptions extends Omit<RequestInit, 'body'> {
   xsrfToken?: string;
-  sessionCookie?: string;
   body?: Record<string, unknown> | Record<string, unknown>[] | FormData;
   automaticallySetCookies?: boolean;
   parseJson?: boolean;
@@ -137,6 +138,7 @@ async function handleCookies(response: Response, options: FetchOptions) {
       response.headers.getSetCookie() ?? []
     );
     for (const cookie of cookiesFromResponse) {
+      console.log('🍪 cookie', cookie);
       cookies().set(cookie);
     }
   }
@@ -149,7 +151,7 @@ async function handleCookies(response: Response, options: FetchOptions) {
  */
 async function handleHttpError(response: Response) {
   if (response?.status === 401) {
-    handleUnauthorizedError();
+    await handleUnauthorizedError();
   }
   if (response?.status === 404) {
     notFound();
@@ -158,14 +160,11 @@ async function handleHttpError(response: Response) {
   const text = await response.json();
 
   throw new Error(text.message);
-
-  throw new Error(`HTTP error! status: ${response?.status} ${text}`);
 }
 
 /**
  * Handles unauthorized errors by deleting relevant cookies.
  */
-function handleUnauthorizedError() {
-  cookies().delete('laravel_session');
-  cookies().delete('XSRF-TOKEN');
+async function handleUnauthorizedError() {
+  await deleteApiCookies();
 }

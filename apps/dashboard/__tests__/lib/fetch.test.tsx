@@ -7,18 +7,20 @@ vi.stubEnv('BACKEND_API_URL', 'http://localhost:3000');
 
 const getAllCookiesMock = vi.fn();
 const setCookieMock = vi.fn();
-const deleteCookieMock = vi.fn();
 
 vi.mock('next/headers', () => ({
   cookies: () => ({
     getAll: getAllCookiesMock,
     set: setCookieMock,
-    delete: deleteCookieMock,
   }),
 }));
 
 vi.mock('next/navigation', () => ({
   notFound: vi.fn(),
+}));
+
+vi.mock('@/server/helpers', () => ({
+  deleteApiCookies: vi.fn(),
 }));
 
 describe('fetchWithAuth', () => {
@@ -81,25 +83,6 @@ describe('fetchWithAuth', () => {
     expect(result).toEqual(mockResponse);
   });
 
-  test('it sets session cookie from options', async () => {
-    const mockResponse = { data: 'test' };
-    fetchMock.mockResolvedValueOnce({
-      ok: true,
-      json: () => Promise.resolve(mockResponse),
-    });
-
-    const result = await fetchWithAuth('api/test', {
-      sessionCookie: 'custom-session-cookie',
-      body: {
-        foo: 'bar',
-      },
-    });
-
-    const headers = fetchMock.mock.calls[0][1].headers;
-    expect(headers.get('Cookie')).toEqual('XSRF-TOKEN=test-xsrf-token');
-    expect(result).toEqual(mockResponse);
-  });
-
   test('it sets cookies from response', async () => {
     const mockResponse = { data: 'test' };
     fetchMock.mockResolvedValueOnce({
@@ -159,9 +142,6 @@ describe('fetchWithAuth', () => {
         },
       })
     ).rejects.toThrow('Unauthorized');
-
-    expect(deleteCookieMock).toHaveBeenCalledWith('laravel_session');
-    expect(deleteCookieMock).toHaveBeenCalledWith('XSRF-TOKEN');
   });
 
   test('it should use the correct method', async () => {

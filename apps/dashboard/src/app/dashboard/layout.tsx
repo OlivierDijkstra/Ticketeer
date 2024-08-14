@@ -7,15 +7,12 @@ import NavigationSheet from '@/components/navigation/navigation-sheet';
 import NavigationSidebar from '@/components/navigation/navigation-sidebar';
 import { Toaster } from '@/components/ui/sonner';
 import { TooltipProvider } from '@/components/ui/tooltip';
-import { auth } from '@/lib/auth';
 
 export default async function RootLayout({
   children,
 }: Readonly<{
   children: ReactNode;
 }>) {
-  const session = await auth();
-
   return (
     <TooltipProvider>
       <Toaster />
@@ -33,7 +30,7 @@ export default async function RootLayout({
               <GlobalSearch />
             </div>
 
-            <AccountSettings session={session} />
+            <AccountSettings />
           </header>
 
           <main className='mx-auto max-w-[120rem] p-4 !pt-8 sm:px-6 sm:py-0'>

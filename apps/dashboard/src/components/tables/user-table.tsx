@@ -3,6 +3,7 @@
 import type { User } from '@repo/lib';
 import { format } from 'date-fns';
 import { MailIcon, MoreHorizontalIcon, TrashIcon } from 'lucide-react';
+import { useSession } from 'next-auth/react';
 import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
@@ -27,11 +28,13 @@ import { sendPasswordResetLink } from '@/server/actions/users';
 
 export default function UserTable({
   users,
-  currentUser,
 }: {
   users: User[];
-  currentUser: User;
 }) {
+  const {data:session} = useSession();
+
+  const currentUser = session?.user as User;
+
   function handleSendPasswordResetLink(email: string) {
     toast.promise(sendPasswordResetLink({ email }), {
       loading: 'Sending password reset link...',
