@@ -76,7 +76,7 @@ describe('NewOrdersStatistic', () => {
     expect(fetchAggregatedData).toHaveBeenCalledWith({
       modelType: 'Order',
       aggregationType: 'sum',
-      granularity: 'month',
+      granularity: 'week',
       dateRange: expect.any(Array),
     });
   });
