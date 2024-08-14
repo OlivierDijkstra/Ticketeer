@@ -4,6 +4,7 @@ import type { User } from '@repo/lib';
 import { PlusIcon } from 'lucide-react';
 
 import CreateUserDialog from '@/components/dialogs/create-user-dialog';
+import UserTable from '@/components/tables/user-table';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -13,7 +14,6 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import UserTable from '@/components/users/UserTable';
 import { auth } from '@/lib/auth';
 import { getUsers } from '@/server/actions/users';
 

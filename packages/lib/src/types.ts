@@ -273,3 +273,39 @@ export interface Ticket {
   updated_at: string;
   product: Product;
 }
+
+export interface MonthlyReport {
+  id: number;
+  month: string;
+  total_revenue: string;
+  total_orders: number;
+  new_customers: number;
+  tickets_sold: number;
+  top_products: {
+    name: string;
+    revenue: string;
+    quantity: string;
+    base_price: string;
+    product_id: number;
+  }[];
+  revenue_by_event: {
+    name: string;
+    revenue: string;
+    event_id: number;
+  }[];
+  customer_acquisition_rate: string;
+  average_order_value: string;
+  show_product_sales: {
+    show_id: number;
+    products: {
+      name: string;
+      revenue: string;
+      quantity: string;
+      base_price: string;
+      product_id: number;
+    }[];
+    show_name: string;
+  }[];
+  created_at: string;
+  updated_at: string;
+}

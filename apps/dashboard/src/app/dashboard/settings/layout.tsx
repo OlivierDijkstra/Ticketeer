@@ -1,5 +1,6 @@
-import Link from 'next/link';
 import type { ReactNode } from 'react';
+
+import SettingsNavigation from '@/components/navigation/settings-navigation';
 
 export default async function Layout({
   children,
@@ -12,17 +13,7 @@ export default async function Layout({
         <h1 className='text-3xl font-semibold'>Settings</h1>
       </div>
       <div className='mx-auto grid w-full max-w-6xl items-start gap-6 md:grid-cols-[180px_1fr] lg:grid-cols-[250px_1fr]'>
-        <nav
-          className='grid gap-4 text-sm text-muted-foreground'
-          x-chunk='dashboard-04-chunk-0'
-        >
-          <Link
-            href='/dashboard/settings/users'
-            className='font-semibold text-primary'
-          >
-            User management
-          </Link>
-        </nav>
+        <SettingsNavigation />
 
         <div className='grid gap-6'>{children}</div>
       </div>

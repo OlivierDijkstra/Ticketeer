@@ -12,15 +12,19 @@ use Tests\TestCase;
 class PaymentsControllerTest extends TestCase
 {
     protected $order;
-
     protected $payment;
+    protected $paymentAmount = 100;
 
     public function setUp(): void
     {
         parent::setUp();
 
         $this->order = Order::factory()->create();
-        $this->payment = Payment::factory()->create(['order_id' => $this->order->id, 'amount' => 10]);
+        $this->payment = Payment::factory()->create([
+            'order_id' => $this->order->id,
+            'amount' => $this->paymentAmount,
+            'status' => 'paid' // Ensure the payment is in 'paid' status
+        ]);
     }
 
     public function test_index()
@@ -39,7 +43,11 @@ class PaymentsControllerTest extends TestCase
 
         Queue::fake();
 
-        $requestData = ['amount' => 5];
+        // Small delay to ensure payment is processed
+        usleep(100000); // 100ms delay
+
+        $refundAmount = $this->paymentAmount / 2; // Refund half of the payment
+        $requestData = ['amount' => $refundAmount];
 
         $response = $this->postJson(route('payments.refund', $this->payment), $requestData);
 

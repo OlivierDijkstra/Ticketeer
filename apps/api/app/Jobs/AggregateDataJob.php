@@ -153,6 +153,8 @@ class AggregateDataJob implements ShouldQueue
                     $date->copy()->startOfWeek(),
                     $date->copy()->endOfWeek(),
                 ];
+            // TODO: Something is wrong with the month aggregation, seems to be taking the same
+            // period as the last week aggregation.
             case 'month':
                 return [
                     $date->copy()->startOfMonth(),

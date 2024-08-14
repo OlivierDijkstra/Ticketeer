@@ -16,7 +16,7 @@ class TicketsNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
-    protected Order $order;
+    public Order $order;
 
     /**
      * Create a new notification instance.
@@ -51,6 +51,7 @@ class TicketsNotification extends Notification implements ShouldQueue
 
         $file_path = public_path('tickets.pdf');
 
+        // Move this to Order model, do a temp save. Refactor like MonthlyReport
         $pdf = pdf()
             ->withBrowsershot(function (Browsershot $browsershot) {
                 $browsershot

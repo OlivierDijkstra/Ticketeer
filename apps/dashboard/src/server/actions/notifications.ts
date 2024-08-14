@@ -10,3 +10,16 @@ export async function notifyTickets({ order_id }: { order_id: string }) {
     },
   });
 }
+
+export async function notifyMonthlyReport({
+  report_id,
+}: {
+  report_id: number;
+}) {
+  await fetchWithAuth('api/notifications/monthly-report', {
+    method: 'POST',
+    body: {
+      report_id,
+    },
+  });
+}

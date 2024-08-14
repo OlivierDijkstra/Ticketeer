@@ -4,6 +4,7 @@ use App\Http\Controllers\AddressController;
 use App\Http\Controllers\AggregationController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\MonthlyReportController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentsController;
@@ -95,3 +96,9 @@ Route::get('tickets/validate', [TicketController::class, 'validate'])->name('tic
 // Notifications
 //
 Route::post('notifications/tickets', [NotificationController::class, 'notifyTickets'])->name('notifications.tickets');
+Route::post('notifications/monthly-report', [NotificationController::class, 'notifyMonthlyReport'])->name('notifications.monthly-report');
+
+//
+// Monthly Reports
+//
+Route::apiResource('monthly-reports', MonthlyReportController::class)->only(['index', 'show']);
