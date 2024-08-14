@@ -138,7 +138,6 @@ async function handleCookies(response: Response, options: FetchOptions) {
       response.headers.getSetCookie() ?? []
     );
     for (const cookie of cookiesFromResponse) {
-      console.log('🍪 cookie', cookie);
       cookies().set(cookie);
     }
   }
