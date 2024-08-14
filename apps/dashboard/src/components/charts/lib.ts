@@ -10,14 +10,6 @@ export type DateRanges =
   | 'This year'
   | 'Last year';
 
-// TODO: Clean these up and use AggregatedData type instead
-export type Result = {
-  x: string;
-  value: number;
-};
-
-export type ResultSet = Result[];
-
 export function determineGranularity(dateRange: DateRanges): Granularity {
   if (dateRange === 'This day' || dateRange === 'Last day') {
     return 'hour';
