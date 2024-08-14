@@ -69,7 +69,7 @@ class OrderTest extends TestCase
 
     public function test_generate_order_number()
     {
-        $orderNumber = Order::GenerateOrderNumber();
+        $orderNumber = Order::generateOrderNumber();
         $this->assertStringStartsWith('ORD-', $orderNumber);
     }
 

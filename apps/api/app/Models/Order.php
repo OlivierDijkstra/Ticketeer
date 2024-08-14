@@ -80,8 +80,7 @@ class Order extends Model
         return $this->subTotalFromProducts();
     }
 
-    // TODO: change case to camel
-    public static function GenerateOrderNumber()
+    public static function generateOrderNumber()
     {
         do {
             $number = 'ORD-'.now()->format('YmdHis').'-'.Str::random(4);

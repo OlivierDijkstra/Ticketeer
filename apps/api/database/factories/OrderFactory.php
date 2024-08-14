@@ -19,7 +19,7 @@ class OrderFactory extends Factory
         return [
             'show_id' => \App\Models\Show::factory(),
             'customer_id' => \App\Models\Customer::factory()->create()->id,
-            'order_number' => \App\Models\Order::GenerateOrderNumber(),
+            'order_number' => \App\Models\Order::generateOrderNumber(),
             'status' => 'pending',
             'description' => fake()->paragraph,
             'service_fee' => '0.00',

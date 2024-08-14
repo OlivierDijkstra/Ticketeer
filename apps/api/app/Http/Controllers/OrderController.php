@@ -55,7 +55,7 @@ class OrderController extends Controller implements HasMiddleware
         $order = $show->orders()->create([
             'show_id' => $show->id,
             'description' => $request->input('description'),
-            'order_number' => Order::GenerateOrderNumber(),
+            'order_number' => Order::generateOrderNumber(),
             'service_fee' => $show->event->service_fee,
         ]);
 

@@ -112,7 +112,7 @@ class SimulatedDataSeeder extends Seeder
         $orderCreatedAt = $date->copy()->startOfDay()->addSeconds(rand(0, 86399));
         $customer = $this->createOrGetCustomer($orderCreatedAt);
 
-        $orderNumber = Order::GenerateOrderNumber();
+        $orderNumber = Order::generateOrderNumber();
         $order = [
             'id' => \Illuminate\Support\Str::uuid()->toString(), // Assuming Order uses UUID
             'show_id' => $show->id,
