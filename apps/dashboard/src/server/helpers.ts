@@ -21,6 +21,8 @@ export async function deleteApiCookies() {
   const NEXTAUTH_URL = process.env.NEXTAUTH_URL;
   const domain = new URL(NEXTAUTH_URL ?? '').hostname;
 
+  console.log('🍪 cookiesToDelete', cookiesToDelete, domain);
+
   cookiesToDelete.forEach((cookie) => {
     cookies().set(cookie, '', {
       domain: `.${domain}`,
