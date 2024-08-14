@@ -35,23 +35,6 @@ services:
       timeout: 10s
       retries: 3
 
-  frontend:
-    build:
-      context: .
-      dockerfile: ./apps/frontend/Dockerfile
-    <<: *common-environment-networks
-    <<: *common-logging
-    restart: unless-stopped
-    depends_on:
-      - api
-    expose:
-      - 3001
-    healthcheck:
-      test: ["CMD-SHELL", "wget --spider -q http://frontend:3001 || exit 1"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-
   api:
     <<: [*api-service-build, *common-environment-networks, *common-logging]
     restart: unless-stopped
