@@ -56,26 +56,30 @@ class AggregateDataJob implements ShouldQueue
     // Aggregate data for hourly granularity directly from the database
     private function aggregateHourlyData(string $modelType, string $aggregationType, Carbon $startDate, Carbon $endDate): void
     {
-        // Determine the table name based on the model type
         $table = strtolower($modelType) . 's';
-
-        // Choose the column to aggregate based on the aggregation type and model type
         $column = $aggregationType === 'count' ? 'id' : ($modelType === 'Order' ? 'total' : 'id');
 
-        // Get the SQL expression for the period (e.g., hour, day, week)
-        $periodExpression = $this->getPeriodExpression();
+        $currentHour = $startDate->copy();
+        $results = [];
 
-        // Construct the aggregation expression
-        $aggregationExpression = $aggregationType === 'count'
-            ? 'COUNT(*) as value'
-            : "COALESCE($aggregationType($column), 0) as value";
+        while ($currentHour <= $endDate) {
+            $nextHour = $currentHour->copy()->addHour();
 
-        $results = DB::table($table)
-            ->select(DB::raw($periodExpression), DB::raw($aggregationExpression))
-            ->whereBetween('created_at', [$startDate, $endDate])
-            ->groupBy('period')
-            ->orderBy('period')
-            ->get();
+            $value = DB::table($table)
+                ->whereBetween('created_at', [$currentHour, $currentHour->copy()->endOfHour()])
+                ->when($aggregationType === 'count', function ($query) {
+                    return $query->count();
+                }, function ($query) use ($aggregationType, $column) {
+                    return $query->{$aggregationType}($column) ?? 0;
+                });
+
+            $results[] = [
+                'period' => $currentHour->format('Y-m-d H:00:00'),
+                'value' => $value,
+            ];
+
+            $currentHour = $nextHour;
+        }
 
         $this->saveAggregations($modelType, $aggregationType, $results);
     }
@@ -155,7 +159,7 @@ class AggregateDataJob implements ShouldQueue
     }
 
     // Save multiple aggregation records
-    private function saveAggregations(string $modelType, string $aggregationType, $results): void
+    private function saveAggregations(string $modelType, string $aggregationType, array $results): void
     {
         foreach ($results as $result) {
             Aggregation::updateOrCreate(
@@ -163,9 +167,9 @@ class AggregateDataJob implements ShouldQueue
                     'model_type' => $modelType,
                     'aggregation_type' => $aggregationType,
                     'granularity' => $this->granularity,
-                    'period' => $result->period,
+                    'period' => $result['period'],
                 ],
-                ['value' => $result->value ?? 0]
+                ['value' => $result['value'] ?? 0]
             );
         }
     }

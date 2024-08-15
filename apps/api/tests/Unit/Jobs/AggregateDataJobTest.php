@@ -359,4 +359,51 @@ class AggregateDataJobTest extends TestCase
             'value' => 200,
         ]);
     }
+
+    public function testHourAggregationWithNoData()
+    {
+        $job = new AggregateDataJob('hour', '2023-01-01 00:00:00');
+        $job->handle();
+
+        $job = new AggregateDataJob('hour', '2023-01-01 01:00:00');
+        $job->handle();
+
+        $job = new AggregateDataJob('hour', '2023-01-02 00:00:00');
+        $job->handle();
+
+        $this->assertDatabaseHas('aggregations', [
+            'model_type' => 'Order',
+            'aggregation_type' => 'count',
+            'granularity' => 'hour',
+            'period' => '2023-01-01 00:00:00',
+            'value' => 0,
+        ]);
+
+        $this->assertDatabaseHas('aggregations', [
+            'model_type' => 'Order',
+            'aggregation_type' => 'count',
+            'granularity' => 'hour',
+            'period' => '2023-01-02 00:00:00',
+            'value' => 0,
+        ]);
+
+        $this->assertDatabaseHas('aggregations', [
+            'model_type' => 'Order',
+            'aggregation_type' => 'count',
+            'granularity' => 'hour',
+            'period' => '2023-01-01 00:00:00',
+            'value' => 0,
+        ]);
+
+        $job = new AggregateDataJob('day', '2023-01-01 00:00:00');
+        $job->handle();
+
+        $this->assertDatabaseHas('aggregations', [
+            'model_type' => 'Order',
+            'aggregation_type' => 'count',
+            'granularity' => 'day',
+            'period' => '2023-01-01 00:00:00',
+            'value' => 0,
+        ]);
+    }
 }
