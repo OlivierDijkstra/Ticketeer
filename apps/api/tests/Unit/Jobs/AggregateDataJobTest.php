@@ -184,7 +184,7 @@ class AggregateDataJobTest extends TestCase
 
         $job = new AggregateDataJob('day', '2023-01-01 00:00:00');
         $job->handle();
-        
+
         $this->assertDatabaseHas('aggregations', [
             'model_type' => 'Customer',
             'aggregation_type' => 'count',
@@ -235,7 +235,7 @@ class AggregateDataJobTest extends TestCase
         Order::factory()->create(['total' => 100, 'created_at' => '2023-01-01 00:00:00']);
         Order::factory()->create(['total' => 200, 'created_at' => '2023-01-01 23:59:59']);
 
-        $job  = new AggregateDataJob('hour', '2023-01-01 00:00:00');
+        $job = new AggregateDataJob('hour', '2023-01-01 00:00:00');
         $job->handle();
 
         $job = new AggregateDataJob('hour', '2023-01-01 23:00:00');

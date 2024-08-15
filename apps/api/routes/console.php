@@ -10,6 +10,6 @@ Schedule::job(new AggregateDataJob('week'))->weekly();
 Schedule::job(new AggregateDataJob('month'))->monthly();
 Schedule::job(new AggregateDataJob('year'))->yearly();
 
-Schedule::job(new GenerateMonthlyReportJob())->monthly();
+Schedule::job(new GenerateMonthlyReportJob)->monthly();
 
 Schedule::command('app:clean-tmp-directory')->daily();

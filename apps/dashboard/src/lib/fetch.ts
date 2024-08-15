@@ -4,7 +4,6 @@ import { notFound } from 'next/navigation';
 
 import { parseSetCookie } from '@/lib/utils';
 
-
 const API_URL = process.env.BACKEND_API_URL;
 
 interface FetchOptions extends Omit<RequestInit, 'body'> {

@@ -18,9 +18,13 @@ class AggregateDataJob implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public $tries = 3;
+
     protected Carbon $date;
+
     protected array $modelTypes = ['Customer', 'Order'];
+
     protected array $aggregationTypes = ['count', 'sum', 'avg', 'min', 'max'];
+
     protected array $skipAggregations = ['Customer' => ['sum', 'max', 'min', 'avg']];
 
     public function __construct(protected string $granularity, ?string $date = null)
@@ -45,7 +49,7 @@ class AggregateDataJob implements ShouldQueue
                             ? $this->aggregateHourlyData($modelType, $aggregationType, $startDate, $endDate)
                             : $this->aggregateFromSmallerGranularity($modelType, $aggregationType, $startDate, $endDate);
                     } catch (Exception $e) {
-                        Log::error("Error aggregating data for $modelType, $aggregationType, {$this->granularity}: " . $e->getMessage());
+                        Log::error("Error aggregating data for $modelType, $aggregationType, {$this->granularity}: ".$e->getMessage());
                     }
                 }
             }
@@ -55,7 +59,7 @@ class AggregateDataJob implements ShouldQueue
     // Aggregate data for hourly granularity directly from the database
     private function aggregateHourlyData(string $modelType, string $aggregationType, Carbon $startDate, Carbon $endDate): void
     {
-        $table = strtolower($modelType) . 's';
+        $table = strtolower($modelType).'s';
         $column = $aggregationType === 'count' ? 'id' : ($modelType === 'Order' ? 'total' : 'id');
 
         $currentHour = $startDate->copy();
@@ -105,6 +109,7 @@ class AggregateDataJob implements ShouldQueue
     private function getSmallerGranularity(): string
     {
         $granularities = ['hour', 'day', 'week', 'month', 'year'];
+
         return $granularities[array_search($this->granularity, $granularities) - 1];
     }
 
@@ -139,7 +144,7 @@ class AggregateDataJob implements ShouldQueue
     {
         return [
             $this->date->copy()->startOf($this->granularity),
-            $this->date->copy()->endOf($this->granularity)
+            $this->date->copy()->endOf($this->granularity),
         ];
     }
 
@@ -147,6 +152,7 @@ class AggregateDataJob implements ShouldQueue
     private function getPreviousPeriodEnd(): Carbon
     {
         $now = now();
+
         return match ($this->granularity) {
             'hour' => $now->subHour()->endOfHour(),
             'day' => $now->subDay()->endOfDay(),
@@ -184,7 +190,7 @@ class AggregateDataJob implements ShouldQueue
             'sqlite' => "strftime('%Y-%m-%d %H:00:00', created_at) as period",
             'mysql' => "DATE_FORMAT(created_at, '%Y-%m-%d %H:00:00') as period",
             'pgsql' => "DATE_TRUNC('hour', created_at) as period",
-            default => throw new Exception("Unsupported database driver: " . DB::getDriverName()),
+            default => throw new Exception('Unsupported database driver: '.DB::getDriverName()),
         };
     }
 }

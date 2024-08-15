@@ -31,7 +31,7 @@ class Order extends Model
 
     public function getPdfNameAttribute()
     {
-        return $this->order_number . '.pdf';
+        return $this->order_number.'.pdf';
     }
 
     public function tickets()

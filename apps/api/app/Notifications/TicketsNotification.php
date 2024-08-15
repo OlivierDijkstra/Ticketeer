@@ -8,9 +8,6 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\HtmlString;
-use Spatie\Browsershot\Browsershot;
-
-use function Spatie\LaravelPdf\Support\pdf;
 
 class TicketsNotification extends Notification implements ShouldQueue
 {

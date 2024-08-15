@@ -26,12 +26,8 @@ import {
 import { DEFAULT_PRETTY_DATE_FORMAT } from '@/lib/constants';
 import { sendPasswordResetLink } from '@/server/actions/users';
 
-export default function UserTable({
-  users,
-}: {
-  users: User[];
-}) {
-  const {data:session} = useSession();
+export default function UserTable({ users }: { users: User[] }) {
+  const { data: session } = useSession();
 
   const currentUser = session?.user as User;
 

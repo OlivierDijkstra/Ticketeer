@@ -14,7 +14,7 @@ export function createUrl(
   params: Record<
     string,
     string | number | boolean | null | undefined | Record<string, string>
-  >
+  >,
 ): string {
   // Generate the query string from the params object
   const queryString = Object.keys(params)
@@ -43,7 +43,7 @@ export function createUrl(
 export default function formatMoney(
   amount?: number | string | null,
   locale: string = "en-US",
-  currency: string = "USD"
+  currency: string = "USD",
 ) {
   if (amount === null || amount === undefined) return "0";
 
