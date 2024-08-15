@@ -1,7 +1,8 @@
-import { parseSetCookie } from '@repo/lib';
 import type { ResponseCookie } from 'next/dist/compiled/@edge-runtime/cookies';
 import { cookies } from 'next/headers';
 import { notFound } from 'next/navigation';
+
+import { parseSetCookie } from '@/lib/utils';
 
 
 const API_URL = process.env.BACKEND_API_URL;

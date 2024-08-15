@@ -1,9 +1,10 @@
-import { parseSetCookie, type User as UserType } from '@repo/lib';
+import { type User as UserType } from '@repo/lib';
 import { cookies } from 'next/headers';
 import NextAuth from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 
 import { fetchWithAuth } from '@/lib/fetch';
+import { parseSetCookie } from '@/lib/utils';
 
 declare module 'next-auth' {
   /**
@@ -76,8 +77,8 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
             return {
               ...user,
               cookies: loginCookies
-                .filter(cookie => cookie.name !== 'XSRF-TOKEN')
-                .flatMap(cookie => cookie.name),
+                .filter((cookie) => cookie.name !== 'XSRF-TOKEN')
+                .flatMap((cookie) => cookie.name),
             };
           }
 
