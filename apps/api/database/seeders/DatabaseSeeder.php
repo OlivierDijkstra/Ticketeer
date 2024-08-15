@@ -114,12 +114,17 @@ class DatabaseSeeder extends Seeder
 
         // Simulate data for each day
         $currentDate = $startDate->copy();
+        $dayCount = 0;
         while ($currentDate <= $endDate) {
+            $dayCount++;
+            $this->command->info("Processing day {$dayCount}: {$currentDate->toDateString()}");
+            
             $aggregations = array_merge($aggregations, $this->aggregateDataForDay($currentDate, $endDate));
             $currentDate->addDay();
 
             // Insert batch if we've reached the batch size
             if (count($aggregations) >= $batchSize) {
+                $this->command->info("Inserting batch of " . count($aggregations) . " aggregations");
                 \App\Models\Aggregation::insert($aggregations);
                 $aggregations = [];
             }
@@ -129,13 +134,16 @@ class DatabaseSeeder extends Seeder
         }
 
         // Insert any remaining aggregations
-        if (! empty($aggregations)) {
+        if (!empty($aggregations)) {
+            $this->command->info("Inserting final batch of " . count($aggregations) . " aggregations");
             \App\Models\Aggregation::insert($aggregations);
         }
 
         // Finish the progress bar
         $bar->finish();
         $this->command->newLine();
+
+        $this->command->info("Total days processed: {$dayCount}");
     }
 
     private function aggregateDataForDay($date, $endDate)
@@ -154,24 +162,22 @@ class DatabaseSeeder extends Seeder
             $aggregations = array_merge($aggregations, $this->createSimpleAggregation('hour', $hourDate, $modelTypes, $aggregationTypes));
         }
 
-        // Daily aggregation (only if we've completed the full day)
-        if ($date->copy()->endOfDay() <= $endDate) {
-            $aggregations = array_merge($aggregations, $this->createSimpleAggregation('day', $date, $modelTypes, $aggregationTypes));
+        // Daily aggregation
+        $aggregations = array_merge($aggregations, $this->createSimpleAggregation('day', $startOfDay, $modelTypes, $aggregationTypes));
+
+        // Weekly aggregation (only on the first day of the week)
+        if ($date->dayOfWeek === Carbon::MONDAY) {
+            $aggregations = array_merge($aggregations, $this->createSimpleAggregation('week', $date->startOfWeek(), $modelTypes, $aggregationTypes));
         }
 
-        // Weekly aggregation on the first day of the week (Monday)
-        if ($date->dayOfWeek === Carbon::MONDAY && $date->copy()->endOfWeek() <= $endDate) {
-            $aggregations = array_merge($aggregations, $this->createSimpleAggregation('week', $date, $modelTypes, $aggregationTypes));
+        // Monthly aggregation (only on the first day of the month)
+        if ($date->day === 1) {
+            $aggregations = array_merge($aggregations, $this->createSimpleAggregation('month', $date->startOfMonth(), $modelTypes, $aggregationTypes));
         }
 
-        // Monthly aggregation on the first day of the month
-        if ($date->day === 1 && $date->copy()->endOfMonth() <= $endDate) {
-            $aggregations = array_merge($aggregations, $this->createSimpleAggregation('month', $date, $modelTypes, $aggregationTypes));
-        }
-
-        // Yearly aggregation on the last day of the year
-        if ($date->month === 12 && $date->day === 31 && $date->copy()->endOfYear() <= $endDate) {
-            $aggregations = array_merge($aggregations, $this->createSimpleAggregation('year', $date, $modelTypes, $aggregationTypes));
+        // Yearly aggregation (only on the first day of the year)
+        if ($date->month === 1 && $date->day === 1) {
+            $aggregations = array_merge($aggregations, $this->createSimpleAggregation('year', $date->startOfYear(), $modelTypes, $aggregationTypes));
         }
 
         return $aggregations;
@@ -191,7 +197,7 @@ class DatabaseSeeder extends Seeder
                     'model_type' => $modelType,
                     'aggregation_type' => $aggregationType,
                     'granularity' => $granularity,
-                    'period' => $granularity === 'hour' ? $date : $date->startOfDay(),
+                    'period' => $date,
                     'value' => 0,
                     'created_at' => now(),
                     'updated_at' => now(),
