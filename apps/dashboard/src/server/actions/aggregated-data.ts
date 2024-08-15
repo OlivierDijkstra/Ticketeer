@@ -40,6 +40,10 @@ export async function fetchAggregatedData({
     data: AggregatedData;
   }>(url);
 
+  if (!response.data) {
+    return [];
+  }
+
   return response.data.map((item) => ({
     ...item,
     value: parseFloat(`${item.value}`),
