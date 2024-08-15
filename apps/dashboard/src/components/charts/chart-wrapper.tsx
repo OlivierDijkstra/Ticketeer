@@ -37,6 +37,7 @@ export default async function ChartWrapper({
 
   const data = await fetchAggregatedData(initialQuery);
 
+  // TODO: This causes a weird type error when auth failed on reload
   return (
     <Chart
       initialQuery={initialQuery}

@@ -19,10 +19,6 @@ vi.mock('next/navigation', () => ({
   notFound: vi.fn(),
 }));
 
-vi.mock('@/server/helpers', () => ({
-  deleteApiCookies: vi.fn(),
-}));
-
 describe('fetchWithAuth', () => {
   const fetchMock = vi.fn();
 

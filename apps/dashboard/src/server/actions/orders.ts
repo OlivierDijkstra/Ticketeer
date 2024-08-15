@@ -52,7 +52,7 @@ export async function createOrdersAction(data: {
   }[];
 }) {
   // Generate a redirect url and add a slash after nextuaht_url only if required if its missing
-  let redirect_url = process.env.NEXTAUTH_URL;
+  let redirect_url = process.env.AUTH_URL;
   if (!redirect_url?.endsWith('/')) {
     redirect_url += '/';
   }

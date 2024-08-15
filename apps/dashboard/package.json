@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "clean": "rm -rf node_modules",
-    "dev": "next dev --turbo",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint . --ext .ts,.tsx --ignore-path .gitignore --fix && tsc --noEmit",
@@ -40,7 +40,7 @@
     "i18n-iso-countries": "^7.11.2",
     "lucide-react": "^0.418.0",
     "next": "14.2.3",
-    "next-auth": "^4.24.7",
+    "next-auth": "5.0.0-beta.18",
     "next-themes": "^0.3.0",
     "react": "18.2.0",
     "react-day-picker": "^8.10.1",

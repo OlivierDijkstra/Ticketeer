@@ -1,22 +1,29 @@
-import type { User } from '@repo/lib';
-import { parseSetCookie } from '@repo/lib';
-import type {
-  GetServerSidePropsContext,
-  NextApiRequest,
-  NextApiResponse,
-} from 'next';
+import { parseSetCookie, type User as UserType } from '@repo/lib';
 import { cookies } from 'next/headers';
-import type { NextAuthOptions } from 'next-auth';
-import { getServerSession } from 'next-auth/next';
-import CredentialsProvider from 'next-auth/providers/credentials';
+import NextAuth from 'next-auth';
+import Credentials from 'next-auth/providers/credentials';
 
 import { fetchWithAuth } from '@/lib/fetch';
-import { deleteApiCookies } from '@/server/helpers';
 
-export const authOptions: NextAuthOptions = {
+declare module 'next-auth' {
+  /**
+   * Returned by `auth`, `useSession`, `getSession` and received as a prop on the `SessionProvider` React Context
+   */
+  interface Session {
+    user: {
+      cookies: string[];
+    } & UserType;
+  }
+
+  interface User {
+    cookies: string[];
+  }
+}
+
+export const { auth, handlers, signIn, signOut } = NextAuth({
+  useSecureCookies: process.env.NODE_ENV === 'production',
   providers: [
-    CredentialsProvider({
-      name: 'Email and Password',
+    Credentials({
       credentials: {
         email: { label: 'Email', type: 'email', placeholder: 'Your Email' },
         password: { label: 'Password', type: 'password' },
@@ -59,7 +66,7 @@ export const authOptions: NextAuthOptions = {
 
           if (rememberMeCookie) cookies().set(rememberMeCookie);
 
-          const user = await fetchWithAuth<User>('api/users/me', {
+          const user = await fetchWithAuth<UserType>('api/users/me', {
             method: 'GET',
           }).catch(() => {
             throw new Error('User fetch failed');
@@ -68,7 +75,9 @@ export const authOptions: NextAuthOptions = {
           if (user) {
             return {
               ...user,
-              cookies: loginCookies.flatMap((cookie) => cookie.name),
+              cookies: loginCookies
+                .filter(cookie => cookie.name !== 'XSRF-TOKEN')
+                .flatMap(cookie => cookie.name),
             };
           }
 
@@ -91,34 +100,48 @@ export const authOptions: NextAuthOptions = {
       return token;
     },
     async session({ session, token }) {
-      session.user = token.user as User & {
+      // @ts-expect-error: Unable to fully overwrite the session.user type
+      session.user = token.user as UserType & {
         cookies: string[];
       };
 
       return session;
     },
+    authorized: async ({ auth }) => {
+      return !!auth;
+    },
   },
   events: {
-    signOut: async () => {
+    // @ts-expect-error: Token is not found, possible type error with next-auth
+    signOut: async ({ token }) => {
       await fetchWithAuth('logout', {
         method: 'POST',
         parseJson: false,
       });
 
-      await deleteApiCookies();
+      const user = token.user as UserType & {
+        cookies: string[];
+      };
+
+      const cookiesToDelete = user.cookies;
+
+      const url = new URL(process.env.AUTH_URL ?? '');
+      const hostnameParts = url.hostname.split('.');
+      const domain =
+        hostnameParts.length > 2
+          ? hostnameParts.slice(-2).join('.')
+          : url.hostname;
+
+      cookiesToDelete.forEach((cookie) => {
+        cookies().set(cookie, '', {
+          domain: `.${domain}`,
+          maxAge: 0,
+        });
+      });
     },
   },
   pages: {
     signIn: '/',
     error: '/',
   },
-};
-
-export function auth(
-  ...args:
-    | [GetServerSidePropsContext['req'], GetServerSidePropsContext['res']]
-    | [NextApiRequest, NextApiResponse]
-    | []
-) {
-  return getServerSession(...args, authOptions);
-}
+});

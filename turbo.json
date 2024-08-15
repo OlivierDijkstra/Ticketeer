@@ -1,7 +1,7 @@
 {
   "globalEnv": [
     "NODE_ENV",
-    "NEXTAUTH_URL",
+    "AUTH_URL",
     "REFERRER_URL",
     "BACKEND_API_URL",
     "APP_NAME",

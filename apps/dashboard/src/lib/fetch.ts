@@ -1,13 +1,8 @@
-import dns from 'node:dns';
-
 import { parseSetCookie } from '@repo/lib';
 import type { ResponseCookie } from 'next/dist/compiled/@edge-runtime/cookies';
 import { cookies } from 'next/headers';
 import { notFound } from 'next/navigation';
 
-import { deleteApiCookies } from '@/server/helpers';
-
-dns.setDefaultResultOrder('ipv4first');
 
 const API_URL = process.env.BACKEND_API_URL;
 
@@ -150,7 +145,7 @@ async function handleCookies(response: Response, options: FetchOptions) {
  */
 async function handleHttpError(response: Response) {
   if (response?.status === 401) {
-    await handleUnauthorizedError();
+    throw new Error('Unauthorized');
   }
   if (response?.status === 404) {
     notFound();
@@ -159,11 +154,4 @@ async function handleHttpError(response: Response) {
   const text = await response.json();
 
   throw new Error(text.message);
-}
-
-/**
- * Handles unauthorized errors by deleting relevant cookies.
- */
-async function handleUnauthorizedError() {
-  await deleteApiCookies();
 }

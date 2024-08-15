@@ -2,7 +2,7 @@
 
 import {
   CalendarDays,
-  Home,
+  LayoutDashboardIcon,
   SettingsIcon,
   Shirt,
   ShoppingCart,
@@ -39,7 +39,7 @@ export default function NavigationSidebar() {
         <Tooltip>
           <TooltipTrigger asChild>
             <Link href='/dashboard' className={getClassesForPath(undefined)}>
-              <Home className='h-5 w-5' />
+              <LayoutDashboardIcon className='h-5 w-5' />
               <span className='sr-only'>Dashboard</span>
             </Link>
           </TooltipTrigger>
