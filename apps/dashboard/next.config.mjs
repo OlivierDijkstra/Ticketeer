@@ -11,16 +11,12 @@ const nextConfig = {
     outputFileTracingRoot: path.join(__dirname, '../../'),
   },
   images: {
+    // Possibly insecure, but it's the only way to get the images to load
+    // via a dockerfile build.
     remotePatterns: [
       {
-        protocol: 'http',
-        hostname: 'localhost',
-        pathname: '**',
-      },
-      {
-        protocol: 'http',
-        hostname: 'api.test.local',
-        pathname: '**',
+        protocol: 'https',
+        hostname: '**',
       },
     ],
   },
