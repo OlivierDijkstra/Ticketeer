@@ -22,14 +22,6 @@ describe('LoginForm', () => {
     });
   });
 
-  test('renders with initial values', () => {
-    render(<LoginForm />);
-
-    expect(screen.getByLabelText(/email/i)).toHaveValue('test@example.com');
-    expect(screen.getByLabelText(/password/i)).toHaveValue('password');
-    expect(screen.getByLabelText(/remember me/i)).not.toBeChecked();
-  });
-
   test('updates input values correctly', async () => {
     render(<LoginForm />);
 
