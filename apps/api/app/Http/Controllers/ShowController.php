@@ -12,6 +12,8 @@ use App\Traits\HandlesPaginationAndFiltering;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
+use App\Jobs\GenerateGuestListPdfJob;
+use Illuminate\Support\Facades\Auth;
 
 class ShowController extends Controller implements HasMiddleware
 {
@@ -20,7 +22,7 @@ class ShowController extends Controller implements HasMiddleware
     public static function middleware(): array
     {
         return [
-            new Middleware('auth:sanctum', only: ['store', 'update', 'destroy', 'addProduct', 'removeProduct']),
+            new Middleware('auth:sanctum', only: ['store', 'update', 'destroy', 'addProduct', 'removeProduct', 'generateGuestList']),
         ];
     }
 
@@ -111,5 +113,17 @@ class ShowController extends Controller implements HasMiddleware
         $show->products()->updateExistingPivot($product->id, $request->validated());
 
         return response()->json($product, 200);
+    }
+
+    /**
+     * Generate a guest list for the show.
+     */
+    public function generateGuestList(Show $show)
+    {
+        $user = Auth::user();
+
+        GenerateGuestListPdfJob::dispatch($show, $user);
+
+        return response()->json(['message' => 'Guest list generation started']);
     }
 }

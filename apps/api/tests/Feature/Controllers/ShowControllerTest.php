@@ -2,9 +2,13 @@
 
 namespace Tests\Feature\Controllers;
 
+use App\Jobs\GenerateGuestListPdfJob;
 use App\Models\Event;
+use App\Models\Order;
 use App\Models\Product;
 use App\Models\Show;
+use App\Models\Ticket;
+use Illuminate\Support\Facades\Queue;
 use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 
@@ -193,5 +197,33 @@ class ShowControllerTest extends TestCase
 
         $response->assertStatus(200);
         $response->assertJsonCount(5, 'data');
+    }
+
+    public function test_generate_guest_list()
+    {
+        Queue::fake();
+
+        Sanctum::actingAs($this->user);
+
+        $show = Show::factory()->create();
+
+        $orders = Order::factory()->create([
+            'show_id' => $show->id,
+        ]);
+
+        $orders->each(function ($order) {
+            Ticket::factory()->count(2)->create([
+                'order_id' => $order->id,
+            ]);
+        });
+
+        $response = $this->postJson(route('shows.guest-list', $show));
+
+        $response->assertStatus(200);
+        $response->assertJson(['message' => 'Guest list generation started']);
+
+        Queue::assertPushed(GenerateGuestListPdfJob::class, function ($job) use ($show) {
+            return $job->show->id === $show->id;
+        });
     }
 }

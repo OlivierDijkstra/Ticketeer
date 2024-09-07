@@ -57,6 +57,11 @@ class Show extends Model
         return $this->hasMany(Order::class);
     }
 
+    public function tickets()
+    {
+        return $this->hasManyThrough(Ticket::class, Order::class);
+    }
+
     protected static function boot()
     {
         parent::boot();

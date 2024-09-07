@@ -124,3 +124,13 @@ export async function unlinkProductFromShowAction({
     }
   );
 }
+
+export async function generateGuestListAction({
+  show_id,
+}: {
+  show_id: string;
+}) {
+  await fetchWithAuth(`api/shows/${show_id}/generate-guest-list`, {
+    method: 'POST',
+  });
+}

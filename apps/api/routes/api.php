@@ -57,6 +57,8 @@ Route::prefix('shows/{show}')->group(function () {
     Route::post('products/{product}', [ShowController::class, 'addProduct'])->name('shows.products.add');
     Route::put('products/{product}', [ShowController::class, 'updateProduct'])->name('shows.products.update');
     Route::delete('products/{product}', [ShowController::class, 'removeProduct'])->name('shows.products.remove');
+
+    Route::post('/generate-guest-list', [ShowController::class, 'generateGuestList'])->name('shows.guest-list');
 });
 
 //
