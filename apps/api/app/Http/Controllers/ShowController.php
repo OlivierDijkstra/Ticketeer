@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\AddProductToShowRequest;
 use App\Http\Requests\StoreShowRequest;
 use App\Http\Requests\UpdateShowRequest;
+use App\Jobs\GenerateGuestListPdfJob;
 use App\Models\Event;
 use App\Models\Product;
 use App\Models\Show;
@@ -12,7 +13,6 @@ use App\Traits\HandlesPaginationAndFiltering;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
-use App\Jobs\GenerateGuestListPdfJob;
 use Illuminate\Support\Facades\Auth;
 
 class ShowController extends Controller implements HasMiddleware

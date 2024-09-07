@@ -32,7 +32,7 @@ class GenerateGuestListPdfJob implements ShouldQueue
         Pdf::view('pdf.guest-list', [
             'show' => $this->show,
             'event' => $this->show->event,
-            'tickets' => $tickets
+            'tickets' => $tickets,
         ])
             ->format('a4')
             ->save($pdfPath);

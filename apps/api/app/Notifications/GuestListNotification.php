@@ -13,6 +13,7 @@ class GuestListNotification extends Notification implements ShouldQueue
     use Queueable;
 
     public Show $show;
+
     public string $pdfPath;
 
     public function __construct(Show $show, string $pdfPath)

@@ -118,13 +118,13 @@ class DatabaseSeeder extends Seeder
         while ($currentDate <= $endDate) {
             $dayCount++;
             $this->command->info("Processing day {$dayCount}: {$currentDate->toDateString()}");
-            
+
             $aggregations = array_merge($aggregations, $this->aggregateDataForDay($currentDate, $endDate));
             $currentDate->addDay();
 
             // Insert batch if we've reached the batch size
             if (count($aggregations) >= $batchSize) {
-                $this->command->info("Inserting batch of " . count($aggregations) . " aggregations");
+                $this->command->info('Inserting batch of '.count($aggregations).' aggregations');
                 \App\Models\Aggregation::insert($aggregations);
                 $aggregations = [];
             }
@@ -134,8 +134,8 @@ class DatabaseSeeder extends Seeder
         }
 
         // Insert any remaining aggregations
-        if (!empty($aggregations)) {
-            $this->command->info("Inserting final batch of " . count($aggregations) . " aggregations");
+        if (! empty($aggregations)) {
+            $this->command->info('Inserting final batch of '.count($aggregations).' aggregations');
             \App\Models\Aggregation::insert($aggregations);
         }
 
