@@ -10,6 +10,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Spatie\Browsershot\Browsershot;
 use Spatie\LaravelPdf\Facades\Pdf;
 
 class GenerateGuestListPdfJob implements ShouldQueue
@@ -34,6 +35,11 @@ class GenerateGuestListPdfJob implements ShouldQueue
             'event' => $this->show->event,
             'tickets' => $tickets,
         ])
+            ->withBrowsershot(function (Browsershot $browsershot) {
+                $browsershot
+                    ->noSandbox()
+                    ->showBackground();
+            })
             ->format('a4')
             ->save($pdfPath);
 
