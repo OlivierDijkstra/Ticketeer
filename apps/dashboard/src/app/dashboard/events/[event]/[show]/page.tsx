@@ -1,5 +1,4 @@
 import { Suspense } from 'react';
-import { toast } from 'sonner';
 
 import AddressCard from '@/components/address-card';
 import ShowGuestsForm from '@/components/forms/show-guests-form';
@@ -8,10 +7,8 @@ import ShowDateAvailablity from '@/components/show/show-date-availability';
 import SkeletonGraph from '@/components/skeletons/skeleton-chart';
 import OrdersTable from '@/components/tables/OrdersTable/orders-table';
 import ProductsTable from '@/components/tables/ProductsTable/products-table';
-import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { getShowAction } from '@/server/actions/shows';
-import { generateGuestListAction } from '@/server/actions/shows';
 
 export default async function Page({
   params,
@@ -26,15 +23,6 @@ export default async function Page({
   const show = await getShowAction({
     show_id: params.show,
   });
-
-  async function handleGenerateGuestList() {
-    await toast.promise(generateGuestListAction({ show_id: params.show }), {
-      loading: 'Generating guest list...',
-      success:
-        "Guest list generation started. You will receive an email when it's ready.",
-      error: 'Failed to generate guest list',
-    });
-  }
 
   return (
     <div className='space-y-4'>
@@ -70,10 +58,6 @@ export default async function Page({
       <Suspense fallback={<SkeletonGraph />}>
         <OrdersTable show={show} page={searchParams?.page_orders} />
       </Suspense>
-
-      <div className='flex justify-end'>
-        <Button onClick={handleGenerateGuestList}>Generate Guest List</Button>
-      </div>
 
       {/* <Suspense fallback={<SkeletonGraph />}>
         <CustomersTable show={show} page={searchParams?.page} />
