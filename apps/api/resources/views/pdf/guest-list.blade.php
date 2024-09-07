@@ -47,7 +47,7 @@
                     <tbody>
                         @foreach($tickets as $ticket)
                             <tr class="border-t border-border">
-                                <td class="p-2">{{ $ticket->order->customer->name }}</td>
+                                <td class="p-2">{{ $ticket->order->customer->first_name }} {{ $ticket->order->customer->last_name }}</td>
                                 <td class="p-2">{{ $ticket->product->name }}</td>
                                 <td class="p-2">{{ $ticket->order->order_number }}</td>
                             </tr>

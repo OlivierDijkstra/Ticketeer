@@ -35,14 +35,17 @@ class GenerateGuestListPdfJob implements ShouldQueue
             Storage::delete($file_path);
         }
 
-        $tickets = $this->show->tickets()
+        $guests = $this->show->tickets()
             ->with(['order.customer', 'product'])
+            ->whereHas('order', function ($query) {
+                $query->where('status', 'paid');
+            })
             ->get();
 
         Pdf::view('pdf.guest-list', [
             'show' => $this->show,
             'event' => $this->show->event,
-            'tickets' => $tickets,
+            'guests' => $guests,
         ])
             ->withBrowsershot(function (Browsershot $browsershot) {
                 $browsershot
