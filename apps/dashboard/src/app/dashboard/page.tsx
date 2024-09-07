@@ -34,8 +34,8 @@ export default async function Page({
           <ChartWrapper
             Chart={RevenueChart}
             modelType='Order'
-            defaultDateRange='This year'
-            defaultGranularity='month'
+            defaultDateRange='This month'
+            defaultGranularity='day'
             aggregationType='sum'
           />
         </Suspense>
