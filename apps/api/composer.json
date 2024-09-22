@@ -22,6 +22,7 @@
         "mallardduck/blade-lucide-icons": "^1.21",
         "mollie/laravel-mollie": "^3.0",
         "nunomaduro/collision": "^8.0",
+        "resend/resend-laravel": "^0.14.0",
         "spatie/laravel-medialibrary": "^11.4",
         "spatie/laravel-pdf": "^1.5",
         "symfony/http-client": "^7.1",
