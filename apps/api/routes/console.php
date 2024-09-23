@@ -13,3 +13,5 @@ Schedule::job(new AggregateDataJob('year'))->yearly();
 Schedule::job(new GenerateMonthlyReportJob)->monthly();
 
 Schedule::command('app:clean-tmp-directory')->daily();
+
+Schedule::command('app:clean-open-orders')->hourlyAt(0);
