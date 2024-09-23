@@ -76,9 +76,11 @@ class MollieWebhookController extends Controller
                 break;
             case 'expired':
                 if ($payment) {
-                    $payment->delete();
-
-                    RestoreProductStockJob::dispatch($payment);
+                    RestoreProductStockJob::dispatch($payment)->onQueue('default')->chain([
+                        function () use ($payment) {
+                            $payment->delete();
+                        }
+                    ]);
                 }
                 break;
             default:
