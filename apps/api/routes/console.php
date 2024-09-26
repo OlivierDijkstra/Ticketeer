@@ -14,4 +14,4 @@ Schedule::job(new GenerateMonthlyReportJob)->monthly();
 
 Schedule::command('app:clean-tmp-directory')->daily();
 
-Schedule::command('app:clean-open-orders')->hourlyAt(0);
+Schedule::command('app:clean-pending-orders')->hourlyAt(0);
