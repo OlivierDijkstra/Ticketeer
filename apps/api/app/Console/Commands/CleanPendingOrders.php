@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Actions\RestoreProductStockAction;
 use App\Models\Order;
 use Illuminate\Console\Command;
 use Carbon\Carbon;
@@ -25,13 +26,14 @@ class CleanPendingOrders extends Command
     /**
      * Execute the console command.
      */
-    public function handle()
+    public function handle(RestoreProductStockAction $restoreProductStockAction)
     {
         $orders = Order::where('status', 'pending')
         ->where('created_at', '<', Carbon::now()->subHour())
             ->get();
 
         foreach ($orders as $order) {
+            $restoreProductStockAction->handle($order->products, $order->show_id);
             $order->delete();
         }
 
