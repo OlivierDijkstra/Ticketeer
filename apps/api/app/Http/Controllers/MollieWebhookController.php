@@ -63,6 +63,9 @@ class MollieWebhookController extends Controller
                     ]);
 
                     RestoreProductStockJob::dispatch($payment);
+
+                    $order = $payment->order;
+                    $order->delete();
                 }
                 break;
             case 'cancelled':
@@ -72,13 +75,18 @@ class MollieWebhookController extends Controller
                     ]);
 
                     RestoreProductStockJob::dispatch($payment);
+
+                    $order = $payment->order;
+                    $order->delete();
                 }
                 break;
             case 'expired':
                 if ($payment) {
                     RestoreProductStockJob::dispatch($payment)->onQueue('default')->chain([
                         function () use ($payment) {
+                            $order = $payment->order;
                             $payment->delete();
+                            $order->delete();
                         }
                     ]);
                 }
