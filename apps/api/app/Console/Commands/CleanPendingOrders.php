@@ -33,7 +33,14 @@ class CleanPendingOrders extends Command
             ->get();
 
         foreach ($orders as $order) {
-            $restoreProductStockAction->handle($order->products->toArray(), $order->show_id);
+            $products = $order->products->map(function ($product) {
+                return [
+                    'id' => $product->id,
+                    'amount' => $product->pivot->amount,
+                ];
+            });
+
+            $restoreProductStockAction->handle($products->toArray(), $order->show_id);
             $order->delete();
         }
 
