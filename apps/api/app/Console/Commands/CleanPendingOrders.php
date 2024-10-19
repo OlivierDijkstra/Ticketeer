@@ -4,8 +4,8 @@ namespace App\Console\Commands;
 
 use App\Actions\RestoreProductStockAction;
 use App\Models\Order;
-use Illuminate\Console\Command;
 use Carbon\Carbon;
+use Illuminate\Console\Command;
 
 class CleanPendingOrders extends Command
 {
@@ -29,7 +29,7 @@ class CleanPendingOrders extends Command
     public function handle(RestoreProductStockAction $restoreProductStockAction)
     {
         $orders = Order::where('status', 'pending')
-        ->where('created_at', '<', Carbon::now()->subHour())
+            ->where('created_at', '<', Carbon::now()->subHour())
             ->get();
 
         foreach ($orders as $order) {

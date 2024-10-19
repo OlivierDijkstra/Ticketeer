@@ -16,7 +16,9 @@ class RestoreProductStockJob implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     protected $payment;
+
     protected $deleteOrder;
+
     /**
      * Create a new job instance.
      */
@@ -31,8 +33,9 @@ class RestoreProductStockJob implements ShouldQueue
      */
     public function handle(RestoreProductStockAction $action): void
     {
-        if (!$this->payment->exists) {
+        if (! $this->payment->exists) {
             Log::warning("Payment {$this->payment->id} no longer exists. Skipping stock restoration.");
+
             return;
         }
 

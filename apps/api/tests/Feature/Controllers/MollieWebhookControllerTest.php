@@ -73,7 +73,7 @@ class MollieWebhookControllerTest extends TestCase
         $response->assertStatus(200);
 
         Bus::assertDispatched(RestoreProductStockJob::class);
-        $action = new RestoreProductStockAction();
+        $action = new RestoreProductStockAction;
         $job = new RestoreProductStockJob($payment, true);
         $job->handle($action);
 
@@ -111,7 +111,7 @@ class MollieWebhookControllerTest extends TestCase
 
         Bus::assertDispatched(RestoreProductStockJob::class);
 
-        $action = new RestoreProductStockAction();
+        $action = new RestoreProductStockAction;
         $job = new RestoreProductStockJob($payment, true);
         $job->handle($action);
 
@@ -146,11 +146,11 @@ class MollieWebhookControllerTest extends TestCase
         $response = $this->postJson('/webhooks/mollie', ['id' => $transaction_id]);
 
         $response->assertStatus(200);
-        
+
         // Assert that the job is dispatched
         Bus::assertDispatched(RestoreProductStockJob::class);
 
-        $action = new RestoreProductStockAction();
+        $action = new RestoreProductStockAction;
         $job = new RestoreProductStockJob($payment, true);
         $job->handle($action);
 
