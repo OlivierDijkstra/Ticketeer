@@ -58,37 +58,17 @@ class MollieWebhookController extends Controller
                 break;
             case 'failed':
                 if ($payment) {
-                    $payment->update([
-                        'status' => 'failed',
-                    ]);
-
-                    RestoreProductStockJob::dispatch($payment);
-
-                    $order = $payment->order;
-                    $order->delete();
+                    RestoreProductStockJob::dispatch($payment, true);
                 }
                 break;
             case 'cancelled':
                 if ($payment) {
-                    $payment->update([
-                        'status' => 'cancelled',
-                    ]);
-
-                    RestoreProductStockJob::dispatch($payment);
-
-                    $order = $payment->order;
-                    $order->delete();
+                    RestoreProductStockJob::dispatch($payment, true);
                 }
                 break;
             case 'expired':
                 if ($payment) {
-                    RestoreProductStockJob::dispatch($payment)->onQueue('default')->chain([
-                        function () use ($payment) {
-                            $order = $payment->order;
-                            $payment->delete();
-                            $order->delete();
-                        }
-                    ]);
+                    RestoreProductStockJob::dispatch($payment, true);
                 }
                 break;
             default:

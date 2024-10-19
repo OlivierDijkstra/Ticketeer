@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Controllers;
 
+use App\Actions\RestoreProductStockAction;
 use App\Jobs\GenerateTicketsJob;
 use App\Jobs\HandlePaymentPaidJob;
 use App\Jobs\HandlePaymentPartiallyRefundedJob;
@@ -65,13 +66,22 @@ class MollieWebhookControllerTest extends TestCase
 
         $this->mockMolliePayment($transaction_id, 'failed', $amount);
 
+        $orderId = $payment->order->id;
+
         $response = $this->postJson('/webhooks/mollie', ['id' => $transaction_id]);
 
         $response->assertStatus(200);
-        $this->assertDatabaseHas('payments', [
+
+        Bus::assertDispatched(RestoreProductStockJob::class);
+        $action = new RestoreProductStockAction();
+        $job = new RestoreProductStockJob($payment, true);
+        $job->handle($action);
+
+        $this->assertdatabaseMissing('payments', [
             'id' => $payment->id,
             'status' => 'failed',
         ]);
+        $this->assertDatabaseMissing('orders', ['id' => $orderId]);
 
         Bus::assertDispatched(RestoreProductStockJob::class);
     }
@@ -91,15 +101,25 @@ class MollieWebhookControllerTest extends TestCase
             'amount' => $amount,
         ]);
 
+        $orderId = $payment->order->id;
+
         $this->mockMolliePayment($transaction_id, 'cancelled', $amount);
 
         $response = $this->postJson('/webhooks/mollie', ['id' => $transaction_id]);
 
         $response->assertStatus(200);
-        $this->assertDatabaseHas('payments', [
+
+        Bus::assertDispatched(RestoreProductStockJob::class);
+
+        $action = new RestoreProductStockAction();
+        $job = new RestoreProductStockJob($payment, true);
+        $job->handle($action);
+
+        $this->assertDatabaseMissing('payments', [
             'id' => $payment->id,
             'status' => 'cancelled',
         ]);
+        $this->assertDatabaseMissing('orders', ['id' => $orderId]);
 
         Bus::assertDispatched(RestoreProductStockJob::class);
     }
@@ -119,14 +139,24 @@ class MollieWebhookControllerTest extends TestCase
             'amount' => $amount,
         ]);
 
+        $orderId = $payment->order->id;
+
         $this->mockMolliePayment($transaction_id, 'expired', $amount);
 
         $response = $this->postJson('/webhooks/mollie', ['id' => $transaction_id]);
 
         $response->assertStatus(200);
-        $this->assertDatabaseMissing('payments', ['id' => $payment->id]);
-
+        
+        // Assert that the job is dispatched
         Bus::assertDispatched(RestoreProductStockJob::class);
+
+        $action = new RestoreProductStockAction();
+        $job = new RestoreProductStockJob($payment, true);
+        $job->handle($action);
+
+        // Now check if the payment and order are deleted
+        $this->assertDatabaseMissing('payments', ['id' => $payment->id]);
+        $this->assertDatabaseMissing('orders', ['id' => $orderId]);
     }
 
     #[RunInSeparateProcess]
