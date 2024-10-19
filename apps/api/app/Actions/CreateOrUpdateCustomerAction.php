@@ -8,14 +8,14 @@ class CreateOrUpdateCustomerAction
 {
     public function handle(array $customerData): Customer
     {
-        $customer = Customer::firstOrCreate([
-            'first_name' => $customerData['first_name'],
-            'last_name' => $customerData['last_name'],
-            'email' => $customerData['email'],
-        ]);
-
-        $customer->phone = $customerData['phone'] ?? null;
-        $customer->save();
+        $customer = Customer::updateOrCreate(
+            ['email' => $customerData['email']],
+            [
+                'first_name' => $customerData['first_name'],
+                'last_name' => $customerData['last_name'],
+                'phone' => $customerData['phone'] ?? null,
+            ]
+        );
 
         $addressData = [
             'street' => $customerData['street'],
