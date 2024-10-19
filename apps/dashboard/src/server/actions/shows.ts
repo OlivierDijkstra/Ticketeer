@@ -74,6 +74,12 @@ export async function updateShowAction({
   });
 }
 
+export async function deleteShowAction({ show_id }: { show_id: number }) {
+  return await fetchWithAuth(`api/shows/${show_id}`, {
+    method: 'DELETE',
+  });
+}
+
 export async function linkProductToShowAction({
   show_id,
   product_id,
