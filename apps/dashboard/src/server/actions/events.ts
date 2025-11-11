@@ -10,15 +10,27 @@ export async function getEventsAction({
 }: {
   page?: string;
 } = {}) {
-  const url = createUrl('api/events', {
-    page: page || 1,
-  });
+  try {
+    const url = createUrl('api/events', {
+      page: page || 1,
+    });
 
-  return await fetchWithAuth<PaginatedResponse<Event>>(url, {
-    next: {
-      tags: ['events'],
-    },
-  });
+    return await fetchWithAuth<PaginatedResponse<Event>>(url, {
+      next: {
+        tags: ['events'],
+      },
+    });
+  } catch (error) {
+    console.error('Error fetching events:', error);
+    // Return empty paginated response on error
+    return {
+      data: [],
+      current_page: 1,
+      last_page: 1,
+      per_page: 15,
+      total: 0,
+    } as PaginatedResponse<Event>;
+  }
 }
 
 export async function getEventAction({ event_slug }: { event_slug: string }) {

@@ -46,6 +46,8 @@ export default auth(async (req) => {
   try {
     await fetchWithAuth('api/users/me', { method: 'GET' });
   } catch (error) {
+    // Log error for debugging but don't crash
+    console.error('Middleware auth check failed:', error);
     const response = await onInvalidAuth(req);
     return response;
   }

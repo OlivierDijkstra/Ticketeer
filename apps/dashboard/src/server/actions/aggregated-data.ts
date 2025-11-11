@@ -26,26 +26,31 @@ export async function fetchAggregatedData({
   granularity,
   dateRange,
 }: AggregatedDataConfig) {
-  const date_range =
-    typeof dateRange === 'string' ? dateRange : JSON.stringify(dateRange);
+  try {
+    const date_range =
+      typeof dateRange === 'string' ? dateRange : JSON.stringify(dateRange);
 
-  const url = createUrl(`api/aggregations`, {
-    model_type: modelType,
-    aggregation_type: aggregationType,
-    granularity,
-    date_range,
-  });
+    const url = createUrl(`api/aggregations`, {
+      model_type: modelType,
+      aggregation_type: aggregationType,
+      granularity,
+      date_range,
+    });
 
-  const response = await fetchWithAuth<{
-    data: AggregatedData;
-  }>(url);
+    const response = await fetchWithAuth<{
+      data: AggregatedData;
+    }>(url);
 
-  if (!response.data) {
+    if (!response.data) {
+      return [];
+    }
+
+    return response.data.map((item) => ({
+      ...item,
+      value: parseFloat(`${item.value}`),
+    }));
+  } catch (error) {
+    console.error('Error fetching aggregated data:', error);
     return [];
   }
-
-  return response.data.map((item) => ({
-    ...item,
-    value: parseFloat(`${item.value}`),
-  }));
 }

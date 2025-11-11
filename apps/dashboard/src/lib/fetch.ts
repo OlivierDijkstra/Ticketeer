@@ -1,20 +1,20 @@
-import type { ResponseCookie } from 'next/dist/compiled/@edge-runtime/cookies';
-import { cookies } from 'next/headers';
-import { notFound } from 'next/navigation';
+import type { ResponseCookie } from "next/dist/compiled/@edge-runtime/cookies";
+import { cookies } from "next/headers";
+import { notFound } from "next/navigation";
 
-import { parseSetCookie } from '@/lib/utils';
+import { parseSetCookie } from "@/lib/utils";
 
 const API_URL = process.env.BACKEND_API_URL;
 
-interface FetchOptions extends Omit<RequestInit, 'body'> {
-  xsrfToken?: string;
-  body?: Record<string, unknown> | Record<string, unknown>[] | FormData;
-  automaticallySetCookies?: boolean;
-  parseJson?: boolean;
+interface FetchOptions extends Omit<RequestInit, "body"> {
+	xsrfToken?: string;
+	body?: Record<string, unknown> | Record<string, unknown>[] | FormData;
+	automaticallySetCookies?: boolean;
+	parseJson?: boolean;
 }
 
-interface FetchConfig extends Omit<FetchOptions, 'body'> {
-  body?: string | FormData | undefined;
+interface FetchConfig extends Omit<FetchOptions, "body"> {
+	body?: string | FormData | undefined;
 }
 
 /**
@@ -24,59 +24,63 @@ interface FetchConfig extends Omit<FetchOptions, 'body'> {
  * @returns The fetched data.
  */
 export async function fetchWithAuth<T>(
-  url: string,
-  options: FetchOptions = {
-    parseJson: true,
-  }
+	url: string,
+	options: FetchOptions = {
+		parseJson: true,
+	},
 ): Promise<T> {
-  const allCookies = cookies().getAll();
-  const headers = createHeaders(allCookies, options);
+	if (!API_URL) {
+		throw new Error("BACKEND_API_URL environment variable is not set");
+	}
 
-  let body: string | FormData;
+	const allCookies = cookies().getAll();
+	const headers = createHeaders(allCookies, options);
 
-  // If body is an object or array, stringify it
-  if (options?.body && typeof options.body === 'object') {
-    if (options.body instanceof FormData) {
-      body = options.body;
-    } else {
-      headers.set('Content-Type', 'application/json');
-      body = JSON.stringify(options.body);
-    }
-  } else {
-    body = options?.body as string | FormData;
-  }
+	let body: string | FormData;
 
-  const fetchConfig: FetchConfig = {
-    headers,
-    method: options.method || 'GET',
-    referrer: process.env.REFERRER_URL || 'http://localhost:3000',
-    credentials: 'include',
-  };
+	// If body is an object or array, stringify it
+	if (options?.body && typeof options.body === "object") {
+		if (options.body instanceof FormData) {
+			body = options.body;
+		} else {
+			headers.set("Content-Type", "application/json");
+			body = JSON.stringify(options.body);
+		}
+	} else {
+		body = options?.body as string | FormData;
+	}
 
-  if (options.body) {
-    fetchConfig.body = body;
-  }
+	const fetchConfig: FetchConfig = {
+		headers,
+		method: options.method || "GET",
+		referrer: process.env.REFERRER_URL || "http://localhost:3000",
+		credentials: "include",
+	};
 
-  if (options.next) {
-    fetchConfig.next = options.next;
-  }
+	if (options.body) {
+		fetchConfig.body = body;
+	}
 
-  if (options.cache) {
-    fetchConfig.cache = options.cache;
-  }
+	if (options.next) {
+		fetchConfig.next = options.next;
+	}
 
-  const response = await fetch(`${API_URL}/${url}`, fetchConfig);
-  await handleCookies(response, options);
+	if (options.cache) {
+		fetchConfig.cache = options.cache;
+	}
 
-  if (!response.ok) {
-    await handleHttpError(response);
-  }
+	const response = await fetch(`${API_URL}/${url}`, fetchConfig);
+	await handleCookies(response, options);
 
-  const shouldParseJson = options.parseJson ?? true;
+	if (!response.ok) {
+		await handleHttpError(response);
+	}
 
-  return shouldParseJson
-    ? ((await response.json()) as T)
-    : (response as unknown as T);
+	const shouldParseJson = options.parseJson ?? true;
+
+	return shouldParseJson
+		? ((await response.json()) as T)
+		: (response as unknown as T);
 }
 
 /**
@@ -86,21 +90,21 @@ export async function fetchWithAuth<T>(
  * @returns The headers object.
  */
 function createHeaders(
-  allCookies: ResponseCookie[],
-  options: FetchOptions
+	allCookies: ResponseCookie[],
+	options: FetchOptions,
 ): Headers {
-  const headers = new Headers({
-    'X-Requested-With': 'XMLHttpRequest',
-    accept: 'application/json',
-  });
+	const headers = new Headers({
+		"X-Requested-With": "XMLHttpRequest",
+		accept: "application/json",
+	});
 
-  setXsrfToken(headers, allCookies, options);
-  headers.set(
-    'Cookie',
-    allCookies.map((cookie) => `${cookie.name}=${cookie.value}`).join('; ')
-  );
+	setXsrfToken(headers, allCookies, options);
+	headers.set(
+		"Cookie",
+		allCookies.map((cookie) => `${cookie.name}=${cookie.value}`).join("; "),
+	);
 
-  return headers;
+	return headers;
 }
 
 /**
@@ -110,16 +114,16 @@ function createHeaders(
  * @param options The fetch options.
  */
 function setXsrfToken(
-  headers: Headers,
-  allCookies: ResponseCookie[],
-  options: FetchOptions
+	headers: Headers,
+	allCookies: ResponseCookie[],
+	options: FetchOptions,
 ) {
-  const xsrfCookie = allCookies.find((cookie) => cookie.name === 'XSRF-TOKEN');
-  if (options.xsrfToken) {
-    headers.set('X-XSRF-TOKEN', options.xsrfToken);
-  } else if (xsrfCookie) {
-    headers.set('X-XSRF-TOKEN', decodeURIComponent(xsrfCookie.value));
-  }
+	const xsrfCookie = allCookies.find((cookie) => cookie.name === "XSRF-TOKEN");
+	if (options.xsrfToken) {
+		headers.set("X-XSRF-TOKEN", options.xsrfToken);
+	} else if (xsrfCookie) {
+		headers.set("X-XSRF-TOKEN", decodeURIComponent(xsrfCookie.value));
+	}
 }
 
 /**
@@ -128,14 +132,14 @@ function setXsrfToken(
  * @param options The fetch options.
  */
 async function handleCookies(response: Response, options: FetchOptions) {
-  if (options.automaticallySetCookies) {
-    const cookiesFromResponse = parseSetCookie(
-      response.headers.getSetCookie() ?? []
-    );
-    for (const cookie of cookiesFromResponse) {
-      cookies().set(cookie);
-    }
-  }
+	if (options.automaticallySetCookies) {
+		const cookiesFromResponse = parseSetCookie(
+			response.headers.getSetCookie() ?? [],
+		);
+		for (const cookie of cookiesFromResponse) {
+			cookies().set(cookie);
+		}
+	}
 }
 
 /**
@@ -144,14 +148,29 @@ async function handleCookies(response: Response, options: FetchOptions) {
  * @throws An error with a message indicating the HTTP status.
  */
 async function handleHttpError(response: Response) {
-  if (response?.status === 401) {
-    throw new Error('Unauthorized');
-  }
-  if (response?.status === 404) {
-    notFound();
-  }
+	if (response?.status === 401) {
+		throw new Error("Unauthorized");
+	}
+	if (response?.status === 404) {
+		notFound();
+	}
 
-  const text = await response.json();
+	let errorMessage = `HTTP ${response.status}: ${response.statusText}`;
 
-  throw new Error(text.message);
+	try {
+		const contentType = response.headers.get("content-type");
+		if (contentType?.includes("application/json")) {
+			const json = await response.json();
+			errorMessage = json.message || json.error || errorMessage;
+		} else {
+			const text = await response.text();
+			if (text) {
+				errorMessage = `HTTP ${response.status}: ${text}`;
+			}
+		}
+	} catch {
+		// If parsing fails, use the default error message
+	}
+
+	throw new Error(errorMessage);
 }
