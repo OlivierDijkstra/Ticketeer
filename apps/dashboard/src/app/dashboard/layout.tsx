@@ -1,6 +1,8 @@
 import type { ReactNode } from 'react';
 
 import GlobalSearch from '@/components/global-search';
+
+export const dynamic = 'force-dynamic';
 import AccountSettings from '@/components/navigation/account-settings';
 import NavigationBreadcrumbs from '@/components/navigation/navigation-breadcrumbs';
 import NavigationSheet from '@/components/navigation/navigation-sheet';

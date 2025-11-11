@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 
 import { parseSetCookie } from "@/lib/utils";
 
-const API_URL = process.env.BACKEND_API_URL;
+const API_URL = process.env.BACKEND_API_URL || "https://api.clubhart.live";
 
 interface FetchOptions extends Omit<RequestInit, "body"> {
 	xsrfToken?: string;
@@ -29,10 +29,6 @@ export async function fetchWithAuth<T>(
 		parseJson: true,
 	},
 ): Promise<T> {
-	if (!API_URL) {
-		throw new Error("BACKEND_API_URL environment variable is not set");
-	}
-
 	const allCookies = cookies().getAll();
 	const headers = createHeaders(allCookies, options);
 
