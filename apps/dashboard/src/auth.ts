@@ -1,7 +1,8 @@
-import type { User as UserType } from "@repo/lib";
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { cookies } from "next/headers";
+
+import type { User as UserType } from "@repo/lib";
 
 import { fetchWithAuth } from "@/lib/fetch";
 import { parseSetCookie } from "@/lib/utils";
@@ -102,7 +103,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
 		},
 		async session({ session, token }) {
 			if (token.user) {
-				// @ts-ignore: Unable to fully overwrite the session.user type
+				// @ts-expect-error: Unable to fully overwrite the session.user type
 				session.user = token.user as UserType & {
 					cookies: string[];
 				};
