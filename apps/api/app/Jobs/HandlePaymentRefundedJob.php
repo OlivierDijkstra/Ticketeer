@@ -8,6 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\DB;
 use Mollie\Api\Resources\Payment as MolliePayment;
 
 class HandlePaymentRefundedJob implements ShouldQueue
@@ -26,18 +27,29 @@ class HandlePaymentRefundedJob implements ShouldQueue
 
     public function handle(): void
     {
-        $current_refunded_amount = $this->payment->amount_refunded;
+        [$payment, $shouldRestoreStock] = DB::transaction(function () {
+            $payment = Payment::query()
+                ->lockForUpdate()
+                ->findOrFail($this->payment->id);
 
-        $this->payment->update([
-            'status' => 'refunded',
-            'amount_refunded' => $this->mollie->amountRefunded->value,
-            'refunded_at' => now(),
-        ]);
+            $hasProcessedRefund = bccomp((string) ($payment->amount_refunded ?? '0.00'), '0.00', 2) === 1
+                || in_array($payment->status, ['partially_refunded', 'refunded'], true);
 
-        $order = $this->payment->order;
+            $payment->update([
+                'status' => 'refunded',
+                'amount_refunded' => $this->mollie->amountRefunded->value,
+                'refunded_at' => now(),
+            ]);
 
-        $order->update([
-            'status' => 'refunded',
-        ]);
+            $payment->order()->update([
+                'status' => 'refunded',
+            ]);
+
+            return [$payment->fresh(), ! $hasProcessedRefund];
+        });
+
+        if ($shouldRestoreStock) {
+            RestoreProductStockJob::dispatch($payment);
+        }
     }
 }

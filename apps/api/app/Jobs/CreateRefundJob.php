@@ -38,7 +38,5 @@ class CreateRefundJob implements ShouldQueue
         $payment->refund($config);
 
         $this->payment->update(['status' => 'pending_refund']);
-
-        RestoreProductStockJob::dispatch($this->payment);
     }
 }

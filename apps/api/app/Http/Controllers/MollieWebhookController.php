@@ -38,10 +38,7 @@ class MollieWebhookController extends Controller
 
                     // if the amountRefunded is equal to the amount of the payment, it's fully refunded
                     if ($amountRefunded === $mollie->amount->value) {
-                        Bus::chain([
-                            new HandlePaymentRefundedJob($payment, $mollie),
-                            new RestoreProductStockJob($payment),
-                        ])->dispatch();
+                        HandlePaymentRefundedJob::dispatch($payment, $mollie);
 
                         break;
                     }

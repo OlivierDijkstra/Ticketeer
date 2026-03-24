@@ -205,10 +205,7 @@ class MollieWebhookControllerTest extends TestCase
 
         $response->assertStatus(200);
 
-        Bus::assertChained([
-            HandlePaymentRefundedJob::class,
-            RestoreProductStockJob::class,
-        ]);
+        Bus::assertDispatched(HandlePaymentRefundedJob::class);
     }
 
     private function mockMolliePayment($transaction_id, $status, $amount, $refunded_amount = '0.00')

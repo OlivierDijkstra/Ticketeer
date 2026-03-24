@@ -46,4 +46,33 @@ class ProductShowObserverTest extends TestCase
 
         $this->assertEquals(13, $product->shows()->first()->pivot->stock);
     }
+
+    public function test_product_show_updated_ignores_refunded_orders_when_recalculating_stock()
+    {
+        $attachProductsToOrderAction = new AttachProductsToOrderAction;
+
+        $product = Product::factory()->create();
+        $show = Show::factory()->create();
+
+        $show->products()->attach($product->id, ['amount' => 10]);
+
+        $order = Order::factory()->create([
+            'show_id' => $show->id,
+            'status' => 'paid',
+        ]);
+
+        $attachProductsToOrderAction->handle($order, [
+            [
+                'id' => $product->id,
+                'amount' => 2,
+            ],
+        ], $show->id);
+
+        $this->assertEquals(8, $product->shows()->first()->pivot->stock);
+
+        $order->update(['status' => 'partially_refunded']);
+        $show->products()->updateExistingPivot($product->id, ['amount' => 15]);
+
+        $this->assertEquals(15, $product->shows()->first()->pivot->stock);
+    }
 }

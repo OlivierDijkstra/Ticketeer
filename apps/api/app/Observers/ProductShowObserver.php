@@ -26,7 +26,8 @@ class ProductShowObserver
             $soldAmount = $productShow->product->orders()
                 ->join('order_product as op', 'orders.id', '=', 'op.order_id')
                 ->where('op.product_id', $productShow->product_id)
-                ->where('show_id', $productShow->show_id)
+                ->where('orders.show_id', $productShow->show_id)
+                ->whereIn('orders.status', ['pending', 'paid'])
                 ->sum('op.amount');
 
             $newStock = max(0, min($newAmount - $soldAmount, $newAmount));
