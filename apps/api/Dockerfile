@@ -28,7 +28,6 @@ FROM base AS installer
 WORKDIR /app
 # Copy pruned package.json and yarn.lock from the builder stage
 COPY --from=builder /app/out/json/ .
-COPY --from=builder /app/out/yarn.lock ./yarn.lock
 # Install dependencies using the frozen lockfile
 RUN yarn install --frozen-lockfile --ignore-scripts
 
