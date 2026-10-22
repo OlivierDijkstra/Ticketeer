@@ -191,8 +191,8 @@ RUN cp ${PHP_INI_DIR}/php.ini-production ${PHP_INI_DIR}/php.ini
 
 USER ${USER}
 
-COPY --link --chown=${WWWUSER}:${WWWGROUP} --from=vendor /usr/bin/composer /usr/bin/composer
-COPY --link --chown=${WWWUSER}:${WWWGROUP} apps/api/composer.json apps/api/composer.lock ./
+COPY --chown=${WWWUSER}:${WWWGROUP} --from=vendor /usr/bin/composer /usr/bin/composer
+COPY --chown=${WWWUSER}:${WWWGROUP} apps/api/composer.json apps/api/composer.lock ./
 
 RUN composer install \
     --no-dev \
@@ -204,7 +204,7 @@ RUN composer install \
 # Move the vendor directory to a tmp directory
 RUN mv vendor /tmp/vendor
 
-COPY --link --chown=${WWWUSER}:${WWWGROUP} apps/api ./
+COPY --chown=${WWWUSER}:${WWWGROUP} apps/api ./
 COPY --from=installer /app/apps/api/public/build ./public/build
 COPY --from=installer /tmp/node_modules ./node_modules
 
@@ -213,11 +213,11 @@ RUN mkdir -p \
     storage/logs \
     bootstrap/cache && chmod -R a+rw storage
 
-COPY --link --chown=${WWWUSER}:${WWWGROUP} apps/api/deployment/supervisord.conf /etc/supervisor/
-COPY --link --chown=${WWWUSER}:${WWWGROUP} apps/api/deployment/octane/Swoole/supervisord.swoole.conf /etc/supervisor/conf.d/
-COPY --link --chown=${WWWUSER}:${WWWGROUP} apps/api/deployment/supervisord.*.conf /etc/supervisor/conf.d/
-COPY --link --chown=${WWWUSER}:${WWWGROUP} apps/api/deployment/php.ini ${PHP_INI_DIR}/conf.d/99-octane.ini
-COPY --link --chown=${WWWUSER}:${WWWGROUP} apps/api/deployment/start-container /usr/local/bin/start-container
+COPY --chown=${WWWUSER}:${WWWGROUP} apps/api/deployment/supervisord.conf /etc/supervisor/
+COPY --chown=${WWWUSER}:${WWWGROUP} apps/api/deployment/octane/Swoole/supervisord.swoole.conf /etc/supervisor/conf.d/
+COPY --chown=${WWWUSER}:${WWWGROUP} apps/api/deployment/supervisord.*.conf /etc/supervisor/conf.d/
+COPY --chown=${WWWUSER}:${WWWGROUP} apps/api/deployment/php.ini ${PHP_INI_DIR}/conf.d/99-octane.ini
+COPY --chown=${WWWUSER}:${WWWGROUP} apps/api/deployment/start-container /usr/local/bin/start-container
 
 # Install PHP dependencies using Composer
 RUN composer install \
